@@ -19,6 +19,15 @@ public class UserService {
      * 회원가입
      */
     public Long register(User user) {
+
+        // email 검증: 이미 회원가입된 email인지 확인
+        User findUser = userRepository.findByEmail(user.getEmail());
+
+        if(findUser != null) {
+            throw new RuntimeException();
+        }
+
+        // 회원가입
         userRepository.save(user);
         return user.getId();
     }
@@ -40,7 +49,7 @@ public class UserService {
             throw new RuntimeException();
         }
 
-        // 로그인 처리(JWT 토큰 발급)
+        // 로그인(JWT 토큰 발급)
         return null;
     }
 }
