@@ -1,19 +1,14 @@
 package com.example.mypetlife.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 public class User {
 
     @Id @GeneratedValue
@@ -24,20 +19,20 @@ public class User {
     private String phone;
     private String birthDate;
     private String petSpices;
-    private LocalDate created_at;
+    private LocalDateTime createdAt;
 
-    //==생성 메서드==//
-    public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpices) {
+    // article
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Article> articles;
 
-        User user = new User();
-        user.username = username;
-        user.email = email;
-        user.password = password;
-        user.phone = phone;
-        user.birthDate = birthDate;
-        user.petSpices = petSpices;
-        user.created_at = LocalDate.now();
+    // comment
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
-        return user;
-    }
+    // message
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private List<Message> sentMessages;
+
+    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+    private List<Message> receiveMessages;
 }
