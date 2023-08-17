@@ -15,6 +15,8 @@ public class Article {
     private String title;
     private String content;
     private CATEGORY_ARTICLE type;
+
+    @Column(name = "post_date")
     private LocalDateTime postDate;
     private Integer likes;
 

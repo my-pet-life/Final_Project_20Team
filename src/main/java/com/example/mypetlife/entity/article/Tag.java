@@ -8,6 +8,8 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "tag_name")
     private String tagName;
 
     // article_id

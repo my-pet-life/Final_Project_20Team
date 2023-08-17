@@ -18,8 +18,14 @@ public class User {
     private String email;
     private String password;
     private String phone;
+
+    @Column(name = "birth_date")
     private String birthDate;
+
+    @Column(name = "pet_spices")
     private String petSpices;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     // article
