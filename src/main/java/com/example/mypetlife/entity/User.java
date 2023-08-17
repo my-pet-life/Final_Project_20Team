@@ -2,12 +2,14 @@ package com.example.mypetlife.entity;
 
 import com.example.mypetlife.entity.article.Article;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "users")
+@Getter
 public class User {
 
     @Id @GeneratedValue
