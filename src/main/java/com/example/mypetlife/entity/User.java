@@ -1,8 +1,9 @@
 package com.example.mypetlife.entity;
 
-import com.example.mypetlife.entity.Calendar;
-import com.example.mypetlife.entity.Review;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class User {
 
     @Id
@@ -29,4 +32,19 @@ public class User {
 
     @OneToMany(mappedBy = "userId")
     private List<Review> reviews = new ArrayList<>();
+
+    //==생성 메서드==//
+    public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpices) {
+
+        User user = new User();
+        user.username = username;
+        user.email = email;
+        user.password = password;
+        user.phone = phone;
+        user.birthDate = birthDate;
+        user.petSpices = petSpices;
+        user.created_at = LocalDate.now();
+
+        return user;
+    }
 }
