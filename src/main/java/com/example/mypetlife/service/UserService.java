@@ -23,7 +23,7 @@ public class UserService {
         // email 검증: 이미 회원가입된 email인지 확인
         User findUser = userRepository.findByEmail(user.getEmail());
 
-        if (findUser != null) {
+        if(findUser != null) {
             throw new RuntimeException();
         }
 
@@ -40,12 +40,12 @@ public class UserService {
         // email 검증: 회원가입된 email인지 확인
         User findUser = userRepository.findByEmail(email);
 
-        if (findUser == null) {
+        if(findUser == null) {
             throw new RuntimeException();
         }
 
         // password 검증: 해당 email에 password가 맞는지 확인
-        if (!findUser.getPassword().equals(password)) {
+        if(!findUser.getPassword().equals(password)) {
             throw new RuntimeException();
         }
 
