@@ -12,6 +12,8 @@ public class Message {
     private Long id;
     private String title;
     private String content;
+
+    @Column(name = "send_date")
     private LocalDateTime sendDate;
 
     // sender_id
