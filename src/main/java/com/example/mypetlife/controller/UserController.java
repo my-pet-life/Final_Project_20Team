@@ -24,7 +24,7 @@ public class UserController {
     public String register(@RequestBody @Validated RegisterRequestDto dto) {
 
         User user = User.createUser(dto.getUsername(), dto.getEmail(), dto.getPassword(),
-                dto.getPhone(), dto.getBirthDate(), dto.getPetSpices());
+                                    dto.getPhone(), dto.getBirthDate(), dto.getPetSpices());
 
         userService.register(user);
 
