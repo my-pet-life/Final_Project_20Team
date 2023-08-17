@@ -1,7 +1,6 @@
-package com.example.mypetlife.hospital.domain;
+package com.example.mypetlife.entity.hospital;
 
-import com.example.mypetlife.hospital.Address;
-import com.example.mypetlife.review.domain.Review;
+import com.example.mypetlife.entity.Review;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

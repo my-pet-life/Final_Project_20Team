@@ -1,4 +1,4 @@
-package com.example.mypetlife.hospital;
+package com.example.mypetlife.entity.hospital;
 
 import jakarta.persistence.Embeddable;
 

@@ -1,7 +1,6 @@
-package com.example.mypetlife.review.domain;
+package com.example.mypetlife.entity;
 
-import com.example.mypetlife.hospital.domain.Hospital;
-import com.example.mypetlife.user.domain.User;
+import com.example.mypetlife.entity.hospital.Hospital;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
