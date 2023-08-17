@@ -4,7 +4,7 @@ import com.example.mypetlife.entity.article.Article;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -34,6 +34,12 @@ public class User {
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<Message> receiveMessages;
+
+    @OneToMany(mappedBy = "userId")
+    private List<Calendar> calendars = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userId")
+    private List<Review> reviews = new ArrayList<>();
 
     //==생성 메서드==//
     public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpices) {
