@@ -1,4 +1,4 @@
-package com.example.mypetlife.entity;
+package com.example.mypetlife.entity.article;
 
 import jakarta.persistence.*;
 

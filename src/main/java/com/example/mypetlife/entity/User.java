@@ -1,9 +1,8 @@
 package com.example.mypetlife.entity;
 
+import com.example.mypetlife.entity.article.Article;
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,4 +34,19 @@ public class User {
 
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<Message> receiveMessages;
+
+    //==생성 메서드==//
+    public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpices) {
+
+        User user = new User();
+        user.username = username;
+        user.email = email;
+        user.password = password;
+        user.phone = phone;
+        user.birthDate = birthDate;
+        user.petSpices = petSpices;
+        user.createdAt = LocalDateTime.now();
+
+        return user;
+    }
 }

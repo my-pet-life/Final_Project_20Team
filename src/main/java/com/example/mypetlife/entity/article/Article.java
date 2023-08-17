@@ -1,5 +1,7 @@
-package com.example.mypetlife.entity;
+package com.example.mypetlife.entity.article;
 
+import com.example.mypetlife.entity.Comment;
+import com.example.mypetlife.entity.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
