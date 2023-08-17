@@ -1,13 +1,14 @@
 package com.example.mypetlife.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -15,9 +16,7 @@ import java.util.List;
 @Getter
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
+    @Id @GeneratedValue
     private Long id;
     private String username;
     private String email;
@@ -26,12 +25,6 @@ public class User {
     private String birthDate;
     private String petSpices;
     private LocalDate created_at;
-
-    @OneToMany(mappedBy = "userId")
-    private List<Calendar> calendars = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userId")
-    private List<Review> reviews = new ArrayList<>();
 
     //==생성 메서드==//
     public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpices) {
