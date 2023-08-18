@@ -1,4 +1,4 @@
-package com.example.mypetlife.dto;
+package com.example.mypetlife.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

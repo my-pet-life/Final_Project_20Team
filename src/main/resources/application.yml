@@ -2,7 +2,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: # 입력
-    username: # 입력
+    username: root
     password: # 입력
 
   jpa:

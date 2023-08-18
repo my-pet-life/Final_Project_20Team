@@ -1,14 +1,13 @@
 package com.example.mypetlife.controller;
 
-import com.example.mypetlife.dto.LoginRequestDto;
-import com.example.mypetlife.dto.RegisterRequestDto;
+import com.example.mypetlife.dto.user.LoginRequestDto;
+import com.example.mypetlife.dto.user.RegisterRequestDto;
+import com.example.mypetlife.dto.user.RegisterResponseDto;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.jwt.JwtTokenDto;
-import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,14 +22,19 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/register")
-    public String register(@RequestBody @Validated RegisterRequestDto dto) {
+    public RegisterResponseDto register(@RequestBody @Validated RegisterRequestDto dto) {
 
+        // 회원 생성
         User user = User.createUser(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
                                     dto.getPhone(), dto.getBirthDate(), dto.getPetSpices());
 
-        userService.register(user);
+        // 회원가입
+        Long id = userService.register(user);
 
-        return "success";
+        User savedUser = userService.findById(id);
+
+        return new RegisterResponseDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(),
+                savedUser.getPetSpecies(), savedUser.getCreatedAt());
     }
 
     /**

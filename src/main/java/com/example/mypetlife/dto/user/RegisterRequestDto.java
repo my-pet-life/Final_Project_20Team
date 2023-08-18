@@ -1,4 +1,4 @@
-package com.example.mypetlife.dto;
+package com.example.mypetlife.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

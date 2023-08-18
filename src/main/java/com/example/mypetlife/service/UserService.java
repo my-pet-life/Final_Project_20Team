@@ -1,6 +1,8 @@
 package com.example.mypetlife.service;
 
 import com.example.mypetlife.entity.User;
+import com.example.mypetlife.exception.CustomException;
+import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.repository.UserRepository;
@@ -34,7 +36,7 @@ public class UserService {
         User findUser = userRepository.findByEmail(user.getEmail());
 
         if(findUser != null) {
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.ALREADY_EXIST_USER);
         }
 
         // 회원가입
@@ -51,18 +53,27 @@ public class UserService {
         User findUser = userRepository.findByEmail(email);
 
         if(findUser == null) {
-            throw new RuntimeException();
+            throw new CustomException(ErrorCode.WrongEmail);
         }
 
         // password 검증: 해당 email에 password가 맞는지 확인
         UserDetails user = manager.loadUserByUsername(email);
         if(!passwordEncoder.matches(password, user.getPassword())){
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new CustomException(ErrorCode.WrongPassword);
+
         }
 
         // 토큰 발급
         JwtTokenDto response = new JwtTokenDto(jwtTokenUtils.generateToken(user));
         log.info(response.toString());
         return response;
+    }
+
+    public User findById(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        return user;
     }
 }
