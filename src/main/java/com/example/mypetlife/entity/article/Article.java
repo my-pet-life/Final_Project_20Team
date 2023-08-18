@@ -14,7 +14,7 @@ public class Article {
     private Long id;
     private String title;
     private String content;
-    private CATEGORY_ARTICLE type;
+    private CategoryArticle type;
 
     @Column(name = "post_date")
     private LocalDateTime postDate;

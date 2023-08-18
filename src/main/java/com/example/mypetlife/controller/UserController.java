@@ -10,9 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,13 +35,24 @@ public class UserController {
 
     /**
      * [POST] /login
-     * 로그인: JWT 토큰 발급
+     * 일반 회원 로그인: JWT 토큰 발급
      */
     @PostMapping("/login")
     public JwtTokenDto login(@RequestBody @Validated LoginRequestDto dto) {
 
-        JwtTokenDto token =userService.login(dto.getEmail(), dto.getPassword());
+        JwtTokenDto token = userService.login(dto.getEmail(), dto.getPassword());
 
         return token;
+    }
+
+    /**
+     * [GET] /login/kakao
+     * 카카오 회원 로그인: JWT 토큰 발급
+     */
+    @GetMapping("/login/kakao")
+    public JwtTokenDto login(@RequestParam String token) {
+
+        JwtTokenDto tokenDto = new JwtTokenDto(token);
+        return tokenDto;
     }
 }

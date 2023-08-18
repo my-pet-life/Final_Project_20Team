@@ -1,6 +1,6 @@
 package com.example.mypetlife.entity.article;
 
-public enum CATEGORY_ARTICLE {
+public enum CategoryArticle {
     NOTICE,
     INFORMATION,
     REVIEW,

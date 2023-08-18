@@ -3,6 +3,7 @@ package com.example.mypetlife.service;
 import com.example.mypetlife.entity.CustomUserDetails;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,15 +13,9 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JpaUserDetailManager implements UserDetailsManager {
     private final UserRepository userRepository;
-
-    public JpaUserDetailManager(
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder
-    ){
-        this.userRepository = userRepository;
-    }
 
     @Override
     public void createUser(UserDetails user) {
