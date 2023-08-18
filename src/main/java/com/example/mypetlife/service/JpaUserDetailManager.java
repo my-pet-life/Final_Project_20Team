@@ -2,6 +2,8 @@ package com.example.mypetlife.service;
 
 import com.example.mypetlife.entity.CustomUserDetails;
 import com.example.mypetlife.entity.User;
+import com.example.mypetlife.exception.CustomException;
+import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,8 +46,8 @@ public class JpaUserDetailManager implements UserDetailsManager {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(email);
-        if(user == null) throw new UsernameNotFoundException(email);
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
         return CustomUserDetails.fromEntity(user);
     }
 }

@@ -2,11 +2,13 @@ package com.example.mypetlife.entity;
 
 import com.example.mypetlife.entity.article.Article;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "comment")
+@Getter
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +21,18 @@ public class Comment {
     @Column(name = "comment_date")
     private LocalDateTime commentDate;
 
-    // user_id
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    // article_id
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
+
+    //==수정 메서드==//
+    public void setArticle(Article article) {
+        this.article = article;
+    }
+
+    //==연관관계 편의 메서드==//
 }

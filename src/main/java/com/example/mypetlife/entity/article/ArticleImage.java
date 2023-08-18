@@ -6,16 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "tag")
+@Table(name = "article_image")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Tag {
+public class ArticleImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tag_name")
-    private String tagName;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
@@ -27,10 +27,10 @@ public class Tag {
     }
 
     //==생성 메서드==//
-    public static Tag createTag(String tagName) {
+    public static ArticleImage createArticleImage(String imageUrl) {
 
-        Tag tag = new Tag();
-        tag.tagName = tagName;
-        return tag;
+        ArticleImage articleImage = new ArticleImage();
+        articleImage.imageUrl = imageUrl;
+        return articleImage;
     }
 }

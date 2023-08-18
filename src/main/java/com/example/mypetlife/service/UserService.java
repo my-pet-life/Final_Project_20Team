@@ -1,5 +1,6 @@
 package com.example.mypetlife.service;
 
+import com.example.mypetlife.entity.CustomUserDetails;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @Slf4j
@@ -33,9 +36,9 @@ public class UserService {
     public Long register(User user) {
 
         // email 검증: 이미 회원가입된 email인지 확인
-        User findUser = userRepository.findByEmail(user.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
 
-        if(findUser != null) {
+        if(optionalUser.isPresent()) {
             throw new CustomException(ErrorCode.ALREADY_EXIST_USER);
         }
 
@@ -50,14 +53,14 @@ public class UserService {
     public JwtTokenDto login(String email, String password) {
 
         // email 검증: 회원가입된 email인지 확인
-        User findUser = userRepository.findByEmail(email);
+        User findUser = findByEmail(email);
 
         if(findUser == null) {
             throw new CustomException(ErrorCode.WrongEmail);
         }
 
         // password 검증: 해당 email에 password가 맞는지 확인
-        UserDetails user = manager.loadUserByUsername(email);
+        CustomUserDetails user = (CustomUserDetails) manager.loadUserByUsername(email);
         if(!passwordEncoder.matches(password, user.getPassword())){
             throw new CustomException(ErrorCode.WrongPassword);
 
@@ -72,6 +75,14 @@ public class UserService {
     public User findById(Long id) {
 
         User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+        return user;
+    }
+
+    public User findByEmail(String email) {
+
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
 
         return user;
