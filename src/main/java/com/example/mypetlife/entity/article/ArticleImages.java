@@ -8,6 +8,8 @@ public class ArticleImages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "image_url")
     private String imageUrl;
 
     // article_id

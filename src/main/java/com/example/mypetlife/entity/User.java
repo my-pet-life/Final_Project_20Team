@@ -18,8 +18,14 @@ public class User {
     private String email;
     private String password;
     private String phone;
+
+    @Column(name = "birth_date")
     private String birthDate;
-    private String petSpices;
+
+    @Column(name = "pet_species")
+    private String petSpecies;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     // article
@@ -44,7 +50,7 @@ public class User {
     private List<Review> reviews = new ArrayList<>();
 
     //==생성 메서드==//
-    public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpices) {
+    public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpecies) {
 
         User user = new User();
         user.username = username;
@@ -52,7 +58,7 @@ public class User {
         user.password = password;
         user.phone = phone;
         user.birthDate = birthDate;
-        user.petSpices = petSpices;
+        user.petSpecies = petSpecies;
         user.createdAt = LocalDateTime.now();
 
         return user;

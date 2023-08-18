@@ -12,7 +12,11 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
+
+    @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(name = "comment_date")
     private LocalDateTime commentDate;
 
     // user_id
