@@ -21,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String phone;
     private String birthDate;
-    private String petSpices;
+    private String petSpecies;
     private LocalDateTime createdAt;
 
     public static CustomUserDetails fromEntity(User entity){
@@ -32,7 +32,7 @@ public class CustomUserDetails implements UserDetails {
                 .email(entity.getEmail())
                 .phone(entity.getPhone())
                 .birthDate(entity.getBirthDate())
-                .petSpices(entity.getPetSpices())
+                .petSpecies(entity.getPetSpecies())
                 .createdAt(entity.getCreatedAt())
                 .build();
     }
