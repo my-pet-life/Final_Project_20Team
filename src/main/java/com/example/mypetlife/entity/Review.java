@@ -1,6 +1,7 @@
 package com.example.mypetlife.entity;
 
-import com.example.mypetlife.entity.hospital.Hospital;
+import com.example.mypetlife.entity.hospital.GyeonggiDoHospital;
+import com.example.mypetlife.entity.hospital.SeoulHospital;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -42,6 +43,10 @@ public class Review {
     private Integer starRating;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reviews")
-    private Hospital hospitalId;
+    @JoinColumn(name = "gyeonggido_hospital_id")
+    private GyeonggiDoHospital gyeonggiDoHospitalId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seoul_hospital_id")
+    private SeoulHospital seoulHospitalId;
 }
