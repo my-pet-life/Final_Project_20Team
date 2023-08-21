@@ -1,10 +1,12 @@
 package com.example.mypetlife.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
+@Entity @Data
 @Table(name = "calendar")
 public class Calendar {
     @Id
@@ -16,11 +18,13 @@ public class Calendar {
     @JoinColumn(name = "user_id")
     private User userId;
 
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate date;
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @Column(name = "start_time")
+    private String startTime;
+
+    @Column(name = "end_time")
+    private String endTime;
 
     @Column(name = "title")
     private String title;
@@ -31,8 +35,8 @@ public class Calendar {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "alarm_date")
-    private LocalDateTime alarmDate;
+    @Column(name = "alarm")
+    private Integer alarm;
 
     @Column(name = "image_url")
     private String imageUrl;
