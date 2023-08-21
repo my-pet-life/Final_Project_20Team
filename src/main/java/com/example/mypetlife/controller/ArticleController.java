@@ -86,4 +86,16 @@ public class ArticleController {
         ArticlesResponse response = ArticlesResponse.createResponse(articles);
         return response;
     }
+
+    /**
+     * [GET] /community/{categoryName}
+     * 게시판 별 게시글 조회
+     */
+    @GetMapping("/community/{categoryName}")
+    public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
+
+        List<Article> articles = articleService.findByCategory(categoryName);
+        ArticlesResponse response = ArticlesResponse.createResponse(articles);
+        return response;
+    }
 }
