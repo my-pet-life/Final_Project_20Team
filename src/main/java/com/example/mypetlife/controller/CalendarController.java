@@ -1,7 +1,7 @@
 package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.ResponseDto;
-import com.example.mypetlife.dto.ScheduleResponseDto;
+import com.example.mypetlife.dto.calendar.ScheduleResponseDto;
 import com.example.mypetlife.dto.calendar.ScheduleRequestDto;
 import com.example.mypetlife.service.CalendarService;
 import jakarta.validation.Valid;

@@ -1,4 +1,4 @@
-package com.example.mypetlife.dto;
+package com.example.mypetlife.dto.calendar;
 
 import lombok.Data;
 

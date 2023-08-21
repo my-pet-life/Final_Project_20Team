@@ -1,6 +1,6 @@
 package com.example.mypetlife.service;
 
-import com.example.mypetlife.dto.ScheduleResponseDto;
+import com.example.mypetlife.dto.calendar.ScheduleResponseDto;
 import com.example.mypetlife.dto.calendar.ScheduleRequestDto;
 import com.example.mypetlife.entity.Calendar;
 import com.example.mypetlife.repository.CalendarRepository;
@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
