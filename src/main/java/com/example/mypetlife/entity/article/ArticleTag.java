@@ -5,33 +5,36 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
-@Table(name = "article_image")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ArticleImage {
+public class ArticleTag {
 
     @Id @GeneratedValue
-    @Column(name = "article_image_id")
+    @Column(name = "article_tag_id")
     private Long id;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    private Article article;
+    Article article;
 
-    //==수정 메서드==//
-    public void setArticle(Article article) {
-        this.article = article;
-    }
+    @ManyToOne
+    @JoinColumn(name = "tag_id")
+    Tag tag;
 
     //==생성 메서드==//
-    public static ArticleImage createArticleImage(String imageUrl) {
+    public static ArticleTag createArticleTag(Tag tag) {
 
-        ArticleImage articleImage = new ArticleImage();
-        articleImage.imageUrl = imageUrl;
-        return articleImage;
+        ArticleTag articleTag = new ArticleTag();
+        articleTag.tag = tag;
+        return articleTag;
+    }
+
+    //==수정 메서드==//
+
+    public void setArticle(Article article) {
+        this.article = article;
     }
 }

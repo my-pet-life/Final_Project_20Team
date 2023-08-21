@@ -1,7 +1,9 @@
 package com.example.mypetlife.service.community;
 
 import com.example.mypetlife.entity.article.Article;
+import com.example.mypetlife.entity.article.ArticleImage;
 import com.example.mypetlife.entity.article.CategoryArticle;
+import com.example.mypetlife.entity.article.Tag;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.ArticleRepository;
@@ -20,6 +22,7 @@ import java.util.List;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
+    private final TagService tagService;
     private final EntityManager em;
 
     public Long saveArticle(Article article) {

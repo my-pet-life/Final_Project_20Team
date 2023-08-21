@@ -5,26 +5,23 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tag")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Tag {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue
+    @Column(name = "tag_id")
     private Long id;
 
     @Column(name = "tag_name")
     private String tagName;
 
-    @ManyToOne
-    @JoinColumn(name = "article_id")
-    private Article article;
-
-    //==수정 메서드==//
-    public void setArticle(Article article) {
-        this.article = article;
-    }
+    @OneToMany(mappedBy = "tag")
+    private List<ArticleTag> articleTags;
 
     //==생성 메서드==//
     public static Tag createTag(String tagName) {

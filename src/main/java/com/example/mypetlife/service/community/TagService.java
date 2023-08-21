@@ -30,4 +30,8 @@ public class TagService {
         return tagRepository.findByTagName(tagName)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_TAG));
     }
+
+    public void saveTag(Tag tag) {
+        tagRepository.save(tag);
+    }
 }

@@ -1,10 +1,7 @@
 package com.example.mypetlife.dto.community.article;
 
 import com.example.mypetlife.entity.Comment;
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.ArticleImage;
-import com.example.mypetlife.entity.article.CategoryArticle;
-import com.example.mypetlife.entity.article.Tag;
+import com.example.mypetlife.entity.article.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -50,10 +47,11 @@ public class ArticleResponse {
             response.commentDtos = commentDtos;
         }
 
-        if(!article.getTags().isEmpty()) {
+        if(!article.getArticleTags().isEmpty()) {
             List<TagDto> tagDtos = new ArrayList<>();
-            List<Tag> tags = article.getTags();
-            for (Tag tag : tags) {
+            List<ArticleTag> articleTags = article.getArticleTags();
+            for (ArticleTag articleTag : articleTags) {
+                Tag tag = articleTag.getTag();
                 tagDtos.add(TagDto.createDto(tag));
             }
             response.tagDtos = tagDtos;

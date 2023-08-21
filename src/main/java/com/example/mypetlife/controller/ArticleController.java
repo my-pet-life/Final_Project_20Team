@@ -2,10 +2,7 @@ package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.community.article.*;
 import com.example.mypetlife.entity.User;
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.ArticleImage;
-import com.example.mypetlife.entity.article.CategoryArticle;
-import com.example.mypetlife.entity.article.Tag;
+import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.UserService;
@@ -37,38 +34,47 @@ public class ArticleController {
     @PostMapping("/community")
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
-                                       @RequestPart List<CreateArticleTagDto> tagDtos,
+                                       @RequestPart(required = false) List<CreateArticleTagDto> tagDtos,
                                        @RequestPart(required = false) List<MultipartFile> imageFiles) {
 
-        // 글 작성한 회원 조회
-        String email = jwtTokenUtils.getEmailFromHeader(request); // request에서 토큰을 받아서, 토큰에서 email을 받아옴
+        // User 조회
+        String email = jwtTokenUtils.getEmailFromHeader(request);
         User user = userService.findByEmail(email);
 
-        // 태그 리스트 생성
-        List<Tag> tags = new ArrayList<>();
-        for (CreateArticleTagDto tagDto : tagDtos) {
-            if(tagService.isExistInDb(tagDto.getTagName())) {
-                // 이미 존재하는 태그이면 db에서 태그를 조회해와서 연결
-                Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                tags.add(findTag);
-            } else {
-                // 존재하지 않은 태그이면 db에 생성
-                tags.add(Tag.createTag(tagDto.getTagName()));
+        // List<ArticleTag>
+        List<ArticleTag> articleTags = new ArrayList<>();
+        if(tagDtos != null) {
+            for (CreateArticleTagDto tagDto : tagDtos) {
+                if(tagService.isExistInDb(tagDto.getTagName())) {
+                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
+                    // Tag 조회
+                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
+                    articleTags.add(articleTag);
+                } else {
+                    // 존재하지 않은 태그이면 DB에 생성
+                    // Tag 생성
+                    Tag newTag = Tag.createTag(tagDto.getTagName());
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                    articleTags.add(articleTag);
+                }
             }
         }
 
-        // 게시글 이미지 리스트 생성
+        // List<ArticleImage>
         List<ArticleImage> articleImages = new ArrayList<>();
-        if(!imageFiles.isEmpty()) {
+        if(imageFiles != null) {
             for (MultipartFile imageFile : imageFiles) {
                 articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
             }
         }
 
-        // 게시글 생성
+        // Article 생성
         Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
                 CategoryArticle.valueOf(dto.getCategory()),
-                user, tags, articleImages);
+                user, articleTags, articleImages);
 
         // 게시글 저장
         Long id = articleService.saveArticle(article);
@@ -121,17 +127,12 @@ public class ArticleController {
 //    @PutMapping("/community/article/{articleId}")
 //    public ArticleResponse updateArticle(@PathVariable Long articleId,
 //                                         @RequestPart @Validated UpdateArticleRequest dto,
-//                                         @RequestPart List<CreateArticleTagDto> tagParam,
-//                                         @RequestPart(required = false) List<MultipartFile> imageFiles) {
+//                                         @RequestPart List<CreateArticleTagDto> tagDtos,
+//                                         @RequestPart(required = false) List<MultipartFile> imageFiles,
+//                                         HttpServelet) {
 //
-//        // 게시글 조회
-//        Article article = articleService.findById(articleId);
-//
-//        // 태그 조회
-//
-//        return ArticleResponse.createResponse(article);
 //    }
-//
+
 //    /**
 //     * [DELETE] /community/article/{articleId}
 //     * 게시글 삭제
