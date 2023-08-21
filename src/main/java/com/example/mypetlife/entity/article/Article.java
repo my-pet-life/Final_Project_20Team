@@ -67,6 +67,15 @@ public class Article {
         this.user = user;
     }
 
+    public void updateArticleTags(List<ArticleTag> articleTags) {
+
+        this.articleTags = articleTags;
+    }
+
+    public void setImages(List<ArticleImage> images) {
+        this.images = images;
+    }
+
     //==생성 메서드==//
     public static Article createArticle(String title, String content, CategoryArticle category,
                                         User user, List<ArticleTag> articleTags, List<ArticleImage> articleImages) {

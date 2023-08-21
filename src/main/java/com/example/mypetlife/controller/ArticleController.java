@@ -3,6 +3,8 @@ package com.example.mypetlife.controller;
 import com.example.mypetlife.dto.community.article.*;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.entity.article.*;
+import com.example.mypetlife.exception.CustomException;
+import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.UserService;
@@ -120,18 +122,69 @@ public class ArticleController {
         return ArticleResponse.createResponse(article);
     }
 
-//    /**
-//     * [PUT] /community/article/{articleId}
-//     * 게시글 수정
-//     */
-//    @PutMapping("/community/article/{articleId}")
-//    public ArticleResponse updateArticle(@PathVariable Long articleId,
-//                                         @RequestPart @Validated UpdateArticleRequest dto,
-//                                         @RequestPart List<CreateArticleTagDto> tagDtos,
-//                                         @RequestPart(required = false) List<MultipartFile> imageFiles,
-//                                         HttpServelet) {
-//
-//    }
+    /**
+     * [PUT] /community/article/{articleId}
+     * 게시글 수정
+     */
+    @PutMapping("/community/article/{articleId}")
+    public ArticleResponse updateArticle(@PathVariable Long articleId,
+                                         @RequestPart @Validated UpdateArticleRequest dto,
+                                         @RequestPart(required = false) List<CreateArticleTagDto> tagDtos,
+                                         @RequestPart(required = false) List<MultipartFile> imageFiles,
+                                         HttpServletRequest request) {
+
+        log.info("컨트롤러 진입");
+        // User 조회
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User loginUser = userService.findByEmail(email);
+
+        // User 검증
+        Article article = articleService.findById(articleId);
+        User user = article.getUser();
+
+        if(!user.equals(loginUser)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // List<ArticleTag>
+        List<ArticleTag> articleTags = new ArrayList<>();
+        if(tagDtos != null) {
+            for (CreateArticleTagDto tagDto : tagDtos) {
+                if(tagService.isExistInDb(tagDto.getTagName())) {
+                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
+                    // Tag 조회
+                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
+                    articleTags.add(articleTag);
+                } else {
+                    // 존재하지 않은 태그이면 DB에 생성
+                    // Tag 생성 후 저장
+                    Tag newTag = Tag.createTag(tagDto.getTagName());
+                    tagService.saveTag(newTag);
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                    articleTags.add(articleTag);
+                }
+            }
+        }
+
+        // List<ArticleImage>
+        List<ArticleImage> articleImages = new ArrayList<>();
+        if(imageFiles != null) {
+            for (MultipartFile imageFile : imageFiles) {
+                articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
+            }
+        }
+
+        // 게시글 수정
+        Long id = articleService.updateArticle(article, dto.getTitle(), dto.getContent(), articleTags, articleImages);
+
+        // 응답 생성
+        Article savedArticle = articleService.findById(id);
+        ArticleResponse articleResponse = ArticleResponse.createResponse(savedArticle);
+        return articleResponse;
+    }
 
 //    /**
 //     * [DELETE] /community/article/{articleId}

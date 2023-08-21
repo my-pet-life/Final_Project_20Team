@@ -1,9 +1,6 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.ArticleImage;
-import com.example.mypetlife.entity.article.CategoryArticle;
-import com.example.mypetlife.entity.article.Tag;
+import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.ArticleRepository;
@@ -49,5 +46,24 @@ public class ArticleService {
         return em.createQuery("select a from Article a where a.category = :category")
                 .setParameter("category", CategoryArticle.valueOf(categoryName.toUpperCase()))
                 .getResultList();
+    }
+
+    public Long updateArticle(Article article, String title, String content,
+                              List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
+
+        article.updateTitle(title);
+        article.updateContent(content);
+
+        // 기존 관계 제거
+        List<ArticleTag> deleteArticleTags = article.getArticleTags();
+        for (ArticleTag deleteArticleTag : deleteArticleTags) {
+            em.remove(deleteArticleTag);
+        }
+        // 새로운 관계 추가
+        article.updateArticleTags(articleTags);
+
+        article.setImages(articleImages);
+
+        return article.getId();
     }
 }
