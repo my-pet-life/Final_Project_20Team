@@ -1,5 +1,6 @@
 package com.example.mypetlife.oauth;
 
+import com.example.mypetlife.entity.CustomUserDetails;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.jwt.JwtTokenUtils;
@@ -44,7 +45,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Map<String, Object> kakaoAccount = (Map<String, Object>) oAuth2User.getAttribute("kakao_account");
         String email = (String)kakaoAccount.get("email");
         // 회원 조회
-        UserDetails user = manager.loadUserByUsername(email);
+        CustomUserDetails user = (CustomUserDetails) manager.loadUserByUsername(email);
 
         // 토큰 발급
         String token = jwtTokenUtils.generateToken(user);

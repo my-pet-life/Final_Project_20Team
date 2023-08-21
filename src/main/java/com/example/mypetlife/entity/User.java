@@ -28,15 +28,9 @@ public class User {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // article
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Article> articles;
 
-    // comment
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Comment> comments;
-
-    // message
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Message> sentMessages;
 

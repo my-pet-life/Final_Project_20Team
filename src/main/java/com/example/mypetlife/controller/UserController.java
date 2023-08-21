@@ -7,12 +7,14 @@ import com.example.mypetlife.entity.User;
 import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -30,6 +32,7 @@ public class UserController {
 
         // 회원가입
         Long id = userService.register(user);
+        log.info("id={}", id);
 
         User savedUser = userService.findById(id);
 
