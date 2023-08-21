@@ -42,18 +42,12 @@ public class ArticleController {
                                        @RequestPart List<CreateArticleTagDto> tagParam,
                                        @RequestPart(required = false) List<MultipartFile> imageFiles) {
 
-        log.info("컨트롤러진입===========");
         // 글 작성한 회원 조회
         String email = jwtTokenUtils.getEmailFromHeader(request); // request에서 토큰을 받아서, 토큰에서 email을 받아옴
         User user = userService.findByEmail(email);
 
         // 태그 리스트 생성
         List<Tag> tags = new ArrayList<>();
-//        if(dto.getTags() != null) {
-//            for (Tag tag : tags) {
-//                tags.add(Tag.createTag(tag.getTagName()));
-//            }
-//        }
         for (CreateArticleTagDto createArticleTagDto : tagParam) {
             tags.add(Tag.createTag(createArticleTagDto.getTagName()));
         }
@@ -82,15 +76,14 @@ public class ArticleController {
     }
 
     /**
-     * [GET] 전체 게시글 조회
+     * [GET] /community
+     * 전체 게시글 조회
      */
-//    @GetMapping("/community")
-//    public ArticlesResponse readArticles() {
-//
-//        List<Article> articles = articleService.findAll();
-//        for (Article article : articles) {
-//            new Article
-//        }
-//        new ArticlesResponse()
-//    }
+    @GetMapping("/community")
+    public ArticlesResponse readArticles() {
+
+        List<Article> articles = articleService.findAll();
+        ArticlesResponse response = ArticlesResponse.createResponse(articles);
+        return response;
+    }
 }

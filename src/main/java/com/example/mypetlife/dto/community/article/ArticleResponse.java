@@ -11,6 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * 게시글 하나 조회
+ */
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArticleResponse {
