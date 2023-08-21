@@ -1,4 +1,4 @@
-package com.example.mypetlife.service;
+package com.example.mypetlife.service.community;
 
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.CategoryArticle;

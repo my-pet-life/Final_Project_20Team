@@ -1,16 +1,15 @@
 package com.example.mypetlife.controller;
 
-import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
-import com.example.mypetlife.entity.Comment;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.ArticleImage;
 import com.example.mypetlife.entity.article.CategoryArticle;
 import com.example.mypetlife.entity.article.Tag;
 import com.example.mypetlife.jwt.JwtTokenUtils;
-import com.example.mypetlife.service.ArticleService;
+import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.UserService;
+import com.example.mypetlife.service.community.TagService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +28,7 @@ public class ArticleController {
     private final ArticleService articleService;
     private final JwtTokenUtils jwtTokenUtils;
     private final UserService userService;
+    private final TagService tagService;
 
     /**
      * [POST] /community
@@ -37,7 +37,7 @@ public class ArticleController {
     @PostMapping("/community")
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
-                                       @RequestPart List<CreateArticleTagDto> tagParam,
+                                       @RequestPart List<CreateArticleTagDto> tagDtos,
                                        @RequestPart(required = false) List<MultipartFile> imageFiles) {
 
         // 글 작성한 회원 조회
@@ -46,8 +46,15 @@ public class ArticleController {
 
         // 태그 리스트 생성
         List<Tag> tags = new ArrayList<>();
-        for (CreateArticleTagDto createArticleTagDto : tagParam) {
-            tags.add(Tag.createTag(createArticleTagDto.getTagName()));
+        for (CreateArticleTagDto tagDto : tagDtos) {
+            if(tagService.isExistInDb(tagDto.getTagName())) {
+                // 이미 존재하는 태그이면 db에서 태그를 조회해와서 연결
+                Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                tags.add(findTag);
+            } else {
+                // 존재하지 않은 태그이면 db에 생성
+                tags.add(Tag.createTag(tagDto.getTagName()));
+            }
         }
 
         // 게시글 이미지 리스트 생성
