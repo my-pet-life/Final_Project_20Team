@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,5 +31,10 @@ public class ArticleService {
 
         return articleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE));
+    }
+
+    public List<Article> findAll() {
+
+        return articleRepository.findAll();
     }
 }

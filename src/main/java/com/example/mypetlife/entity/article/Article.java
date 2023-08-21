@@ -77,11 +77,17 @@ public class Article {
         article.postDate = LocalDateTime.now();
         article.likes = 0;
         article.setUser(user);
-        for (Tag tag : tags) {
-            article.addTag(tag);
+
+        if(tags != null) {
+            for (Tag tag : tags) {
+                article.addTag(tag);
+            }
         }
-        for (ArticleImage articleImage : articleImages) {
-            article.addImage(articleImage);
+
+        if(articleImages != null) {
+            for (ArticleImage articleImage : articleImages) {
+                article.addImage(articleImage);
+            }
         }
 
         return article;

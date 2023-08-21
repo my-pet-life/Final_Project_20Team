@@ -1,7 +1,10 @@
 package com.example.mypetlife.controller;
 
+import com.example.mypetlife.dto.community.article.ArticlesResponse;
 import com.example.mypetlife.dto.community.article.CreateArticleRequest;
-import com.example.mypetlife.dto.community.article.CreateArticleResponse;
+import com.example.mypetlife.dto.community.article.ArticleResponse;
+import com.example.mypetlife.dto.community.article.CreateArticleTagDto;
+import com.example.mypetlife.entity.Comment;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.ArticleImage;
@@ -14,10 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -37,26 +37,30 @@ public class ArticleController {
      * 게시글 등록
      */
     @PostMapping("/community")
-    public CreateArticleResponse postArticle(HttpServletRequest request,
-                              @RequestPart @Validated CreateArticleRequest dto,
-                              @RequestPart(required = false) List<MultipartFile> imageFiles) {
+    public ArticleResponse postArticle(HttpServletRequest request,
+                                       @RequestPart @Validated CreateArticleRequest dto,
+                                       @RequestPart List<CreateArticleTagDto> tagParam,
+                                       @RequestPart(required = false) List<MultipartFile> imageFiles) {
 
-        log.info("컨트롤러실행");
+        log.info("컨트롤러진입===========");
         // 글 작성한 회원 조회
         String email = jwtTokenUtils.getEmailFromHeader(request); // request에서 토큰을 받아서, 토큰에서 email을 받아옴
         User user = userService.findByEmail(email);
 
         // 태그 리스트 생성
-        List<String> tagNames = dto.getTags();
         List<Tag> tags = new ArrayList<>();
-        for (String tagName : tagNames) {
-            Tag tag = Tag.createTag(tagName);
-            tags.add(tag);
+//        if(dto.getTags() != null) {
+//            for (Tag tag : tags) {
+//                tags.add(Tag.createTag(tag.getTagName()));
+//            }
+//        }
+        for (CreateArticleTagDto createArticleTagDto : tagParam) {
+            tags.add(Tag.createTag(createArticleTagDto.getTagName()));
         }
 
         // 게시글 이미지 리스트 생성
         List<ArticleImage> articleImages = new ArrayList<>();
-        if(imageFiles != null) {
+        if(!imageFiles.isEmpty()) {
             for (MultipartFile imageFile : imageFiles) {
                 articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
             }
@@ -72,9 +76,21 @@ public class ArticleController {
 
         // 응답 생성
         Article savedArticle = articleService.findById(id);
-        CreateArticleResponse createArticleResponse = new CreateArticleResponse(id, savedArticle.getTitle(), savedArticle.getContent(),
-                savedArticle.getCategory(), savedArticle.getPostDate(), savedArticle.getLikes(),
-                savedArticle.getUser().getUsername());
-        return createArticleResponse;
+        ArticleResponse articleResponse = ArticleResponse.createResponse(
+                savedArticle, savedArticle.getComments(), savedArticle.getTags(), savedArticle.getImages());
+        return articleResponse;
     }
+
+    /**
+     * [GET] 전체 게시글 조회
+     */
+//    @GetMapping("/community")
+//    public ArticlesResponse readArticles() {
+//
+//        List<Article> articles = articleService.findAll();
+//        for (Article article : articles) {
+//            new Article
+//        }
+//        new ArticlesResponse()
+//    }
 }
