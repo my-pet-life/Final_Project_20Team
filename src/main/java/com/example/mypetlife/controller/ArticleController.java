@@ -1,9 +1,7 @@
 package com.example.mypetlife.controller;
 
-import com.example.mypetlife.dto.community.article.ArticlesResponse;
-import com.example.mypetlife.dto.community.article.CreateArticleRequest;
-import com.example.mypetlife.dto.community.article.ArticleResponse;
-import com.example.mypetlife.dto.community.article.CreateArticleTagDto;
+import com.example.mypetlife.dto.MessageResponse;
+import com.example.mypetlife.dto.community.article.*;
 import com.example.mypetlife.entity.Comment;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.entity.article.Article;
@@ -70,16 +68,15 @@ public class ArticleController {
 
         // 응답 생성
         Article savedArticle = articleService.findById(id);
-        ArticleResponse articleResponse = ArticleResponse.createResponse(
-                savedArticle, savedArticle.getComments(), savedArticle.getTags(), savedArticle.getImages());
+        ArticleResponse articleResponse = ArticleResponse.createResponse(savedArticle);
         return articleResponse;
     }
 
     /**
-     * [GET] /community
+     * [GET] /community/articles
      * 전체 게시글 조회
      */
-    @GetMapping("/community")
+    @GetMapping("/community/articles")
     public ArticlesResponse readArticles() {
 
         List<Article> articles = articleService.findAll();
@@ -88,14 +85,52 @@ public class ArticleController {
     }
 
     /**
-     * [GET] /community/{categoryName}
+     * [GET] /community/articles/{categoryName}
      * 게시판 별 게시글 조회
      */
-    @GetMapping("/community/{categoryName}")
+    @GetMapping("/community/articles/{categoryName}")
     public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
 
         List<Article> articles = articleService.findByCategory(categoryName);
         ArticlesResponse response = ArticlesResponse.createResponse(articles);
         return response;
     }
+
+    /**
+     * [GET] /community/article/{articleId}
+     * 게시글 단일 조회
+     */
+    @GetMapping("/community/article/{articleId}")
+    public ArticleResponse readArticle(@PathVariable Long articleId) {
+
+        Article article = articleService.findById(articleId);
+        return ArticleResponse.createResponse(article);
+    }
+
+//    /**
+//     * [PUT] /community/article/{articleId}
+//     * 게시글 수정
+//     */
+//    @PutMapping("/community/article/{articleId}")
+//    public ArticleResponse updateArticle(@PathVariable Long articleId,
+//                                         @RequestPart @Validated UpdateArticleRequest dto,
+//                                         @RequestPart List<CreateArticleTagDto> tagParam,
+//                                         @RequestPart(required = false) List<MultipartFile> imageFiles) {
+//
+//        // 게시글 조회
+//        Article article = articleService.findById(articleId);
+//
+//        // 태그 조회
+//
+//        return ArticleResponse.createResponse(article);
+//    }
+//
+//    /**
+//     * [DELETE] /community/article/{articleId}
+//     * 게시글 삭제
+//     */
+//    @DeleteMapping("/community/article/{articleId}")
+//    public MessageResponse DeleteArticle(@PathVariable Long articleId) {
+//
+//    }
 }

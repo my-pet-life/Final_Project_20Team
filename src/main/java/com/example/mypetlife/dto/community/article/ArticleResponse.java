@@ -30,8 +30,7 @@ public class ArticleResponse {
     private List<ArticleImageDto> imageDtos = new ArrayList<>();
 
     //==생성 메서드==//
-    public static ArticleResponse createResponse(Article article, List<Comment> comments,
-                                                 List<Tag> tags, List<ArticleImage> articleImages) {
+    public static ArticleResponse createResponse(Article article) {
 
         ArticleResponse response = new ArticleResponse();
         response.id = article.getId();
@@ -42,23 +41,32 @@ public class ArticleResponse {
         response.like = article.getLikes();
         response.username = article.getUser().getUsername();
 
-        List<CommentDto> commentDtos = new ArrayList<>();
-        for (Comment comment : comments) {
-            commentDtos.add(CommentDto.createDto(comment));
+        if(!article.getComments().isEmpty()) {
+            List<CommentDto> commentDtos = new ArrayList<>();
+            List<Comment> comments = article.getComments();
+            for (Comment comment : comments) {
+                commentDtos.add(CommentDto.createDto(comment));
+            }
+            response.commentDtos = commentDtos;
         }
-        response.commentDtos = commentDtos;
 
-        List<TagDto> tagDtos = new ArrayList<>();
-        for (Tag tag : tags) {
-            tagDtos.add(TagDto.createDto(tag));
+        if(!article.getTags().isEmpty()) {
+            List<TagDto> tagDtos = new ArrayList<>();
+            List<Tag> tags = article.getTags();
+            for (Tag tag : tags) {
+                tagDtos.add(TagDto.createDto(tag));
+            }
+            response.tagDtos = tagDtos;
         }
-        response.tagDtos = tagDtos;
 
-        List<ArticleImageDto> articleImageDtos = new ArrayList<>();
-        for (ArticleImage articleImage : articleImages) {
-            articleImageDtos.add(ArticleImageDto.createDto(articleImage));
+        if(!article.getImages().isEmpty()) {
+            List<ArticleImageDto> articleImageDtos = new ArrayList<>();
+            List<ArticleImage> articleImages = article.getImages();
+            for (ArticleImage articleImage : articleImages) {
+                articleImageDtos.add(ArticleImageDto.createDto(articleImage));
+            }
+            response.imageDtos = articleImageDtos;
         }
-        response.imageDtos = articleImageDtos;
 
         return response;
     }
