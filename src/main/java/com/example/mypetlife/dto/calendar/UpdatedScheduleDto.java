@@ -14,5 +14,4 @@ public class UpdatedScheduleDto {
     private String content;
     private String location;
     private Integer alarm;
-    private String imageUrl;
 }

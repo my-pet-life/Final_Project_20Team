@@ -14,5 +14,4 @@ public class ScheduleResponseDto {
     private String content;
     private String location;
     private Boolean isAlarm;
-    private String imageUrl;
 }

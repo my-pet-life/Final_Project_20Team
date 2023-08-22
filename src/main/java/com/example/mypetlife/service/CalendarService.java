@@ -82,7 +82,6 @@ public class CalendarService {
         dto.setEndTime(calendar.getEndTime());
         dto.setIsAlarm(calendar.getAlarm() != null);
         dto.setLocation(calendar.getLocation());
-        dto.setImageUrl(calendar.getImageUrl());
         return dto;
     }
 
@@ -133,7 +132,6 @@ public class CalendarService {
         updateFieldIfNotNull(dto.getContent(), calendar::setContent);
         updateFieldIfNotNull(dto.getLocation(), calendar::setLocation);
         updateFieldIfNotNull(dto.getAlarm(), calendar::setAlarm);
-        updateFieldIfNotNull(dto.getImageUrl(), calendar::setImageUrl);
         calendarRepository.save(calendar);
     }
 

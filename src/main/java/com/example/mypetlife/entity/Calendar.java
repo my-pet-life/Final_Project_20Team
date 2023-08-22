@@ -38,7 +38,4 @@ public class Calendar {
 
     @Column(name = "alarm")
     private Integer alarm;
-
-    @Column(name = "image_url")
-    private String imageUrl;
 }
