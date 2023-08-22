@@ -1,13 +1,16 @@
 package com.example.mypetlife.service.community;
 
+import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.Tag;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.TagRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,6 +19,7 @@ import java.util.Optional;
 public class TagService {
 
     private final TagRepository tagRepository;
+    private final EntityManager em;
 
     public boolean isExistInDb(String tagName) {
 
@@ -34,4 +38,5 @@ public class TagService {
     public void saveTag(Tag tag) {
         tagRepository.save(tag);
     }
+
 }

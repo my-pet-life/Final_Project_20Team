@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -70,5 +72,18 @@ public class ArticleService {
     public void deleteArticle(Article article) {
 
         articleRepository.delete(article);
+    }
+
+    public List<Article> findByTagName(String tagName) {
+
+        List<Article> articles = articleRepository.findAll();
+        List<Article> result = new ArrayList<>();
+        for (Article article : articles) {
+            if(article.getArticleTags().stream().filter(articleTag -> articleTag.getTag().getTagName().equals(tagName)).findAny().isPresent()) {
+                result.add(article);
+            }
+        }
+
+        return result;
     }
 }

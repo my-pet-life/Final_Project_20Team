@@ -101,18 +101,6 @@ public class ArticleController {
     }
 
     /**
-     * [GET] /community/articles/{categoryName}
-     * 게시판 별 게시글 조회
-     */
-    @GetMapping("/community/articles/{categoryName}")
-    public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
-
-        List<Article> articles = articleService.findByCategory(categoryName);
-        ArticlesResponse response = ArticlesResponse.createResponse(articles);
-        return response;
-    }
-
-    /**
      * [GET] /community/article/{articleId}
      * 게시글 단일 조회
      */
@@ -209,4 +197,34 @@ public class ArticleController {
         MessageResponse response = new MessageResponse("게시글이 삭제되었습니다");
         return response;
     }
+
+    /**
+     * [GET] /community/articles/{categoryName}
+     * 게시판 별 게시글 조회
+     */
+    @GetMapping("/community/articles/{categoryName}")
+    public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
+
+        List<Article> articles = articleService.findByCategory(categoryName);
+        ArticlesResponse response = ArticlesResponse.createResponse(articles);
+        return response;
+    }
+
+    /**
+     * [GET] /community/search/tag/{tagName}
+     * 태그 별 게시글 조회
+     */
+    @GetMapping("/community/search/tag/{tagName}")
+    public ArticlesResponse readArticlesByTagName(@PathVariable String tagName) {
+
+        List<Article> articles = articleService.findByTagName(tagName);
+        ArticlesResponse response = ArticlesResponse.createResponse(articles);
+        return response;
+    }
+
+    /**
+     * [GET] /community/search/species/{species}
+     * 종 별 게시글 조회
+     */
+
 }
