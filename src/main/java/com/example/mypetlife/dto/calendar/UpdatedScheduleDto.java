@@ -5,14 +5,14 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-@Data
-public class ScheduleResponseDto {
+@Data @Builder
+public class UpdatedScheduleDto {
     private LocalDate date;
     private String startTime;
     private String endTime;
     private String title;
     private String content;
     private String location;
-    private Boolean isAlarm;
+    private Integer alarm;
     private String imageUrl;
 }

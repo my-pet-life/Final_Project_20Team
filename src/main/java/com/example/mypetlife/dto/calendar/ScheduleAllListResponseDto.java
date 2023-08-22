@@ -6,13 +6,9 @@ import lombok.Data;
 import java.time.LocalDate;
 
 @Data
-public class ScheduleResponseDto {
+public class ScheduleAllListResponseDto {
     private LocalDate date;
     private String startTime;
     private String endTime;
     private String title;
-    private String content;
-    private String location;
-    private Boolean isAlarm;
-    private String imageUrl;
 }

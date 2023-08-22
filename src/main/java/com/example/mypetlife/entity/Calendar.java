@@ -1,6 +1,7 @@
 package com.example.mypetlife.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
