@@ -10,11 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
 public class ArticleService {
@@ -23,32 +22,54 @@ public class ArticleService {
     private final TagService tagService;
     private final EntityManager em;
 
+    /*
+     * 저장
+     */
+    @Transactional
     public Long saveArticle(Article article) {
 
-        // 저장
         articleRepository.save(article);
-
         return article.getId();
     }
 
+    /*
+     * 단건 조회
+     */
     public Article findById(Long id) {
 
         return articleRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ARTICLE));
     }
 
+    /*
+     * 전체 조회
+     */
     public List<Article> findAll() {
 
         return articleRepository.findAll();
     }
 
+    /*
+     * 카테고리별 조회
+     */
     public List<Article> findByCategory(String categoryName) {
 
-        return em.createQuery("select a from Article a where a.category = :category")
-                .setParameter("category", ArticleCategory.valueOf(categoryName.toUpperCase()))
-                .getResultList();
+        ArticleCategory articleCategory = ArticleCategory.valueOf(categoryName.toUpperCase());
+        return articleRepository.findByCategory(articleCategory);
     }
 
+    /*
+     * 태그별 조회
+     */
+    public List<Article> findByTagName(String tagName) {
+
+        return articleRepository.findByTagName(tagName);
+    }
+
+    /*
+     * 수정
+     */
+    @Transactional
     public Long updateArticle(Article article, String title, String content,
                               List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
 
@@ -68,21 +89,12 @@ public class ArticleService {
         return article.getId();
     }
 
+    /*
+     * 삭제
+     */
+    @Transactional
     public void deleteArticle(Article article) {
 
         articleRepository.delete(article);
-    }
-
-    public List<Article> findByTagName(String tagName) {
-
-        List<Article> articles = articleRepository.findAll();
-        List<Article> result = new ArrayList<>();
-        for (Article article : articles) {
-            if(article.getArticleTags().stream().filter(articleTag -> articleTag.getTag().getTagName().equals(tagName)).findAny().isPresent()) {
-                result.add(article);
-            }
-        }
-
-        return result;
     }
 }

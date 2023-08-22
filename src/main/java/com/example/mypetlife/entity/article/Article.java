@@ -31,7 +31,7 @@ public class Article {
     @Column(name = "post_date")
     private LocalDateTime postDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

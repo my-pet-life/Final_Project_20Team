@@ -48,19 +48,18 @@ public class ArticleController {
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
             for (CreateArticleTagDto tagDto : tagDtos) {
-                if(tagService.isExistInDb(tagDto.getTagName())) {
+                if(tagService.isNewTag(tagDto.getTagName())) {
+                    // 새로운 태그이면 DB에 생성
+                    Tag newTag = Tag.createTag(tagDto.getTagName());
+                    tagService.saveTag(newTag);
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                    articleTags.add(articleTag);
+                } else {
                     // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                    // Tag 조회
                     Tag findTag = tagService.findByTagName(tagDto.getTagName());
                     // ArticleTag 생성
                     ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
-                } else {
-                    // 존재하지 않은 태그이면 DB에 생성
-                    // Tag 생성
-                    Tag newTag = Tag.createTag(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
                     articleTags.add(articleTag);
                 }
             }
@@ -151,20 +150,20 @@ public class ArticleController {
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
             for (CreateArticleTagDto tagDto : tagDtos) {
-                if(tagService.isExistInDb(tagDto.getTagName())) {
-                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                    // Tag 조회
-                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
-                } else {
+                if(tagService.isNewTag(tagDto.getTagName())) {
                     // 존재하지 않은 태그이면 DB에 생성
                     // Tag 생성 후 저장
                     Tag newTag = Tag.createTag(tagDto.getTagName());
                     tagService.saveTag(newTag);
                     // ArticleTag 생성
                     ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                    articleTags.add(articleTag);
+                } else {
+                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
+                    // Tag 조회
+                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
                     articleTags.add(articleTag);
                 }
             }
@@ -221,6 +220,4 @@ public class ArticleController {
         ArticlesResponse response = ArticlesResponse.createResponse(articles);
         return response;
     }
-
-
 }

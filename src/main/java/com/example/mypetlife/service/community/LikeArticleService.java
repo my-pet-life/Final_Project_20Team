@@ -19,6 +19,9 @@ public class LikeArticleService {
 
     private final LikeArticleRepository likeArticleRepository;
 
+    /*
+     * 저장
+     */
     public void saveLike(User user, Article article) {
 
         Optional<LikeArticle> result = likeArticleRepository.findByArticle(article)
