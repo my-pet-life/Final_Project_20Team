@@ -1,5 +1,6 @@
 package com.example.mypetlife.controller;
 
+import com.example.mypetlife.dto.community.article.ArticleResponse;
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.LikeArticle;
 import com.example.mypetlife.entity.user.User;
@@ -12,9 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,16 +28,16 @@ public class ArticleLikeController {
      * 게시글 좋아요 누르기
      */
     @PostMapping("/community/article/{articleId}/like")
-    public void likeArticle(HttpServletRequest request, @PathVariable Long articleId) {
+    public ArticleResponse likeArticle(HttpServletRequest request, @PathVariable Long articleId) {
 
-        // 회원
+        // 회원 조회
         String email = jwtTokenUtils.getEmailFromHeader(request);
         User user = userService.findByEmail(email);
 
-        // 게시글
-        Article article = articleService.findById(articleId);
+        // 좋아요 저장/취소
+        likeArticleService.saveLike(user, articleId);
 
-        // 저장
-        likeArticleService.saveLike(user, article);
+        Article article = articleService.findById(articleId);
+        return ArticleResponse.createResponse(article);
     }
 }

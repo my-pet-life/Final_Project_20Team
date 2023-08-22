@@ -47,22 +47,7 @@ public class ArticleController {
         // List<ArticleTag>
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
-            for (CreateArticleTagDto tagDto : tagDtos) {
-                if(tagService.isNewTag(tagDto.getTagName())) {
-                    // 새로운 태그이면 DB에 생성
-                    Tag newTag = Tag.createTag(tagDto.getTagName());
-                    tagService.saveTag(newTag);
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                    articleTags.add(articleTag);
-                } else {
-                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
-                }
-            }
+            createTagAndArticleTag(articleTags, tagDtos);
         }
 
         // List<ArticleImage>
@@ -133,40 +118,15 @@ public class ArticleController {
                                          @RequestPart(required = false) List<MultipartFile> imageFiles,
                                          HttpServletRequest request) {
 
-        log.info("컨트롤러 진입");
-        // User 조회
-        String email = jwtTokenUtils.getEmailFromHeader(request);
-        User loginUser = userService.findByEmail(email);
-
-        // User 검증
+        // 회원 검증
         Article article = articleService.findById(articleId);
         User user = article.getUser();
-
-        if(!user.equals(loginUser)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
+        validateUser(request, user);
 
         // List<ArticleTag>
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
-            for (CreateArticleTagDto tagDto : tagDtos) {
-                if(tagService.isNewTag(tagDto.getTagName())) {
-                    // 존재하지 않은 태그이면 DB에 생성
-                    // Tag 생성 후 저장
-                    Tag newTag = Tag.createTag(tagDto.getTagName());
-                    tagService.saveTag(newTag);
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                    articleTags.add(articleTag);
-                } else {
-                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                    // Tag 조회
-                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
-                }
-            }
+            createTagAndArticleTag(articleTags, tagDtos);
         }
 
         // List<ArticleImage>
@@ -194,13 +154,9 @@ public class ArticleController {
     public MessageResponse DeleteArticle(@PathVariable Long articleId, HttpServletRequest request) {
 
         // 회원 검증
-        String email = jwtTokenUtils.getEmailFromHeader(request);
-        User loginUser = userService.findByEmail(email);
-
         Article article = articleService.findById(articleId);
-        if(!article.getUser().equals(loginUser)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
+        User user = article.getUser();
+        validateUser(request, user);
 
         // 삭제
         articleService.deleteArticle(article);
@@ -219,5 +175,40 @@ public class ArticleController {
         List<Article> articles = articleService.findByTagName(tagName);
         ArticlesResponse response = ArticlesResponse.createResponse(articles);
         return response;
+    }
+
+    /*
+     * 로그인 회원 검증
+     */
+    private void validateUser(HttpServletRequest request, User user) {
+
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User loginUser = userService.findByEmail(email);
+        if(!loginUser.equals(user)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+    }
+
+    /*
+     * 게시글 등록/수정시 입력된 태그를 기반으로 Tag, ArticleTag 생성
+     */
+    private void createTagAndArticleTag(List<ArticleTag> articleTags, List<CreateArticleTagDto> tagDtos) {
+
+        for (CreateArticleTagDto tagDto : tagDtos) {
+            if(tagService.isNewTag(tagDto.getTagName())) {
+                // 새로운 태그이면 DB에 생성
+                Tag newTag = Tag.createTag(tagDto.getTagName());
+                tagService.saveTag(newTag);
+                // ArticleTag 생성
+                ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                articleTags.add(articleTag);
+            } else {
+                // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
+                Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                // ArticleTag 생성
+                ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
+                articleTags.add(articleTag);
+            }
+        }
     }
 }

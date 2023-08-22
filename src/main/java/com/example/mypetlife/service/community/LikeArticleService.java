@@ -8,35 +8,27 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class LikeArticleService {
 
     private final LikeArticleRepository likeArticleRepository;
+    private final ArticleService articleService;
 
     /*
      * 저장
      */
-    public void saveLike(User user, Article article) {
+    public void saveLike(User user, Long articleId) {
 
-        Optional<LikeArticle> result = likeArticleRepository.findByArticle(article)
-                .stream().filter(likeArticle -> likeArticle.getUser().equals(user))
-                .findFirst();
-
-        // 이미 좋아요를 누른 상태면 좋아요 취소
-        if(result.isPresent()) {
-            // 좋아요 취소
-            LikeArticle likeArticle = result.get();
-            likeArticleRepository.delete(likeArticle);
-        } else {
-            // 좋아요 등록
-            LikeArticle likeArticle = LikeArticle.createLikeArticle(user, article);
-            likeArticleRepository.save(likeArticle);
-        }
+        likeArticleRepository.findByArticleIdAndUsername(articleId, user.getUsername())
+                .ifPresentOrElse(
+                        // 조회 결과가 있으면(이미 좋아요를 누른 상태) 취소
+                        likeArticle -> likeArticleRepository.delete(likeArticle),
+                        // 조회 결과가 없으면 좋아요 생성 및 저장
+                        () -> {
+                            Article article = articleService.findById(articleId);
+                            likeArticleRepository.save(LikeArticle.createLikeArticle(user, article));}
+                );
     }
 }
