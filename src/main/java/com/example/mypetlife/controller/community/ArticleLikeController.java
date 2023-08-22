@@ -1,4 +1,4 @@
-package com.example.mypetlife.controller;
+package com.example.mypetlife.controller.community;
 
 import com.example.mypetlife.dto.community.article.ArticleResponse;
 import com.example.mypetlife.entity.article.Article;

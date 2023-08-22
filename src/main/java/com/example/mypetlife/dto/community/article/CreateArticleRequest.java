@@ -7,9 +7,9 @@ import lombok.Data;
 public class CreateArticleRequest {
 
     @NotBlank(message = "제목을 입력하세요")
-    private final String title;
+    private String title;
     @NotBlank(message = "글을 입력하세요")
-    private final String content;
+    private String content;
     @NotBlank(message = "카테고리를 선택하세요")
-    private final String category;
+    private String category;
 }

@@ -78,7 +78,6 @@ public class ArticleResponse {
 
         private String username;
         private String content;
-        private String imageUrl;
         private LocalDateTime commentDate;
 
         public static CommentDto createDto(Comment comment) {
@@ -86,7 +85,6 @@ public class ArticleResponse {
             CommentDto commentDto = new CommentDto();
             commentDto.username = comment.getUser().getUsername();
             commentDto.content = comment.getContent();
-            commentDto.imageUrl = comment.getImageUrl();
             commentDto.commentDate = comment.getCommentDate();
             return commentDto;
         }
