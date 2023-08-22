@@ -66,4 +66,9 @@ public class ArticleService {
 
         return article.getId();
     }
+
+    public void deleteArticle(Article article) {
+
+        articleRepository.delete(article);
+    }
 }

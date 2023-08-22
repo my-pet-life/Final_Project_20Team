@@ -1,5 +1,6 @@
 package com.example.mypetlife.controller;
 
+import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
 import com.example.mypetlife.entity.User;
 import com.example.mypetlife.entity.article.*;
@@ -186,12 +187,26 @@ public class ArticleController {
         return articleResponse;
     }
 
-//    /**
-//     * [DELETE] /community/article/{articleId}
-//     * 게시글 삭제
-//     */
-//    @DeleteMapping("/community/article/{articleId}")
-//    public MessageResponse DeleteArticle(@PathVariable Long articleId) {
-//
-//    }
+    /**
+     * [DELETE] /community/article/{articleId}
+     * 게시글 삭제
+     */
+    @DeleteMapping("/community/article/{articleId}")
+    public MessageResponse DeleteArticle(@PathVariable Long articleId, HttpServletRequest request) {
+
+        // 회원 검증
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User loginUser = userService.findByEmail(email);
+
+        Article article = articleService.findById(articleId);
+        if(!article.getUser().equals(loginUser)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 삭제
+        articleService.deleteArticle(article);
+
+        MessageResponse response = new MessageResponse("게시글이 삭제되었습니다");
+        return response;
+    }
 }
