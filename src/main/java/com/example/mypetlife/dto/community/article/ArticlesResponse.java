@@ -1,7 +1,7 @@
 package com.example.mypetlife.dto.community.article;
 
 import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.CategoryArticle;
+import com.example.mypetlife.entity.article.ArticleCategory;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +27,7 @@ public class ArticlesResponse {
         for (Article article : articles) {
             response.articleDtos.add(new ArticleListResponse(article.getId(),
                     article.getTitle(), article.getCategory(), article.getPostDate(),
-                    article.getLikes(), article.getUser().getUsername(), article.getComments().size()));
+                    article.getLikeArticles().size(), article.getUser().getUsername(), article.getComments().size()));
         }
         response.articlesCount = articles.size();
 
@@ -39,7 +39,7 @@ public class ArticlesResponse {
     static class ArticleListResponse {
         private final Long id;
         private final String title;
-        private final CategoryArticle category;
+        private final ArticleCategory category;
         private final LocalDateTime postDate;
         private final Integer like;
         private final String username;

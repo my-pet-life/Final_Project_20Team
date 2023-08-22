@@ -3,7 +3,7 @@ package com.example.mypetlife.service.community;
 import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
-import com.example.mypetlife.repository.ArticleRepository;
+import com.example.mypetlife.repository.community.ArticleRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -46,7 +45,7 @@ public class ArticleService {
     public List<Article> findByCategory(String categoryName) {
 
         return em.createQuery("select a from Article a where a.category = :category")
-                .setParameter("category", CategoryArticle.valueOf(categoryName.toUpperCase()))
+                .setParameter("category", ArticleCategory.valueOf(categoryName.toUpperCase()))
                 .getResultList();
     }
 

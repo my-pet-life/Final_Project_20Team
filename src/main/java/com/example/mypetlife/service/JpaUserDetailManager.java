@@ -1,15 +1,12 @@
 package com.example.mypetlife.service;
 
 import com.example.mypetlife.entity.CustomUserDetails;
-import com.example.mypetlife.entity.User;
-import com.example.mypetlife.exception.CustomException;
-import com.example.mypetlife.exception.ErrorCode;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 

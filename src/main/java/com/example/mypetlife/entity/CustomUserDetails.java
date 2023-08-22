@@ -1,5 +1,7 @@
 package com.example.mypetlife.entity;
 
+import com.example.mypetlife.entity.user.PetSpecies;
+import com.example.mypetlife.entity.user.User;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +21,7 @@ public class CustomUserDetails implements UserDetails {
     private String email;
     private String phone;
     private String birthDate;
-    private String petSpecies;
+    private PetSpecies petSpecies;
     private LocalDateTime createdAt;
 
     public static CustomUserDetails fromEntity(User entity){

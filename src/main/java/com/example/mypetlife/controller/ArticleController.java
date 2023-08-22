@@ -2,7 +2,7 @@ package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -76,7 +76,7 @@ public class ArticleController {
 
         // Article 생성
         Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
-                CategoryArticle.valueOf(dto.getCategory()),
+                ArticleCategory.valueOf(dto.getCategory()),
                 user, articleTags, articleImages);
 
         // 게시글 저장
@@ -96,6 +96,18 @@ public class ArticleController {
     public ArticlesResponse readArticles() {
 
         List<Article> articles = articleService.findAll();
+        ArticlesResponse response = ArticlesResponse.createResponse(articles);
+        return response;
+    }
+
+    /**
+     * [GET] /community/articles/{categoryName}
+     * 게시판 별 게시글 조회
+     */
+    @GetMapping("/community/articles/{categoryName}")
+    public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
+
+        List<Article> articles = articleService.findByCategory(categoryName);
         ArticlesResponse response = ArticlesResponse.createResponse(articles);
         return response;
     }
@@ -199,18 +211,6 @@ public class ArticleController {
     }
 
     /**
-     * [GET] /community/articles/{categoryName}
-     * 게시판 별 게시글 조회
-     */
-    @GetMapping("/community/articles/{categoryName}")
-    public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
-
-        List<Article> articles = articleService.findByCategory(categoryName);
-        ArticlesResponse response = ArticlesResponse.createResponse(articles);
-        return response;
-    }
-
-    /**
      * [GET] /community/search/tag/{tagName}
      * 태그 별 게시글 조회
      */
@@ -222,9 +222,5 @@ public class ArticleController {
         return response;
     }
 
-    /**
-     * [GET] /community/search/species/{species}
-     * 종 별 게시글 조회
-     */
 
 }

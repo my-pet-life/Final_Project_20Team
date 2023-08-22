@@ -1,16 +1,14 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.Tag;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
-import com.example.mypetlife.repository.TagRepository;
+import com.example.mypetlife.repository.community.TagRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

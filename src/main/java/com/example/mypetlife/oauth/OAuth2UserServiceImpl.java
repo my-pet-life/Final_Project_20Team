@@ -1,6 +1,6 @@
 package com.example.mypetlife.oauth;
 
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

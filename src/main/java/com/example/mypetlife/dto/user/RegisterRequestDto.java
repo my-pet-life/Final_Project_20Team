@@ -1,7 +1,9 @@
 package com.example.mypetlife.dto.user;
 
+import com.example.mypetlife.entity.user.PetSpecies;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -21,6 +23,6 @@ public class RegisterRequestDto {
 
     private String birthDate;
 
-    @NotBlank(message = "반려동물 종을 입력하세요")
-    private String petSpices;
+    @NotNull(message = "반려동물 종을 입력하세요")
+    private PetSpecies petSpices;
 }
