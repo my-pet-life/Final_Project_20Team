@@ -1,20 +1,19 @@
 package com.example.mypetlife.controller.community;
 
-import com.example.mypetlife.dto.community.comment.CreateCommentRequest;
+import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
 import com.example.mypetlife.dto.community.comment.CreateCommentResponse;
 import com.example.mypetlife.entity.Comment;
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.user.User;
+import com.example.mypetlife.exception.CustomException;
+import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.community.CommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class CommentController {
      * 댓글 등록
      */
     @PostMapping("/community/article/{articleId}/comment")
-    public CreateCommentResponse addComment(@RequestBody CreateCommentRequest dto,
+    public CreateCommentResponse addComment(@RequestBody CreateAndUpdateCommentRequest dto,
                            @PathVariable Long articleId,
                            HttpServletRequest request) {
 
@@ -46,5 +45,30 @@ public class CommentController {
         commentService.saveComment(comment);
 
         return CreateCommentResponse.createResponse(comment, user, article);
+    }
+
+    /**
+     * [PUT] /community/article/{articleId}/{commentId}
+     * 댓글 수정
+     */
+    @PutMapping("/community/article/{articleId}/{commentId}")
+    public CreateCommentResponse updateComment(@RequestBody CreateAndUpdateCommentRequest dto,
+                                               @PathVariable Long articleId,
+                                               @PathVariable Long commentId,
+                                               HttpServletRequest request) {
+
+        // 회원 검증
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User loginUser = userService.findByEmail(email);
+
+        Comment comment = commentService.findById(commentId);
+        if(!comment.getUser().equals(loginUser)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 댓글 수정
+        commentService.updateComment(comment, dto.getContent());
+
+        return CreateCommentResponse.createResponse(comment, loginUser, comment.getArticle());
     }
 }
