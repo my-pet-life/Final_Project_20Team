@@ -16,8 +16,9 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id @GeneratedValue
+    @Column(name = "article_id")
     private Long id;
     private String title;
     private String content;
@@ -36,16 +37,16 @@ public class Article {
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private List<Tag> tags = new ArrayList<>();
+    private List<ArticleTag> articleTags = new ArrayList<>();
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleImage> images = new ArrayList<>();
 
     //==연관관계 편의 메서드==//
-    public void addTag(Tag tag) {
+    public void addArticleTag(ArticleTag articleTag) {
 
-        tag.setArticle(this);
-        this.tags.add(tag);
+        articleTag.setArticle(this);
+        this.articleTags.add(articleTag);
     }
 
     public void addImage(ArticleImage articleImage) {
@@ -66,9 +67,18 @@ public class Article {
         this.user = user;
     }
 
+    public void updateArticleTags(List<ArticleTag> articleTags) {
+
+        this.articleTags = articleTags;
+    }
+
+    public void setImages(List<ArticleImage> images) {
+        this.images = images;
+    }
+
     //==생성 메서드==//
     public static Article createArticle(String title, String content, CategoryArticle category,
-                                        User user, List<Tag> tags, List<ArticleImage> articleImages) {
+                                        User user, List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
 
         Article article = new Article();
         article.title = title;
@@ -77,13 +87,26 @@ public class Article {
         article.postDate = LocalDateTime.now();
         article.likes = 0;
         article.setUser(user);
-        for (Tag tag : tags) {
-            article.addTag(tag);
+
+        for (ArticleTag articleTag : articleTags) {
+            article.addArticleTag(articleTag);
         }
+
         for (ArticleImage articleImage : articleImages) {
             article.addImage(articleImage);
         }
 
         return article;
+    }
+
+    //==비즈니스 메서드==//
+    public void updateTitle(String title) {
+
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+
+        this.content = content;
     }
 }

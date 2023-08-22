@@ -19,5 +19,4 @@ public class CreateArticleRequest {
     private final String content;
     @NotBlank(message = "카테고리를 선택하세요")
     private final String category;
-    private List<String> tags = new ArrayList<>();
 }
