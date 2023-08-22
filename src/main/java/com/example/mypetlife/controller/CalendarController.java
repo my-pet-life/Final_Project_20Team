@@ -1,17 +1,12 @@
 package com.example.mypetlife.controller;
 
-import com.example.mypetlife.dto.ResponseDto;
+import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.calendar.*;
-import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.CalendarService;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +19,7 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    public ResponseDto create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto) {
+    public MessageResponse create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto) {
         calendarService.create(request, dto);
         return responseDto("일정이 등록되었습니다.");
     }
@@ -50,20 +45,19 @@ public class CalendarController {
     }
 
     @PutMapping("/{scheduleId}")
-    public ResponseDto updateSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId, @RequestBody UpdatedScheduleDto dto){
+    public MessageResponse updateSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId, @RequestBody UpdatedScheduleDto dto){
         calendarService.updateSchedule(request, scheduleId, dto);
         return responseDto("수정이 완료되었습니다.");
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseDto deleteSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId) {
+    public MessageResponse deleteSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId) {
         calendarService.deleteSchedule(request, scheduleId);
         return responseDto("삭제가 완료되었습니다.");
     }
 
-    public ResponseDto responseDto(String message) {
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setMessage(message);
+    public MessageResponse responseDto(String message) {
+        MessageResponse responseDto = new MessageResponse(message);
         return responseDto;
     }
 }
