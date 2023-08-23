@@ -7,6 +7,9 @@ import com.example.mypetlife.repository.community.ArticleRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +22,6 @@ import java.util.List;
 public class ArticleService {
 
     private final ArticleRepository articleRepository;
-    private final TagService tagService;
     private final EntityManager em;
 
     /*
@@ -44,26 +46,31 @@ public class ArticleService {
     /*
      * 전체 조회
      */
-    public List<Article> findAll() {
+    public Page<Article> findAll(String order, int page, int size) {
 
-        return articleRepository.findAll();
+        Sort sort = ArticleOrderOption.getSortFromOrder(order);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        return articleRepository.findAll(pageRequest);
     }
 
     /*
      * 카테고리별 조회
      */
-    public List<Article> findByCategory(String categoryName) {
+    public Page<Article> findByCategory(ArticleCategory articleCategory, String order, int page, int size) {
 
-        ArticleCategory articleCategory = ArticleCategory.valueOf(categoryName.toUpperCase());
-        return articleRepository.findByCategory(articleCategory);
+        Sort sort = ArticleOrderOption.getSortFromOrder(order);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        return articleRepository.findByCategory(articleCategory, pageRequest);
     }
 
     /*
      * 태그별 조회
      */
-    public List<Article> findByTagName(String tagName) {
+    public Page<Article> findByTagName(String tagName, String order, int page, int size) {
 
-        return articleRepository.findByTagName(tagName);
+        Sort sort = ArticleOrderOption.getSortFromOrder(order);
+        PageRequest pageRequest = PageRequest.of(page, size, sort);
+        return articleRepository.findByTagName(tagName, pageRequest);
     }
 
     /*

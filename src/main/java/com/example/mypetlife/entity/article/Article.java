@@ -6,13 +6,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "article")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article {
@@ -46,6 +46,14 @@ public class Article {
 
     @OneToMany(mappedBy = "article")
     private List<LikeArticle> likeArticles = new ArrayList<>();
+
+    // 좋아요 갯수를 의미하는 가상 칼럼
+    @Formula("(select count(*) from like_article where like_article.article_id = article_id)")
+    private int likeCount;
+
+    // 댓글 갯수를 의미하는 가상 칼럼
+    @Formula("(select count(*) from comment where comment.article_id = article_id)")
+    private int commentCount;
 
     //==연관관계 편의 메서드==//
     public void addArticleTag(ArticleTag articleTag) {

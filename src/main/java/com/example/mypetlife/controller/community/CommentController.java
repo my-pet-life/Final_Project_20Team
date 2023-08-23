@@ -1,5 +1,6 @@
 package com.example.mypetlife.controller.community;
 
+import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
 import com.example.mypetlife.dto.community.comment.CreateCommentResponse;
 import com.example.mypetlife.entity.Comment;
@@ -70,5 +71,29 @@ public class CommentController {
         commentService.updateComment(comment, dto.getContent());
 
         return CreateCommentResponse.createResponse(comment, loginUser, comment.getArticle());
+    }
+
+    /**
+     * [DELETE] /community/article/{articleId}/{commentId}
+     * 댓글 삭제
+     */
+    @DeleteMapping("/community/article/{articleId}/{commentId}")
+    public MessageResponse deleteComment(@PathVariable Long articleId,
+                                               @PathVariable Long commentId,
+                                               HttpServletRequest request) {
+
+        // 회원 검증
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User loginUser = userService.findByEmail(email);
+
+        Comment comment = commentService.findById(commentId);
+        if(!comment.getUser().equals(loginUser)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 댓글 삭제
+        commentService.deleteComment(comment);
+
+        return new MessageResponse("댓글이 삭제되었습니다");
     }
 }

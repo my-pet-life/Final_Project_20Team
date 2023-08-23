@@ -30,4 +30,9 @@ public class CommentService {
 
         comment.updateContent(content);
     }
+
+    public void deleteComment(Comment comment) {
+
+        commentRepository.delete(comment);
+    }
 }
