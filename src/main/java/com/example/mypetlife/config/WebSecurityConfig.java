@@ -34,7 +34,7 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers("/register", "/login/**").permitAll()
+                        authHttp.requestMatchers("/register", "/login/**", "/hospitals/**").permitAll()
                                 .requestMatchers(POST, "/community").authenticated())
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
@@ -60,7 +60,7 @@ public class WebSecurityConfig {
         return web -> {
             web.ignoring()
                     // 해당 경로는 security filter chain을 생략
-                    .requestMatchers("/register", "/login/**");
+                    .requestMatchers("/register", "/login/**", "/hospitals/**");
         };
     }
 
