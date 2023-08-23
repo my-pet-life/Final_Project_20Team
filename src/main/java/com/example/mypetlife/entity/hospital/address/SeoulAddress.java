@@ -1,8 +1,10 @@
 package com.example.mypetlife.entity.hospital.address;
 
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
 
 @Embeddable
+@Getter
 public class SeoulAddress {
     // 시
     private String city;
