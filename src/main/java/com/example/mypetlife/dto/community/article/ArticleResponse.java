@@ -1,6 +1,6 @@
 package com.example.mypetlife.dto.community.article;
 
-import com.example.mypetlife.entity.Comment;
+import com.example.mypetlife.entity.comment.Comment;
 import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.entity.user.PetSpecies;
 import lombok.*;
@@ -79,6 +79,7 @@ public class ArticleResponse {
         private String username;
         private String content;
         private LocalDateTime commentDate;
+        private int likeCount;
 
         public static CommentDto createDto(Comment comment) {
 
@@ -86,6 +87,7 @@ public class ArticleResponse {
             commentDto.username = comment.getUser().getUsername();
             commentDto.content = comment.getContent();
             commentDto.commentDate = comment.getCommentDate();
+            commentDto.likeCount = comment.getLikeComments().size();
             return commentDto;
         }
     }

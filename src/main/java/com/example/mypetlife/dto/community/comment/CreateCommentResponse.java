@@ -1,6 +1,6 @@
 package com.example.mypetlife.dto.community.comment;
 
-import com.example.mypetlife.entity.Comment;
+import com.example.mypetlife.entity.comment.Comment;
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.user.User;
 import lombok.AccessLevel;

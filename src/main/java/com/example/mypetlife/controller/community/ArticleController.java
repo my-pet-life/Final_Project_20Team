@@ -9,6 +9,7 @@ import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.UserService;
+import com.example.mypetlife.service.community.LikeArticleService;
 import com.example.mypetlife.service.community.TagService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+    private final LikeArticleService likeArticleService;
     private final JwtTokenUtils jwtTokenUtils;
     private final UserService userService;
     private final TagService tagService;
@@ -183,6 +185,25 @@ public class ArticleController {
         MessageResponse response = new MessageResponse("게시글이 삭제되었습니다");
         return response;
     }
+
+    /**
+     * [POST] /community/article/{articleId}/like
+     * 게시글 좋아요 누르기
+     */
+    @PostMapping("/community/article/{articleId}/like")
+    public ArticleResponse likeArticle(HttpServletRequest request, @PathVariable Long articleId) {
+
+        // 회원 조회
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User user = userService.findByEmail(email);
+
+        // 좋아요 저장/취소
+        likeArticleService.saveLike(user, articleId);
+
+        Article article = articleService.findById(articleId);
+        return ArticleResponse.createResponse(article);
+    }
+
 
     /*
      * 로그인 회원 검증

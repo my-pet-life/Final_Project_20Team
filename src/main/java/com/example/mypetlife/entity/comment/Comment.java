@@ -1,4 +1,4 @@
-package com.example.mypetlife.entity;
+package com.example.mypetlife.entity.comment;
 
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.user.User;
@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "comment")
@@ -24,13 +26,16 @@ public class Comment {
     @Column(name = "comment_date")
     private LocalDateTime commentDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "article_id")
     private Article article;
+
+    @OneToMany(mappedBy = "comment")
+    private List<LikeComment> likeComments = new ArrayList<>();
 
     //==생성 메서드==//
     public static Comment createComment(String content, User user, Article article) {
@@ -51,5 +56,12 @@ public class Comment {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    //==연관관계 편의 메서드==//
+    public void addLikeComment(LikeComment likeComment) {
+
+        this.likeComments.add(likeComment);
+        likeComment.comment = this;
     }
 }
