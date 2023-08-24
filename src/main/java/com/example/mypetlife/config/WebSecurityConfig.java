@@ -68,6 +68,9 @@ public class WebSecurityConfig {
                     .requestMatchers(GET, "/community/articles/**");
         };
 
+
+
+
     }
 
     @Bean
