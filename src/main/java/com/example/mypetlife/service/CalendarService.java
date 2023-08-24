@@ -2,7 +2,7 @@ package com.example.mypetlife.service;
 
 import com.example.mypetlife.dto.calendar.*;
 import com.example.mypetlife.entity.Calendar;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
