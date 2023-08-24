@@ -4,7 +4,6 @@ import com.example.mypetlife.jwt.JwtExceptionFilter;
 import com.example.mypetlife.jwt.JwtFilter;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.oauth.OAuth2SuccessHandler;
-import com.example.mypetlife.oauth.OAuth2UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpMethod.GET;
 
 @Configuration
@@ -34,7 +32,7 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers("/register", "/login/**", "/community/search/**").permitAll()
+                        authHttp.requestMatchers("/register", "/login/**", "/community/search/**", "/hospitals/**").permitAll()
                                 .requestMatchers(GET, "/community/articles/**").permitAll()
                                 .anyRequest().authenticated()
                 )
@@ -64,14 +62,14 @@ public class WebSecurityConfig {
                     // 해당 경로는 security filter chain을 생략
                     // 즉 permitAll로 설정하여 로그인 없이 접근 가능한 URL을 아래에 추가하여
                     // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
-                    .requestMatchers("/register", "/login/**", "/community/search/**")
+                    .requestMatchers("/register", "/login/**", "/community/search/**", "/hospitals/**")
                     .requestMatchers(GET, "/community/articles/**");
         };
-     
+
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
