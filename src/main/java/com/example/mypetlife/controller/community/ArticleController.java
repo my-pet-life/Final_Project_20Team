@@ -1,8 +1,8 @@
-package com.example.mypetlife.controller;
+package com.example.mypetlife.controller.community;
 
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -13,6 +13,7 @@ import com.example.mypetlife.service.community.TagService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,23 +48,7 @@ public class ArticleController {
         // List<ArticleTag>
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
-            for (CreateArticleTagDto tagDto : tagDtos) {
-                if(tagService.isExistInDb(tagDto.getTagName())) {
-                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                    // Tag 조회
-                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
-                } else {
-                    // 존재하지 않은 태그이면 DB에 생성
-                    // Tag 생성
-                    Tag newTag = Tag.createTag(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                    articleTags.add(articleTag);
-                }
-            }
+            createTagAndArticleTag(articleTags, tagDtos);
         }
 
         // List<ArticleImage>
@@ -76,7 +61,7 @@ public class ArticleController {
 
         // Article 생성
         Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
-                CategoryArticle.valueOf(dto.getCategory()),
+                ArticleCategory.valueOf(dto.getCategory()),
                 user, articleTags, articleImages);
 
         // 게시글 저장
@@ -93,23 +78,41 @@ public class ArticleController {
      * 전체 게시글 조회
      */
     @GetMapping("/community/articles")
-    public ArticlesResponse readArticles() {
+    public Page<ArticleListResponse> readArticles(@RequestParam(defaultValue = "latest") String order,
+                                                  @RequestParam(defaultValue = "0") int page,
+                                                  @RequestParam(defaultValue = "3") int size) {
 
-        List<Article> articles = articleService.findAll();
-        ArticlesResponse response = ArticlesResponse.createResponse(articles);
-        return response;
+        Page<Article> articlePage = articleService.findAll(order, page, size);
+        return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
     /**
      * [GET] /community/articles/{categoryName}
-     * 게시판 별 게시글 조회
+     * 게시판별 게시글 조회
      */
     @GetMapping("/community/articles/{categoryName}")
-    public ArticlesResponse readArticlesByCategory(@PathVariable String categoryName) {
+    public Page<ArticleListResponse> readArticlesByCategory(@PathVariable String categoryName,
+                                                            @RequestParam(defaultValue = "latest") String order,
+                                                            @RequestParam(defaultValue = "0") int page,
+                                                            @RequestParam(defaultValue = "3") int size) {
 
-        List<Article> articles = articleService.findByCategory(categoryName);
-        ArticlesResponse response = ArticlesResponse.createResponse(articles);
-        return response;
+        ArticleCategory articleCategory = ArticleCategory.valueOf(categoryName.toUpperCase());
+        Page<Article> articlePage = articleService.findByCategory(articleCategory, order, page, size);
+        return articlePage.map(article -> ArticleListResponse.createResponse(article));
+    }
+
+    /**
+     * [GET] /community/search/tag/{tagName}
+     * 태그별 게시글 조회: 페이지
+     */
+    @GetMapping("/community/search/tag/{tagName}")
+    public Page<ArticleListResponse> readArticlesByTagName(@PathVariable String tagName,
+                                                           @RequestParam(defaultValue = "latest") String order,
+                                                           @RequestParam int page,
+                                                           @RequestParam int size) {
+
+        Page<Article> articlePage = articleService.findByTagName(tagName, order, page, size);
+        return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
     /**
@@ -134,40 +137,15 @@ public class ArticleController {
                                          @RequestPart(required = false) List<MultipartFile> imageFiles,
                                          HttpServletRequest request) {
 
-        log.info("컨트롤러 진입");
-        // User 조회
-        String email = jwtTokenUtils.getEmailFromHeader(request);
-        User loginUser = userService.findByEmail(email);
-
-        // User 검증
+        // 회원 검증
         Article article = articleService.findById(articleId);
         User user = article.getUser();
-
-        if(!user.equals(loginUser)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
+        validateUser(request, user);
 
         // List<ArticleTag>
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
-            for (CreateArticleTagDto tagDto : tagDtos) {
-                if(tagService.isExistInDb(tagDto.getTagName())) {
-                    // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                    // Tag 조회
-                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
-                } else {
-                    // 존재하지 않은 태그이면 DB에 생성
-                    // Tag 생성 후 저장
-                    Tag newTag = Tag.createTag(tagDto.getTagName());
-                    tagService.saveTag(newTag);
-                    // ArticleTag 생성
-                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                    articleTags.add(articleTag);
-                }
-            }
+            createTagAndArticleTag(articleTags, tagDtos);
         }
 
         // List<ArticleImage>
@@ -195,18 +173,49 @@ public class ArticleController {
     public MessageResponse DeleteArticle(@PathVariable Long articleId, HttpServletRequest request) {
 
         // 회원 검증
-        String email = jwtTokenUtils.getEmailFromHeader(request);
-        User loginUser = userService.findByEmail(email);
-
         Article article = articleService.findById(articleId);
-        if(!article.getUser().equals(loginUser)) {
-            throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
+        User user = article.getUser();
+        validateUser(request, user);
 
         // 삭제
         articleService.deleteArticle(article);
 
         MessageResponse response = new MessageResponse("게시글이 삭제되었습니다");
         return response;
+    }
+
+    /*
+     * 로그인 회원 검증
+     */
+    private void validateUser(HttpServletRequest request, User user) {
+
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User loginUser = userService.findByEmail(email);
+        if(!loginUser.equals(user)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+    }
+
+    /*
+     * 게시글 등록/수정시 입력된 태그를 기반으로 Tag, ArticleTag 생성
+     */
+    private void createTagAndArticleTag(List<ArticleTag> articleTags, List<CreateArticleTagDto> tagDtos) {
+
+        for (CreateArticleTagDto tagDto : tagDtos) {
+            if(tagService.isNewTag(tagDto.getTagName())) {
+                // 새로운 태그이면 DB에 생성
+                Tag newTag = Tag.createTag(tagDto.getTagName());
+                tagService.saveTag(newTag);
+                // ArticleTag 생성
+                ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                articleTags.add(articleTag);
+            } else {
+                // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
+                Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                // ArticleTag 생성
+                ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
+                articleTags.add(articleTag);
+            }
+        }
     }
 }

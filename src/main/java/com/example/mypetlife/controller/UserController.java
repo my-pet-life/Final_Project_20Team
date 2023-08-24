@@ -3,7 +3,7 @@ package com.example.mypetlife.controller;
 import com.example.mypetlife.dto.user.LoginRequestDto;
 import com.example.mypetlife.dto.user.RegisterRequestDto;
 import com.example.mypetlife.dto.user.RegisterResponseDto;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.service.UserService;
 import lombok.RequiredArgsConstructor;

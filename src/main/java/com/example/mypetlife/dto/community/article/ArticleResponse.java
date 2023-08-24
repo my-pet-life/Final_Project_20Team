@@ -2,6 +2,7 @@ package com.example.mypetlife.dto.community.article;
 
 import com.example.mypetlife.entity.Comment;
 import com.example.mypetlife.entity.article.*;
+import com.example.mypetlife.entity.user.PetSpecies;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,10 +19,11 @@ public class ArticleResponse {
     private Long id;
     private String title;
     private String content;
-    private CategoryArticle category;
+    private ArticleCategory category;
     private LocalDateTime postDate;
     private Integer like;
     private String username;
+    private PetSpecies petSpecies;
     private List<CommentDto> commentDtos = new ArrayList<>();
     private List<TagDto> tagDtos = new ArrayList<>();
     private List<ArticleImageDto> imageDtos = new ArrayList<>();
@@ -35,8 +37,9 @@ public class ArticleResponse {
         response.content = article.getContent();
         response.category = article.getCategory();
         response.postDate = article.getPostDate();
-        response.like = article.getLikes();
+        response.like = article.getLikeArticles().size();
         response.username = article.getUser().getUsername();
+        response.petSpecies = article.getUser().getPetSpecies();
 
         if(!article.getComments().isEmpty()) {
             List<CommentDto> commentDtos = new ArrayList<>();
@@ -75,7 +78,6 @@ public class ArticleResponse {
 
         private String username;
         private String content;
-        private String imageUrl;
         private LocalDateTime commentDate;
 
         public static CommentDto createDto(Comment comment) {
@@ -83,7 +85,6 @@ public class ArticleResponse {
             CommentDto commentDto = new CommentDto();
             commentDto.username = comment.getUser().getUsername();
             commentDto.content = comment.getContent();
-            commentDto.imageUrl = comment.getImageUrl();
             commentDto.commentDate = comment.getCommentDate();
             return commentDto;
         }

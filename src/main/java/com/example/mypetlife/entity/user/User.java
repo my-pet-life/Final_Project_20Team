@@ -1,6 +1,10 @@
-package com.example.mypetlife.entity;
+package com.example.mypetlife.entity.user;
 
+import com.example.mypetlife.entity.Calendar;
+import com.example.mypetlife.entity.Message;
+import com.example.mypetlife.entity.Review;
 import com.example.mypetlife.entity.article.Article;
+import com.example.mypetlife.entity.article.LikeArticle;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -13,19 +17,22 @@ import java.util.*;
 public class User {
 
     @Id @GeneratedValue
+    @Column(name = "user_id")
     private Long id;
+
     private String username;
+
     private String email;
+
     private String password;
+
     private String phone;
 
-    @Column(name = "birth_date")
     private String birthDate;
 
-    @Column(name = "pet_species")
-    private String petSpecies;
+    @Enumerated(EnumType.STRING)
+    private PetSpecies petSpecies;
 
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -43,8 +50,11 @@ public class User {
     @OneToMany(mappedBy = "userId")
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<LikeArticle> likeArticles = new ArrayList<>();
+
     //==생성 메서드==//
-    public static User createUser(String username, String email, String password, String phone, String birthDate, String petSpecies) {
+    public static User createUser(String username, String email, String password, String phone, String birthDate, PetSpecies petSpecies) {
 
         User user = new User();
         user.username = username;
@@ -56,5 +66,12 @@ public class User {
         user.createdAt = LocalDateTime.now();
 
         return user;
+    }
+
+    //==연관관계 편의 메서드==//
+    public void addLike(LikeArticle likeArticle) {
+
+        likeArticle.setUser(this);
+        this.likeArticles.add(likeArticle);
     }
 }

@@ -1,18 +1,18 @@
 package com.example.mypetlife.entity.article;
 
 import com.example.mypetlife.entity.Comment;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Formula;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "article")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Article {
@@ -20,16 +20,18 @@ public class Article {
     @Id @GeneratedValue
     @Column(name = "article_id")
     private Long id;
+
     private String title;
+
     private String content;
+
     @Enumerated(value = EnumType.STRING)
-    private CategoryArticle category;
+    private ArticleCategory category;
 
     @Column(name = "post_date")
     private LocalDateTime postDate;
-    private Integer likes;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -41,6 +43,17 @@ public class Article {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
     private List<ArticleImage> images = new ArrayList<>();
+
+    @OneToMany(mappedBy = "article")
+    private List<LikeArticle> likeArticles = new ArrayList<>();
+
+    // 좋아요 갯수를 의미하는 가상 칼럼
+    @Formula("(select count(*) from like_article where like_article.article_id = article_id)")
+    private int likeCount;
+
+    // 댓글 갯수를 의미하는 가상 칼럼
+    @Formula("(select count(*) from comment where comment.article_id = article_id)")
+    private int commentCount;
 
     //==연관관계 편의 메서드==//
     public void addArticleTag(ArticleTag articleTag) {
@@ -76,8 +89,14 @@ public class Article {
         this.images = images;
     }
 
+    public void addLike(LikeArticle likeArticle) {
+
+        this.likeArticles.add(likeArticle);
+        likeArticle.setArticle(this);
+    }
+
     //==생성 메서드==//
-    public static Article createArticle(String title, String content, CategoryArticle category,
+    public static Article createArticle(String title, String content, ArticleCategory category,
                                         User user, List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
 
         Article article = new Article();
@@ -85,7 +104,6 @@ public class Article {
         article.content = content;
         article.category = category;
         article.postDate = LocalDateTime.now();
-        article.likes = 0;
         article.setUser(user);
 
         for (ArticleTag articleTag : articleTags) {

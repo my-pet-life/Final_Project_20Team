@@ -1,4 +1,4 @@
-package com.example.mypetlife.repository;
+package com.example.mypetlife.repository.community;
 
 
 import com.example.mypetlife.entity.article.ArticleImage;
