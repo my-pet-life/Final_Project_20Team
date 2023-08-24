@@ -25,7 +25,7 @@ public enum ErrorCode {
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다"),
     NOT_FOUND_ARTICLE(HttpStatus.NOT_FOUND, "게시글을 찾을 수 없습니다"),
     NOT_FOUND_TAG(HttpStatus.NOT_FOUND, "태그를 찾을 수 없습니다"),
-
+    NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다"),
     /*
      * 409
      */
