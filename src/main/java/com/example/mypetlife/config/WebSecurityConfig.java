@@ -66,6 +66,7 @@ public class WebSecurityConfig {
                     // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
                     .requestMatchers("/register", "/login/**", "/community/search/**")
                     .requestMatchers(GET, "/community/articles/**");
+        };
      
     }
 
