@@ -1,6 +1,7 @@
-package com.example.mypetlife.entity.article;
+package com.example.mypetlife.entity.community.article;
 
-import com.example.mypetlife.entity.comment.Comment;
+import com.example.mypetlife.entity.community.BaseEntity;
+import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Article {
+public class Article extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "article_id")
@@ -27,9 +28,6 @@ public class Article {
 
     @Enumerated(value = EnumType.STRING)
     private ArticleCategory category;
-
-    @Column(name = "post_date")
-    private LocalDateTime postDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -103,7 +101,6 @@ public class Article {
         article.title = title;
         article.content = content;
         article.category = category;
-        article.postDate = LocalDateTime.now();
         article.setUser(user);
 
         for (ArticleTag articleTag : articleTags) {

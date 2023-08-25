@@ -1,7 +1,6 @@
 package com.example.mypetlife.repository.community;
 
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.LikeArticle;
+import com.example.mypetlife.entity.community.article.LikeArticle;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

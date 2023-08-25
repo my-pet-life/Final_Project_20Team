@@ -1,4 +1,4 @@
-package com.example.mypetlife.entity.article;
+package com.example.mypetlife.entity.community.article;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

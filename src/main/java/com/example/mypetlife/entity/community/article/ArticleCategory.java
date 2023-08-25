@@ -1,4 +1,4 @@
-package com.example.mypetlife.entity.article;
+package com.example.mypetlife.entity.community.article;
 
 public enum ArticleCategory {
     INFORMATION, // 정보

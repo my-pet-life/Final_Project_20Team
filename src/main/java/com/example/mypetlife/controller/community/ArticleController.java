@@ -2,8 +2,8 @@ package com.example.mypetlife.controller.community;
 
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
+import com.example.mypetlife.entity.community.article.*;
 import com.example.mypetlife.entity.user.User;
-import com.example.mypetlife.entity.article.*;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
@@ -49,8 +49,24 @@ public class ArticleController {
 
         // List<ArticleTag>
         List<ArticleTag> articleTags = new ArrayList<>();
+
         if(tagDtos != null) {
-            createTagAndArticleTag(articleTags, tagDtos);
+            for (CreateArticleTagDto tagDto : tagDtos) {
+                if(tagService.isNewTag(tagDto.getTagName())) {
+                    // 새로운 태그 -> 태그 생성 및 저장
+                    Tag newTag = Tag.createTag(tagDto.getTagName());
+                    tagService.saveTag(newTag);
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                    articleTags.add(articleTag);
+                } else {
+                    // 이미 존재하는 태그 -> DB에서 태그를 조회해와서 연결
+                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
+                    articleTags.add(articleTag);
+                }
+            }
         }
 
         // List<ArticleImage>
@@ -147,7 +163,22 @@ public class ArticleController {
         // List<ArticleTag>
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
-            createTagAndArticleTag(articleTags, tagDtos);
+            for (CreateArticleTagDto tagDto : tagDtos) {
+                if(tagService.isNewTag(tagDto.getTagName())) {
+                    // 새로운 태그 -> 태그 생성 및 저장
+                    Tag newTag = Tag.createTag(tagDto.getTagName());
+                    tagService.saveTag(newTag);
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
+                    articleTags.add(articleTag);
+                } else {
+                    // 이미 존재하는 태그 -> DB에서 태그를 조회해와서 연결
+                    Tag findTag = tagService.findByTagName(tagDto.getTagName());
+                    // ArticleTag 생성
+                    ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
+                    articleTags.add(articleTag);
+                }
+            }
         }
 
         // List<ArticleImage>
@@ -214,29 +245,6 @@ public class ArticleController {
         User loginUser = userService.findByEmail(email);
         if(!loginUser.equals(user)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
-        }
-    }
-
-    /*
-     * 게시글 등록/수정시 입력된 태그를 기반으로 Tag, ArticleTag 생성
-     */
-    private void createTagAndArticleTag(List<ArticleTag> articleTags, List<CreateArticleTagDto> tagDtos) {
-
-        for (CreateArticleTagDto tagDto : tagDtos) {
-            if(tagService.isNewTag(tagDto.getTagName())) {
-                // 새로운 태그이면 DB에 생성
-                Tag newTag = Tag.createTag(tagDto.getTagName());
-                tagService.saveTag(newTag);
-                // ArticleTag 생성
-                ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                articleTags.add(articleTag);
-            } else {
-                // 이미 존재하는 태그이면 DB에서 태그를 조회해와서 연결
-                Tag findTag = tagService.findByTagName(tagDto.getTagName());
-                // ArticleTag 생성
-                ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                articleTags.add(articleTag);
-            }
         }
     }
 }

@@ -1,17 +1,14 @@
 package com.example.mypetlife.controller.community;
 
 import com.example.mypetlife.dto.MessageResponse;
-import com.example.mypetlife.dto.community.article.ArticleResponse;
 import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
 import com.example.mypetlife.dto.community.comment.CreateCommentResponse;
-import com.example.mypetlife.entity.comment.Comment;
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.comment.LikeComment;
+import com.example.mypetlife.entity.community.comment.Comment;
+import com.example.mypetlife.entity.community.article.Article;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
-import com.example.mypetlife.repository.community.LikeCommentRepository;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.community.CommentService;
@@ -19,8 +16,6 @@ import com.example.mypetlife.service.community.LikeCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor

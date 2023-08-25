@@ -1,8 +1,8 @@
 package com.example.mypetlife.init.community;
 
-import com.example.mypetlife.entity.article.*;
-import com.example.mypetlife.entity.comment.Comment;
-import com.example.mypetlife.entity.comment.LikeComment;
+import com.example.mypetlife.entity.community.comment.Comment;
+import com.example.mypetlife.entity.community.comment.LikeComment;
+import com.example.mypetlife.entity.community.article.*;
 import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.UserRepository;
@@ -10,7 +10,6 @@ import com.example.mypetlife.repository.community.*;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;

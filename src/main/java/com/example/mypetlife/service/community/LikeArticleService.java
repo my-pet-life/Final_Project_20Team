@@ -1,7 +1,7 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.LikeArticle;
+import com.example.mypetlife.entity.community.article.Article;
+import com.example.mypetlife.entity.community.article.LikeArticle;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.community.LikeArticleRepository;
 import lombok.RequiredArgsConstructor;

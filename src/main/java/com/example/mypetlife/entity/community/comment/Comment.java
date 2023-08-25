@@ -1,6 +1,7 @@
-package com.example.mypetlife.entity.comment;
+package com.example.mypetlife.entity.community.comment;
 
-import com.example.mypetlife.entity.article.Article;
+import com.example.mypetlife.entity.community.BaseEntity;
+import com.example.mypetlife.entity.community.article.Article;
 import com.example.mypetlife.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -15,16 +16,13 @@ import java.util.List;
 @Table(name = "comment")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "comment_id")
     private Long id;
 
     private String content;
-
-    @Column(name = "comment_date")
-    private LocalDateTime commentDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -42,7 +40,6 @@ public class Comment {
 
         Comment comment = new Comment();
         comment.content = content;
-        comment.commentDate = LocalDateTime.now();
         comment.user = user;
         article.addComment(comment);
 

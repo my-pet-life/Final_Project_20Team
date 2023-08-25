@@ -1,6 +1,6 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.entity.comment.Comment;
+import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.community.CommentRepository;

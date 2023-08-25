@@ -1,6 +1,6 @@
 package com.example.mypetlife.repository.community;
 
-import com.example.mypetlife.entity.comment.LikeComment;
+import com.example.mypetlife.entity.community.comment.LikeComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

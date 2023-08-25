@@ -1,17 +1,12 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.dto.community.article.ArticleResponse;
-import com.example.mypetlife.entity.comment.Comment;
-import com.example.mypetlife.entity.comment.LikeComment;
+import com.example.mypetlife.entity.community.comment.Comment;
+import com.example.mypetlife.entity.community.comment.LikeComment;
 import com.example.mypetlife.entity.user.User;
-import com.example.mypetlife.repository.community.CommentRepository;
 import com.example.mypetlife.repository.community.LikeCommentRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.yaml.snakeyaml.comments.CommentLine;
 
 import java.util.Optional;
 

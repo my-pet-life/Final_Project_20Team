@@ -3,8 +3,8 @@ package com.example.mypetlife.entity.user;
 import com.example.mypetlife.entity.Calendar;
 import com.example.mypetlife.entity.Message;
 import com.example.mypetlife.entity.Review;
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.LikeArticle;
+import com.example.mypetlife.entity.community.article.Article;
+import com.example.mypetlife.entity.community.article.LikeArticle;
 import jakarta.persistence.*;
 import lombok.Getter;
 

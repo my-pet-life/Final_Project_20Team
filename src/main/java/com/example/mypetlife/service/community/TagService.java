@@ -1,6 +1,6 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.entity.article.Tag;
+import com.example.mypetlife.entity.community.article.Tag;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.community.TagRepository;
@@ -42,5 +42,4 @@ public class TagService {
 
         tagRepository.save(tag);
     }
-
 }

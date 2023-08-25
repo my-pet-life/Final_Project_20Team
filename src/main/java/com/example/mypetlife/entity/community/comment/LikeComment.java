@@ -1,4 +1,4 @@
-package com.example.mypetlife.entity.comment;
+package com.example.mypetlife.entity.community.comment;
 
 import com.example.mypetlife.entity.user.User;
 import jakarta.persistence.*;
