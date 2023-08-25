@@ -35,7 +35,7 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Article> articles;
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)

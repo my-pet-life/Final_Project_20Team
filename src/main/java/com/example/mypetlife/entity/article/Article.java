@@ -35,14 +35,14 @@ public class Article {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article")
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArticleTag> articleTags = new ArrayList<>();
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL)
-    private List<ArticleImage> images = new ArrayList<>();
+    @OneToMany(mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ArticleImage> articleImages = new ArrayList<>();
 
     @OneToMany(mappedBy = "article")
     private List<LikeArticle> likeArticles = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Article {
     public void addImage(ArticleImage articleImage) {
 
         articleImage.setArticle(this);
-        this.images.add(articleImage);
+        this.articleImages.add(articleImage);
     }
 
     public void addComment(Comment comment) {
@@ -85,8 +85,8 @@ public class Article {
         this.articleTags = articleTags;
     }
 
-    public void setImages(List<ArticleImage> images) {
-        this.images = images;
+    public void setArticleImages(List<ArticleImage> articleImages) {
+        this.articleImages = articleImages;
     }
 
     public void addLike(LikeArticle likeArticle) {

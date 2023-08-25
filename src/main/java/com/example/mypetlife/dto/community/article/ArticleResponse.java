@@ -60,9 +60,9 @@ public class ArticleResponse {
             response.tagDtos = tagDtos;
         }
 
-        if(!article.getImages().isEmpty()) {
+        if(!article.getArticleImages().isEmpty()) {
             List<ArticleImageDto> articleImageDtos = new ArrayList<>();
-            List<ArticleImage> articleImages = article.getImages();
+            List<ArticleImage> articleImages = article.getArticleImages();
             for (ArticleImage articleImage : articleImages) {
                 articleImageDtos.add(ArticleImageDto.createDto(articleImage));
             }

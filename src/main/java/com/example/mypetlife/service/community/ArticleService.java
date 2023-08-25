@@ -91,7 +91,7 @@ public class ArticleService {
         // 새로운 관계 추가
         article.updateArticleTags(articleTags);
 
-        article.setImages(articleImages);
+        article.setArticleImages(articleImages);
 
         return article.getId();
     }
