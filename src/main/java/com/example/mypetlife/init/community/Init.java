@@ -11,6 +11,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,15 +47,17 @@ public class Init {
         private final LikeArticleRepository likeArticleRepository;
         private final LikeCommentRepository likeCommentRepository;
 
+        private final PasswordEncoder passwordEncoder;
+
         public void initUser() {
 
-            User user1 = User.createUser("kim", "kim@naver.com", "1111", "01012341234", "170201", PetSpecies.DOG);
+            User user1 = User.createUser("kim", "kim@naver.com", passwordEncoder.encode("1111"), "01012341234", "170201", PetSpecies.DOG);
             userRepository.save(user1);
 
-            User user2 = User.createUser("lee", "lee@naver.com", "2222", "01012345678", "201212", PetSpecies.CAT);
+            User user2 = User.createUser("lee", "lee@naver.com", passwordEncoder.encode("2222") , "01012345678", "201212", PetSpecies.CAT);
             userRepository.save(user2);
 
-            User user3 = User.createUser("park", "park@naver.com", "3333", "01033332222", "220102", PetSpecies.ETC);
+            User user3 = User.createUser("park", "park@naver.com", passwordEncoder.encode("3333"), "01033332222", "220102", PetSpecies.ETC);
             userRepository.save(user3);
         }
 

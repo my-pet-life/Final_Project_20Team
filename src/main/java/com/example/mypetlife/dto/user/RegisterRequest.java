@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class RegisterRequestDto {
+public class RegisterRequest {
 
     @NotBlank(message = "이름을 입력하세요")
     private String username;
