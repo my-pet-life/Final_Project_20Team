@@ -63,8 +63,11 @@ public class HospitalTest {
                 hospitalAddressList.add(hospitalAddress);
             }
         }
-        assertThat(hospitalAddressList.get(0).split(" ")[0]).isEqualTo("경기도");
-        assertThat(hospitalAddressList.get(0).split(" ")[0]).isNotEqualTo("서울특별시");
+        assertThat(hospitalAddressList.get(0))
+                .isNotBlank()
+                .startsWith("경기도")
+                .contains("경기도")
+                .doesNotContain("서울특별시");
     }
 
     @Test
@@ -82,6 +85,7 @@ public class HospitalTest {
                 hospitalList.add(hospitalName);
             }
         }
+
         assertThat(hospitalList.size()).isNotEqualTo(0);
         assertThat(hospitalList.get(0)).isEqualTo("차지우동물병원");
     }
@@ -101,8 +105,11 @@ public class HospitalTest {
                 hospitalAddressList.add(hospitalAddress);
             }
         }
-        assertThat(hospitalAddressList.get(0).split(" ")[0]).isEqualTo("서울특별시");
-        assertThat(hospitalAddressList.get(0).split(" ")[0]).isNotEqualTo("경기도");
+        assertThat(hospitalAddressList.get(0))
+                .isNotBlank()
+                .startsWith("서울특별시")
+                .contains("서울특별시")
+                .doesNotContain("경기도");
     }
 
     private static JSONArray getOpenSeoulApi(int i) throws IOException, ParseException {
