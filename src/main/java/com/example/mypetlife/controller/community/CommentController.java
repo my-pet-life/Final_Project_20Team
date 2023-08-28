@@ -3,8 +3,8 @@ package com.example.mypetlife.controller.community;
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
 import com.example.mypetlife.dto.community.comment.CreateCommentResponse;
-import com.example.mypetlife.entity.Comment;
-import com.example.mypetlife.entity.article.Article;
+import com.example.mypetlife.entity.community.comment.Comment;
+import com.example.mypetlife.entity.community.article.Article;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -12,6 +12,7 @@ import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.community.CommentService;
+import com.example.mypetlife.service.community.LikeCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ public class CommentController {
     private final JwtTokenUtils jwtTokenUtils;
     private final UserService userService;
     private final ArticleService articleService;
+    private final LikeCommentService likeCommentService;
 
     /**
      * [POST] /community/article/{articleId}/comment
@@ -95,5 +97,21 @@ public class CommentController {
         commentService.deleteComment(comment);
 
         return new MessageResponse("댓글이 삭제되었습니다");
+    }
+
+    /**
+     * [POST] /community/article/{articleId}/{commentId}/like
+     * 댓글 좋아요 누르기
+     */
+    @PostMapping("/community/article/{articleId}/{commentId}/like")
+    public String likeComment(@PathVariable Long commentId, HttpServletRequest request) {
+
+        // 회원 조회
+        String email = jwtTokenUtils.getEmailFromHeader(request);
+        User user = userService.findByEmail(email);
+
+        likeCommentService.likeComment(user, commentId);
+
+        return "ok";
     }
 }

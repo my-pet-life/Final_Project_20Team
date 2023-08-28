@@ -1,7 +1,7 @@
 package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.user.LoginRequestDto;
-import com.example.mypetlife.dto.user.RegisterRequestDto;
+import com.example.mypetlife.dto.user.RegisterRequest;
 import com.example.mypetlife.dto.user.RegisterResponseDto;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.JwtTokenDto;
@@ -24,7 +24,7 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/register")
-    public RegisterResponseDto register(@RequestBody @Validated RegisterRequestDto dto) {
+    public RegisterResponseDto register(@RequestBody @Validated RegisterRequest dto) {
 
         // 회원 생성
         User user = User.createUser(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),

@@ -1,6 +1,9 @@
 package com.example.mypetlife.service.community;
 
-import com.example.mypetlife.entity.article.*;
+import com.example.mypetlife.entity.community.article.Article;
+import com.example.mypetlife.entity.community.article.ArticleCategory;
+import com.example.mypetlife.entity.community.article.ArticleImage;
+import com.example.mypetlife.entity.community.article.ArticleTag;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.repository.community.ArticleRepository;
@@ -91,7 +94,7 @@ public class ArticleService {
         // 새로운 관계 추가
         article.updateArticleTags(articleTags);
 
-        article.setImages(articleImages);
+        article.setArticleImages(articleImages);
 
         return article.getId();
     }

@@ -1,15 +1,12 @@
 package com.example.mypetlife.repository.community;
 
-import com.example.mypetlife.entity.article.Article;
-import com.example.mypetlife.entity.article.ArticleCategory;
+import com.example.mypetlife.entity.community.article.Article;
+import com.example.mypetlife.entity.community.article.ArticleCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
