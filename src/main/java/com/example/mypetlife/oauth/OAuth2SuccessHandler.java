@@ -1,6 +1,7 @@
 package com.example.mypetlife.oauth;
 
 import com.example.mypetlife.entity.CustomUserDetails;
+import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.JpaUserDetailManager;
 import jakarta.servlet.ServletException;
@@ -42,10 +43,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomUserDetails user = (CustomUserDetails) manager.loadUserByUsername(email);
 
         // 토큰 발급
-        String token = jwtTokenUtils.generateToken(user);
+        JwtTokenDto tokenDto = jwtTokenUtils.generateToken(user);
 
         // 파라미터로 토큰을 전달하면서 리다이렉트
-        String redirectUrl = String.format("http://localhost:8080/login/kakao?token=%s", token);
+        String redirectUrl = String.format("http://localhost:8080/login/kakao?access_token=%s&refresh_token=%s",
+                tokenDto.getAccessToken(), tokenDto.getRefreshToken());
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
 }

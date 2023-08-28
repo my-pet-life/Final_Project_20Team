@@ -1,5 +1,6 @@
 package com.example.mypetlife.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,16 @@ public class ErrorResponse {
                 .body(ErrorResponse.builder()
                         .error(HttpStatus.BAD_REQUEST.name())
                         .message(e.getAllErrors().get(0).getDefaultMessage())
+                        .build());
+    }
+
+    public static ResponseEntity<ErrorResponse> createErrorResponse(ExpiredJwtException e) {
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(ErrorResponse.builder()
+                        .error(HttpStatus.UNAUTHORIZED.name())
+                        .message("Refresh Token이 만료되었습니다. 재로그인이 필요합니다.")
                         .build());
     }
 }
