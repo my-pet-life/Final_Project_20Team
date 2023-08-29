@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="login-wrapper">
+    <h2>Login</h2>
+
+
+
+    <form th:object="${loginRequestDto}" method = "post">
+        <h1 class="h3 mb-3 fw-normal">로그인</h1>
+
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
+               th:text="${err}">전체 오류 메시지</p>
+        </div>
+        <div class="form-floating">
+            <input type="text" id="loginId" th:field="${loginRequestDto.email}" class="form-control"
+                   th:errorclass="field-error">
+            <label for="loginId">이메일을 입력하세요</label>
+            <div class="field-error" th:errors="${loginRequestDto.email}">
+                이메일 오류
+            </div>
+        </div>
+        <div class="form-floating">
+            <input type="password" id="password" th:field="${loginRequestDto.password}"
+                   class="form-control"
+                   th:errorclass="field-error">
+            <label for="password">패스워드를 입력하세요</label>
+            <div class="field-error" th:errors="${loginRequestDto.password}">
+                패스워드 오류
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-lg btn-primary" type="submit">로그인</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-lg btn-primary" th:onclick="|location.href='@{/register}'|"
+                        type="button">회원가입</button>
+            </div>
+        </div>
+    </form>
+<!--    -->
+<!--    -->
+<!--    <form th:object="${loginRequestDto}" method="post" action="/login" id="login-form">-->
+<!--        <input type="text" name="email" th:field="${loginRequestDto.email}" placeholder="Email">-->
+<!--        <input type="password" name="password" th:field="${loginRequestDto.password}" placeholder="Password">-->
+<!--        <input type="submit" value="Login">-->
+<!--    </form>-->
+</div>
+</body>
+</html>
