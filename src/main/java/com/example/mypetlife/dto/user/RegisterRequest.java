@@ -19,10 +19,11 @@ public class RegisterRequest {
     @NotBlank(message = "패스워드를 입력하세요")
     private String password;
 
+    @NotBlank(message = "핸드폰 번호를 입력하세요")
     private String phone;
 
     private String birthDate;
 
-    @NotNull(message = "반려동물 종을 입력하세요")
-    private PetSpecies petSpices;
+    @NotBlank(message = "반려동물 종을 입력하세요")
+    private String petSpices;
 }
