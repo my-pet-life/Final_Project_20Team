@@ -58,7 +58,18 @@ public class UserController {
     }
 
     /**
-     *
+     * [GET] /login/kakao
+     * 카카오 회원 로그인: JWT 토큰 발급
+     */
+    @GetMapping("/login/kakao")
+    public JwtTokenDto login(@RequestParam(name = "access_token") String accessToken,
+                             @RequestParam(name = "refresh_token") String refreshToken) {
+
+        return new JwtTokenDto(accessToken, refreshToken);
+    }
+
+    /**
+     * [POST] /access_token
      * Refresh Token 검증 후 유효하면 새로운 Access Token 발급, 유효하지 않으면 재로그인하도록
      */
     @PostMapping("/access_token")
@@ -70,16 +81,5 @@ public class UserController {
         String accessToken = jwtTokenUtils.validateRefreshToken(refreshToken);
 
         return new AccessTokenDto(accessToken);
-    }
-
-    /**
-     * [GET] /login/kakao
-     * 카카오 회원 로그인: JWT 토큰 발급
-     */
-    @GetMapping("/login/kakao")
-    public JwtTokenDto login(@RequestParam(name = "access_token") String accessToken,
-                             @RequestParam(name = "refresh_token") String refreshToken) {
-
-        return new JwtTokenDto(accessToken, refreshToken);
     }
 }
