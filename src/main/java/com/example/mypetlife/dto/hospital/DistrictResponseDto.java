@@ -8,9 +8,11 @@ import java.util.List;
 @Getter
 @Setter
 public class DistrictResponseDto {
+    private String city;
     private List<String> district;
 
-    public DistrictResponseDto(final List<String> district) {
+    public DistrictResponseDto(final String city, final List<String> district) {
+        this.city = city;
         this.district = district;
     }
 }
