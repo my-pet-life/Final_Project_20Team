@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>City Filter Result</title>
+</head>
+<body>
+<h1>Select a City</h1>
+
+<form method="get" action="/hospitals/city/country">
+    <div th:each="city : ${selectCity}">
+        <input type="hidden" name="city" th:value="${city.city}" />
+    </div>
+    <ul>
+        <li th:each="hospital : ${selectCity}">
+            <span th:each="district : ${hospital.getDistrict()}">
+                <button type="submit" name="country" th:value="${district}" th:text="${district}"></button>
+            </span>
+        </li>
+    </ul>
+</form>
+</body>
+</html>
