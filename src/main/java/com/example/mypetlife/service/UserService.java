@@ -58,8 +58,6 @@ public class UserService {
         // password 검증: 해당 email에 password가 맞는지 확인
         CustomUserDetails user = (CustomUserDetails) manager.loadUserByUsername(email);
         if(!passwordEncoder.matches(password, user.getPassword())){
-            log.info("입력된 패스워드:{}", password);
-            log.info("저장된 패스워드:{}", user.getPassword());
 
             throw new CustomException(ErrorCode.WrongPassword);
 

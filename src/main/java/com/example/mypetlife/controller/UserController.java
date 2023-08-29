@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -52,6 +53,7 @@ public class UserController {
     @PostMapping("/login")
     public JwtTokenDto login(@RequestBody @Validated LoginRequestDto dto) {
 
+        log.info("=====로그인 api 컨트롤러 실행=====");
         JwtTokenDto token = userService.login(dto.getEmail(), dto.getPassword());
 
         return token;
