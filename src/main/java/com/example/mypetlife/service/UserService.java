@@ -66,9 +66,9 @@ public class UserService {
         }
 
         // 토큰 발급
-        JwtTokenDto response = new JwtTokenDto(jwtTokenUtils.generateToken(user));
-        log.info(response.toString());
-        return response;
+        JwtTokenDto tokenDto = jwtTokenUtils.generateToken(user);
+        log.info(tokenDto.toString());
+        return tokenDto;
     }
 
     public User findById(Long id) {
