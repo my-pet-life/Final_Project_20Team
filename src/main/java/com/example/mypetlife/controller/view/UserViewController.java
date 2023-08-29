@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +42,15 @@ public class UserViewController {
      * 일반 회원 로그인: JWT 토큰 발급
      */
     @PostMapping("/login")
-    public String login(@ModelAttribute @Validated LoginRequestDto loginRequestDto) {
+    public String login(@ModelAttribute @Validated LoginRequestDto loginRequestDto,
+                        BindingResult bindingResult) {
 
-        log.info("email:{}", loginRequestDto.getEmail());
-        log.info("password:{}", loginRequestDto.getPassword());
+        //아이디, 패스워드가 공백일 경우 오류
+        if(bindingResult.hasErrors()) {
+            return "loginForm";
+        }
+
+        // 로그인 처리: jwt 토큰 발급
         JwtTokenDto token = userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
 
         return "redirect:/main?access_token=" + token.getAccessToken() + "refresh_token=" + token.getRefreshToken();
