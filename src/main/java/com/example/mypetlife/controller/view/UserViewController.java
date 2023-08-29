@@ -4,6 +4,7 @@ import com.example.mypetlife.dto.user.LoginRequestDto;
 import com.example.mypetlife.dto.user.RegisterRequest;
 import com.example.mypetlife.dto.user.RegisterResponseDto;
 import com.example.mypetlife.entity.user.User;
+import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.jwt.AccessTokenDto;
 import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.jwt.JwtTokenUtils;
@@ -26,6 +27,15 @@ public class UserViewController {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
 
+    /**
+     * [GET] /register
+     * 회원가입 폼
+     */
+    @GetMapping("/register")
+    public String registerForm() {
+
+        return "registerForm";
+    }
 
     /**
      * [GET] /login
@@ -37,23 +47,27 @@ public class UserViewController {
         return "loginForm";
     }
 
-    /**
-     * [POST] /login
-     * 일반 회원 로그인: JWT 토큰 발급
-     */
-    @PostMapping("/login")
-    public String login(@ModelAttribute @Validated LoginRequestDto loginRequestDto,
-                        BindingResult bindingResult) {
-
-        //아이디, 패스워드가 공백일 경우 오류
-        if(bindingResult.hasErrors()) {
-            return "loginForm";
-        }
-
-        // 로그인 처리: jwt 토큰 발급
-        JwtTokenDto token = userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
-
-        return "redirect:/main?access_token=" + token.getAccessToken() + "refresh_token=" + token.getRefreshToken();
-    }
+//    /**
+//     * [POST] /login
+//     * 일반 회원 로그인: JWT 토큰 발급
+//     */
+//    @PostMapping("/login")
+//    public String login(@ModelAttribute @Validated LoginRequestDto loginRequestDto,
+//                        BindingResult bindingResult) {
+//
+//        //아이디, 패스워드가 공백일 경우 오류
+//        if(bindingResult.hasErrors()) {
+//            return "loginForm";
+//        }
+//
+//        // 로그인 처리: jwt 토큰 발급, 예외시 bindingResult에 예외를 담음
+//        try {
+//            JwtTokenDto token = userService.login(loginRequestDto.getEmail(), loginRequestDto.getPassword());
+//            return "redirect:/main?access_token=" + token.getAccessToken() + "refresh_token=" + token.getRefreshToken();
+//        } catch(CustomException e) {
+//            bindingResult.reject("loginFail", e.getMessage());
+//            return "loginForm";
+//        }
+//    }
 
 }

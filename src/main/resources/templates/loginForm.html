@@ -1,56 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>로그인 폼</title>
 </head>
 <body>
-<div class="login-wrapper">
-    <h2>Login</h2>
+<h2>로그인</h2>
+<form id="loginForm">
+    <label for="email">이메일:</label>
+    <input type="text" id="email" name="email" required><br><br>
 
+    <label for="password">비밀번호:</label>
+    <input type="password" id="password" name="password" required><br><br>
 
+    <button type="submit">로그인</button>
+    <button th:onclick="|location.href='@{/register}'|"
+                type="button">회원가입</button>
+</form>
 
-    <form th:object="${loginRequestDto}" method = "post">
-        <h1 class="h3 mb-3 fw-normal">로그인</h1>
+<div id="token"></div>
 
-        <div th:if="${#fields.hasGlobalErrors()}">
-            <p class="field-error" th:each="err : ${#fields.globalErrors()}"
-               th:text="${err}">전체 오류 메시지</p>
-        </div>
-        <div class="form-floating">
-            <input type="text" id="loginId" th:field="${loginRequestDto.email}" class="form-control"
-                   th:errorclass="field-error">
-            <label for="loginId">이메일을 입력하세요</label>
-            <div class="field-error" th:errors="${loginRequestDto.email}">
-                이메일 오류
-            </div>
-        </div>
-        <div class="form-floating">
-            <input type="password" id="password" th:field="${loginRequestDto.password}"
-                   class="form-control"
-                   th:errorclass="field-error">
-            <label for="password">패스워드를 입력하세요</label>
-            <div class="field-error" th:errors="${loginRequestDto.password}">
-                패스워드 오류
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <button class="w-100 btn btn-lg btn-primary" type="submit">로그인</button>
-            </div>
-            <div class="col">
-                <button class="w-100 btn btn-lg btn-primary" th:onclick="|location.href='@{/register}'|"
-                        type="button">회원가입</button>
-            </div>
-        </div>
-    </form>
-<!--    -->
-<!--    -->
-<!--    <form th:object="${loginRequestDto}" method="post" action="/login" id="login-form">-->
-<!--        <input type="text" name="email" th:field="${loginRequestDto.email}" placeholder="Email">-->
-<!--        <input type="password" name="password" th:field="${loginRequestDto.password}" placeholder="Password">-->
-<!--        <input type="submit" value="Login">-->
-<!--    </form>-->
-</div>
+<script>
+    // JavaScript 코드를 여기에 작성합니다.
+    document.getElementById('loginForm').addEventListener('submit', function (event) {
+        event.preventDefault(); // 폼 제출 기본 동작 막기
+
+        // 폼 입력 값을 가져옵니다.
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        // 서버에 보낼 URL을 지정합니다.
+        const apiUrl = 'http://localhost:8080/login';
+
+        // POST 요청 설정
+        const requestOptions = {
+            method: 'POST', // HTTP 메서드
+            headers: {
+                'Content-Type': 'application/json' // 요청 헤더 설정
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }) // 요청 본문 데이터 (JSON 문자열로 변환)
+        };
+
+        // POST 요청 보내기
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('서버 내에서 예외 발생');
+                }
+                return response.json(); // JSON 데이터로 파싱
+            })
+            .then(data => {
+
+                // 로그인 성공시 콘솔에 json 데이터 남기고, main 페이지로
+                console.log("data 파싱 결과:", data);
+
+                return fetch('http://localhost:8080/community', {
+                    method: 'GET'
+                });
+            })
+            .catch(error => {
+                console.error('오류:', error);
+            });
+
+    });
+</script>
 </body>
 </html>

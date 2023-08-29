@@ -6,12 +6,65 @@
 </head>
 <body>
 <div class="login-wrapper">
-    <h2>Login</h2>
-    <form method="post" action="서버의url" id="login-form">
-        <input type="text" name="userName" placeholder="Email">
-        <input type="password" name="userPassword" placeholder="Password">
-        <input type="submit" value="Login">
+    <h2>Register</h2>
+    <form id="register-form" method="post">
+        <div class="form-floating">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control">
+        </div>
+        <div class="form-floating">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control">
+        </div>
+        <div class="form-floating">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control">
+        </div>
+        <div class="form-floating">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" class="form-control">
+        </div>
+        <div class="form-floating">
+            <label for="petSpices">petSpices</label>
+            <input type="petSpices" id="petSpices" name="petSpices" class="form-control">
+        </div>
+        <!-- Other input fields -->
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Register</button>
     </form>
 </div>
+<script>
+    document.getElementById("register-form").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const phone = document.getElementById("phone").value;
+        const petSpices = document.getElementById("petSpices").value;
+
+        const response = await fetch("/api/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password,
+                phone: phone,
+                petSpices: petSpices
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+
+            window.location.href = "/login";
+        } else {
+            console.log("error")
+        }
+    });
+</script>
 </body>
 </html>
