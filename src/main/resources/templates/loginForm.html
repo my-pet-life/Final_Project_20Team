@@ -21,7 +21,7 @@
 
 <script>
     // JavaScript 코드를 여기에 작성합니다.
-    document.getElementById('loginForm').addEventListener('submit', function (event) {
+    document.getElementById('loginForm').addEventListener('submit', async function (event) {
         event.preventDefault(); // 폼 제출 기본 동작 막기
 
         // 폼 입력 값을 가져옵니다.
@@ -32,7 +32,7 @@
         const apiUrl = 'http://localhost:8080/login';
 
         // POST 요청 설정
-        const requestOptions = {
+        const requestOptions = await fetch("/api/login", {
             method: 'POST', // HTTP 메서드
             headers: {
                 'Content-Type': 'application/json' // 요청 헤더 설정
@@ -41,29 +41,37 @@
                 email: email,
                 password: password
             }) // 요청 본문 데이터 (JSON 문자열로 변환)
-        };
+        });
 
-        // POST 요청 보내기
-        fetch(apiUrl, requestOptions)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('서버 내에서 예외 발생');
-                }
-                return response.json(); // JSON 데이터로 파싱
-            })
-            .then(data => {
+        if(requestOptions.ok){
+            const data = await requestOptions.json();
+            console.log(data)
+            const token = data.accessToken;
 
-                // 로그인 성공시 콘솔에 json 데이터 남기고, main 페이지로
-                console.log("data 파싱 결과:", data);
+            if(token) {
+                localStorage.getItem("token", token);
 
-                return fetch('http://localhost:8080/community', {
-                    method: 'GET'
+                const mainUrl = "/main";
+                const headers = new Headers();
+                headers.append("Authorization", `Bearer ${token}`);
+
+                const response = await fetch(mainUrl, {
+                    method: "GET",
+                    headers: headers
                 });
-            })
-            .catch(error => {
-                console.error('오류:', error);
-            });
 
+                if (response.ok) {
+                    window.location.href = mainUrl;
+                } else {
+                    console.log("Failed to load main page");
+                }
+
+            }else {
+                console.log("Token validation failed");
+            }
+        } else {
+            console.log("error");
+        }
     });
 </script>
 </body>
