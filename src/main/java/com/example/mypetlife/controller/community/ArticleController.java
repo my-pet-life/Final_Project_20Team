@@ -3,6 +3,7 @@ package com.example.mypetlife.controller.community;
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
 import com.example.mypetlife.entity.community.article.*;
+import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -100,23 +101,40 @@ public class ArticleController {
      */
     @GetMapping("/community/articles")
     public Page<ArticleListResponse> readArticles(@PageableDefault(size = 5, sort = "createdDate",
-                                                    direction = Sort.Direction.DESC) Pageable pageable) {
+                                                    direction = Sort.Direction.DESC) Pageable pageable,
+                                                  @RequestParam(name = "species", required = false) String species) {
 
-        Page<Article> articlePage = articleService.findAll(pageable);
+        Page<Article> articlePage = null;
+        if(species != null) {
+            PetSpecies petSpecies = PetSpecies.valueOf(species.toUpperCase());
+            articlePage = articleService.findAll(petSpecies, pageable);
+        } else {
+            articlePage = articleService.findAll(pageable);
+        }
+
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
     /**
      * [GET] /community/articles/{categoryName}
-     * 게시판별 게시글 조회
+     * 게시판별 조회
      */
     @GetMapping("/community/articles/{categoryName}")
     public Page<ArticleListResponse> readArticlesByCategory(@PathVariable String categoryName,
                                                             @PageableDefault(size = 5, sort = "createdDate",
-                                                                direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                    direction = Sort.Direction.DESC) Pageable pageable,
+                                                            @RequestParam(name = "species", required = false) String species) {
 
         ArticleCategory articleCategory = ArticleCategory.valueOf(categoryName.toUpperCase());
-        Page<Article> articlePage = articleService.findByCategory(articleCategory, pageable);
+
+        Page<Article> articlePage = null;
+        if(species != null) {
+            PetSpecies petSpecies = PetSpecies.valueOf(species.toUpperCase());
+            articlePage = articleService.findByCategory(articleCategory, petSpecies, pageable);
+        } else {
+            articlePage = articleService.findByCategory(articleCategory, pageable);
+        }
+
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
@@ -127,9 +145,16 @@ public class ArticleController {
     @GetMapping("/community/search/tag/{tagName}")
     public Page<ArticleListResponse> readArticlesByTagName(@PathVariable String tagName,
                                                            @PageableDefault(size = 5, sort = "createdDate",
-                                                                   direction = Sort.Direction.DESC) Pageable pageable) {
+                                                                   direction = Sort.Direction.DESC) Pageable pageable,
+                                                           @RequestParam(name = "species", required = false) String species) {
 
-        Page<Article> articlePage = articleService.findByTagName(tagName, pageable);
+        Page<Article> articlePage = null;
+        if(species != null) {
+            PetSpecies petSpecies = PetSpecies.valueOf(species.toUpperCase());
+            articlePage = articleService.findByTagName(tagName, petSpecies, pageable);
+        } else {
+            articlePage = articleService.findByTagName(tagName, pageable);
+        }
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
