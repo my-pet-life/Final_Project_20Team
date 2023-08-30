@@ -115,7 +115,7 @@ public class Init {
             articleImages.add(articleImage2);
 
             // Article 생성
-            Article article2 = Article.createArticle("성남에 병원 추천해요!", "친절하셔서 좋았습니다", ArticleCategory.INFORMATION,
+            Article article2 = Article.createArticle("성남에 병원 추천해요!", "친절하셔서 좋았습니다", ArticleCategory.REVIEW,
                                                         lee, articleTags2, articleImages2);
             articleRepository.save(article2);
 

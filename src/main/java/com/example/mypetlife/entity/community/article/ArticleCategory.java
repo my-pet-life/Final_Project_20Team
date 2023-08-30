@@ -1,8 +1,9 @@
 package com.example.mypetlife.entity.community.article;
 
 public enum ArticleCategory {
-    INFORMATION, // 정보
+
     NOTICE, // 공지
+    REVIEW, // 리뷰
     QUESTION, // 질문
     CHAT; // 친목
 
