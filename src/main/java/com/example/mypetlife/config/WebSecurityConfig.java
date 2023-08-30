@@ -32,9 +32,15 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers("/main",  "/register",  "/login", "/community/search/**", "/hospitals/**", "/access_token").permitAll()
-                                .requestMatchers(GET, "/community/articles/**").permitAll()
-                                .requestMatchers("admin").hasRole("ADMIN")
+                        authHttp.requestMatchers(
+                                        "/main",
+                                        "/register",
+                                        "/login",
+                                        "/community/articles/**",
+                                        "/community/search/**",
+                                        "/hospitals/**",
+                                        "/access_token").permitAll()
+                                .requestMatchers("/community/notice").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login

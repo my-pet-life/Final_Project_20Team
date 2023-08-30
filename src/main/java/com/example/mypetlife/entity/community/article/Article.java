@@ -103,9 +103,12 @@ public class Article extends BaseEntity {
         article.category = category;
         article.setUser(user);
 
-        for (ArticleTag articleTag : articleTags) {
-            article.addArticleTag(articleTag);
+        if(articleTags != null) {
+            for (ArticleTag articleTag : articleTags) {
+                article.addArticleTag(articleTag);
+            }
         }
+
 
         for (ArticleImage articleImage : articleImages) {
             article.addImage(articleImage);
