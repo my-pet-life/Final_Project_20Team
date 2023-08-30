@@ -1,14 +1,20 @@
 package com.example.mypetlife.controller.calendar;
 
 import com.example.mypetlife.dto.MessageResponse;
-import com.example.mypetlife.dto.calendar.*;
+import com.example.mypetlife.dto.calendar.alarm.AlarmScheduleListDto;
+import com.example.mypetlife.dto.calendar.schedule.*;
 import com.example.mypetlife.service.calendar.CalendarService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @RestController
@@ -19,7 +25,8 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    public MessageResponse create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto) {
+    public MessageResponse create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
+            throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.create(request, dto);
         return responseDto("일정이 등록되었습니다.");
     }
@@ -30,7 +37,7 @@ public class CalendarController {
     }
 
     @GetMapping("/{scheduleId}")
-    public ScheduleResponseDto  readSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId){
+    public ScheduleResponseDto readSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId){
         return calendarService.readSchedule(request, scheduleId);
     }
 

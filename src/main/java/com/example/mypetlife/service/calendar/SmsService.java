@@ -1,8 +1,8 @@
 package com.example.mypetlife.service.calendar;
 
-import com.example.mypetlife.dto.calendar.MessageDto;
-import com.example.mypetlife.dto.calendar.SmsRequestDto;
-import com.example.mypetlife.dto.calendar.SmsResponseDto;
+import com.example.mypetlife.dto.calendar.alarm.MessageDto;
+import com.example.mypetlife.dto.calendar.alarm.SmsRequestDto;
+import com.example.mypetlife.dto.calendar.alarm.SmsResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -26,8 +25,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +43,7 @@ public class SmsService {
     private String phone;
 
     // TODO 메세지 전송 테스트
-    public SmsResponseDto sendSms(MessageDto messageDto)
+    public SmsResponseDto sendSms(MessageDto messageDto, String reserveTime)
             throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Long time = System.currentTimeMillis();
 
@@ -63,9 +60,11 @@ public class SmsService {
                 .type("SMS")
                 .contentType("COMM")
                 .countryCode("82")
-                .from(this.phone)
+                .from("01056644571")
                 .content(messageDto.getContent())
                 .messages(messages)
+                .reserveTime(reserveTime)
+                .reserveTimeZone("Asia/Seoul")
                 .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -76,7 +75,6 @@ public class SmsService {
         SmsResponseDto response = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponseDto.class);
 
         return response;
-
     }
 
     public String makeSignature(Long time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
