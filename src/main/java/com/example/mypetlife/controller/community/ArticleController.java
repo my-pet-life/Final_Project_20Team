@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,11 +99,10 @@ public class ArticleController {
      * 전체 게시글 조회
      */
     @GetMapping("/community/articles")
-    public Page<ArticleListResponse> readArticles(@RequestParam(defaultValue = "latest") String order,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "3") int size) {
+    public Page<ArticleListResponse> readArticles(@PageableDefault(size = 5, sort = "createdDate",
+                                                    direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<Article> articlePage = articleService.findAll(order, page, size);
+        Page<Article> articlePage = articleService.findAll(pageable);
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
@@ -110,26 +112,24 @@ public class ArticleController {
      */
     @GetMapping("/community/articles/{categoryName}")
     public Page<ArticleListResponse> readArticlesByCategory(@PathVariable String categoryName,
-                                                            @RequestParam(defaultValue = "latest") String order,
-                                                            @RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "3") int size) {
+                                                            @PageableDefault(size = 5, sort = "createdDate",
+                                                                direction = Sort.Direction.DESC) Pageable pageable) {
 
         ArticleCategory articleCategory = ArticleCategory.valueOf(categoryName.toUpperCase());
-        Page<Article> articlePage = articleService.findByCategory(articleCategory, order, page, size);
+        Page<Article> articlePage = articleService.findByCategory(articleCategory, pageable);
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
     /**
      * [GET] /community/search/tag/{tagName}
-     * 태그별 게시글 조회: 페이지
+     * 태그별 게시글 조회
      */
     @GetMapping("/community/search/tag/{tagName}")
     public Page<ArticleListResponse> readArticlesByTagName(@PathVariable String tagName,
-                                                           @RequestParam(defaultValue = "latest") String order,
-                                                           @RequestParam int page,
-                                                           @RequestParam int size) {
+                                                           @PageableDefault(size = 5, sort = "createdDate",
+                                                                   direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<Article> articlePage = articleService.findByTagName(tagName, order, page, size);
+        Page<Article> articlePage = articleService.findByTagName(tagName, pageable);
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 

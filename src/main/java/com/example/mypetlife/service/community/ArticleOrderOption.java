@@ -11,9 +11,9 @@ import java.util.Locale;
 @RequiredArgsConstructor
 public enum ArticleOrderOption {
 
-    LATEST(Sort.by(Sort.Direction.DESC, "postDate")),
-    LIKE(Sort.by(Sort.Direction.DESC, "likeCount").and(Sort.by(Sort.Direction.DESC, "postDate"))),
-    COMMENT(Sort.by(Sort.Direction.DESC, "commentCount").and(Sort.by(Sort.Direction.DESC, "postDate")));
+    LATEST(Sort.by(Sort.Direction.DESC, "createdDate")),
+    LIKE(Sort.by(Sort.Direction.DESC, "likeCount").and(Sort.by(Sort.Direction.DESC, "createdDate"))),
+    COMMENT(Sort.by(Sort.Direction.DESC, "commentCount").and(Sort.by(Sort.Direction.DESC, "createdDate")));
 
     private final Sort sort;
 

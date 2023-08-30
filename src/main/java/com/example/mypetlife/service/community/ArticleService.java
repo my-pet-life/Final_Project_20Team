@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,31 +50,25 @@ public class ArticleService {
     /*
      * 전체 조회
      */
-    public Page<Article> findAll(String order, int page, int size) {
+    public Page<Article> findAll(Pageable pageable) {
 
-        Sort sort = ArticleOrderOption.getSortFromOrder(order);
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-        return articleRepository.findAll(pageRequest);
+        return articleRepository.findAll(pageable);
     }
 
     /*
      * 카테고리별 조회
      */
-    public Page<Article> findByCategory(ArticleCategory articleCategory, String order, int page, int size) {
+    public Page<Article> findByCategory(ArticleCategory articleCategory, Pageable pageable) {
 
-        Sort sort = ArticleOrderOption.getSortFromOrder(order);
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-        return articleRepository.findByCategory(articleCategory, pageRequest);
+        return articleRepository.findByCategory(articleCategory, pageable);
     }
 
     /*
      * 태그별 조회
      */
-    public Page<Article> findByTagName(String tagName, String order, int page, int size) {
+    public Page<Article> findByTagName(String tagName, Pageable pageable) {
 
-        Sort sort = ArticleOrderOption.getSortFromOrder(order);
-        PageRequest pageRequest = PageRequest.of(page, size, sort);
-        return articleRepository.findByTagName(tagName, pageRequest);
+        return articleRepository.findByTagName(tagName, pageable);
     }
 
     /*
