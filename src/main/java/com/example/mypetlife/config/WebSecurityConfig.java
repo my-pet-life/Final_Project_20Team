@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                         authHttp.requestMatchers("/api/register", "/register", "/login/**", "/community/search/**", "/hospitals/**", "/access_token").permitAll()
                                 .requestMatchers(GET, "/community/articles/**").permitAll()
                                 .requestMatchers(GET, "/community").permitAll()
-                                .requestMatchers(POST, "/sms/send").permitAll()
+                                .requestMatchers(POST, "/sms/send/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
@@ -67,7 +67,7 @@ public class WebSecurityConfig {
                     // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
                     .requestMatchers("/api/register", "/register", "/login/**", "/community/search/**", "/hospitals/**", "/access_token")
                     .requestMatchers(GET, "/community/articles/**")
-                    .requestMatchers(POST, "/sms/send")
+                    .requestMatchers(POST, "/sms/send/**")
                     .requestMatchers(GET, "/community");
         };
 
