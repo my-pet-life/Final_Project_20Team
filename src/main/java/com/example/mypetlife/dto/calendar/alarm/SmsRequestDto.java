@@ -1,6 +1,4 @@
-package com.example.mypetlife.dto.calendar;
-
-import lombok.Data;
+package com.example.mypetlife.dto.calendar.alarm;
 
 import java.util.List;
 
@@ -18,4 +16,6 @@ public class SmsRequestDto {
     String from;
     String content;
     List<MessageDto> messages;
+    String reserveTime;
+    String reserveTimeZone;
 }

@@ -1,4 +1,4 @@
-package com.example.mypetlife.dto.calendar;
+package com.example.mypetlife.dto.calendar.alarm;
 
 import lombok.*;
 
