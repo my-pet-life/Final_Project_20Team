@@ -1,8 +1,8 @@
-package com.example.mypetlife.controller;
+package com.example.mypetlife.controller.calendar;
 
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.calendar.*;
-import com.example.mypetlife.service.CalendarService;
+import com.example.mypetlife.service.calendar.CalendarService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

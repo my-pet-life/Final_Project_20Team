@@ -1,4 +1,4 @@
-package com.example.mypetlife.service;
+package com.example.mypetlife.service.calendar;
 
 import com.example.mypetlife.dto.calendar.*;
 import com.example.mypetlife.entity.Calendar;
@@ -8,6 +8,7 @@ import com.example.mypetlife.exception.ErrorCode;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.repository.CalendarRepository;
 import com.example.mypetlife.repository.UserRepository;
+import com.example.mypetlife.service.UserService;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
