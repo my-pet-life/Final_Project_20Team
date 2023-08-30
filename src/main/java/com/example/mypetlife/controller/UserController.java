@@ -3,6 +3,7 @@ package com.example.mypetlife.controller;
 import com.example.mypetlife.dto.user.LoginRequestDto;
 import com.example.mypetlife.dto.user.RegisterRequest;
 import com.example.mypetlife.dto.user.RegisterResponseDto;
+import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.AccessTokenDto;
@@ -35,7 +36,8 @@ public class UserController {
         log.info("{}", PetSpecies.valueOf("DOG"));
         // 회원 생성
         User user = User.createUser(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
-                                    dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices()));
+                                    dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices()),
+                                    Authority.ROLE_USER);
 
         // 회원가입
         Long id = userService.register(user);

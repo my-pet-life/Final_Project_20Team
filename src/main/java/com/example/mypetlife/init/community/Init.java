@@ -3,6 +3,7 @@ package com.example.mypetlife.init.community;
 import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.entity.community.comment.LikeComment;
 import com.example.mypetlife.entity.community.article.*;
+import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.UserRepository;
@@ -50,14 +51,21 @@ public class Init {
 
         public void initUser() {
 
-            User user1 = User.createUser("kim", "kim@naver.com", passwordEncoder.encode("1111"), "01012341234", "170201", PetSpecies.DOG);
+            User user1 = User.createUser("kim", "kim@naver.com", passwordEncoder.encode("1111"),
+                    "01012341234", "170201", PetSpecies.DOG, Authority.ROLE_USER);
             userRepository.save(user1);
 
-            User user2 = User.createUser("lee", "lee@naver.com", passwordEncoder.encode("2222") , "01012345678", "201212", PetSpecies.CAT);
+            User user2 = User.createUser("lee", "lee@naver.com", passwordEncoder.encode("2222") ,
+                    "01012345678", "201212", PetSpecies.CAT, Authority.ROLE_USER);
             userRepository.save(user2);
 
-            User user3 = User.createUser("park", "park@naver.com", passwordEncoder.encode("3333"), "01033332222", "220102", PetSpecies.ETC);
+            User user3 = User.createUser("park", "park@naver.com", passwordEncoder.encode("3333"),
+                    "01033332222", "220102", PetSpecies.ETC, Authority.ROLE_USER);
             userRepository.save(user3);
+
+            User admin = User.createUser("admin", "admin@naver.com", passwordEncoder.encode("1111"),
+                    "01033332222", "220102", PetSpecies.ETC, Authority.ROLE_ADMIN);
+            userRepository.save(admin);
         }
 
         public void initArticle() {

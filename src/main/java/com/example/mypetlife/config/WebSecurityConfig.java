@@ -34,6 +34,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authHttp ->
                         authHttp.requestMatchers("/main",  "/register",  "/login", "/community/search/**", "/hospitals/**", "/access_token").permitAll()
                                 .requestMatchers(GET, "/community/articles/**").permitAll()
+                                .requestMatchers("admin").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login

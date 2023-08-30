@@ -35,6 +35,9 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
     @OneToMany(mappedBy = "user")
     private List<Article> articles;
 
@@ -54,7 +57,8 @@ public class User {
     private List<LikeArticle> likeArticles = new ArrayList<>();
 
     //==생성 메서드==//
-    public static User createUser(String username, String email, String password, String phone, String birthDate, PetSpecies petSpecies) {
+    public static User createUser(String username, String email, String password, String phone,
+                                  String birthDate, PetSpecies petSpecies, Authority authority) {
 
         User user = new User();
         user.username = username;
@@ -64,6 +68,7 @@ public class User {
         user.birthDate = birthDate;
         user.petSpecies = petSpecies;
         user.createdAt = LocalDateTime.now();
+        user.authority = authority;
 
         return user;
     }
