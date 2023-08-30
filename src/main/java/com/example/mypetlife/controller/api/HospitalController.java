@@ -1,4 +1,4 @@
-package com.example.mypetlife.controller;
+package com.example.mypetlife.controller.api;
 
 import com.example.mypetlife.dto.hospital.DistrictResponseDto;
 import com.example.mypetlife.dto.hospital.gyeonggiDo.GyeonggiHospitalCountryResponseDto;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/hospitals")
+@RequestMapping("/api/hospitals")
 public class HospitalController {
     private final HospitalService hospitalService;
 
