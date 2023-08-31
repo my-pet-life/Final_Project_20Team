@@ -1,5 +1,6 @@
 package com.example.mypetlife.jwt;
 
+import com.example.mypetlife.exception.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -8,7 +9,9 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -35,16 +38,17 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
 
     private void createJwtErrorResponse(HttpServletRequest request, HttpServletResponse response, JwtException e) throws IOException {
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("httpStatus", HttpServletResponse.SC_UNAUTHORIZED);
+        errorResponse.put("errorName", "JwtException");
+        errorResponse.put("message", e.getMessage());
+
+        String responseBody = objectMapper.writeValueAsString(errorResponse);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-
-        Map<String, Object> body = new HashMap<>();
-        body.put("httpStatus", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("error", "UNAUTHORIZED");
-        body.put("message", e.getMessage());
-
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(response.getOutputStream(), body);
-
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        response.getWriter().write(responseBody);
     }
 }
