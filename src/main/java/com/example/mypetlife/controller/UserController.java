@@ -3,6 +3,7 @@ package com.example.mypetlife.controller;
 import com.example.mypetlife.dto.user.LoginRequestDto;
 import com.example.mypetlife.dto.user.RegisterRequest;
 import com.example.mypetlife.dto.user.RegisterResponseDto;
+import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.AccessTokenDto;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api")
 public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -33,12 +33,11 @@ public class UserController {
     @PostMapping("/register")
     public RegisterResponseDto register(@RequestBody @Validated RegisterRequest dto) {
 
-        log.info("=====회원가입 컨트롤러 진입=====");
-
         log.info("{}", PetSpecies.valueOf("DOG"));
         // 회원 생성
         User user = User.createUser(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
-                                    dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices()));
+                                    dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices()),
+                                    Authority.ROLE_USER);
 
         // 회원가입
         Long id = userService.register(user);
@@ -57,9 +56,6 @@ public class UserController {
     @PostMapping("/login")
     public JwtTokenDto login(@RequestBody @Validated LoginRequestDto dto) {
 
-        log.info("=====로그인 api 컨트롤러 실행=====");
-        log.info("email:{}", dto.getEmail());
-        log.info("password:{}", dto.getPassword());
         JwtTokenDto token = userService.login(dto.getEmail(), dto.getPassword());
 
         return token;

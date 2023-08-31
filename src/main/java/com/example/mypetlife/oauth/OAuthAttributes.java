@@ -1,5 +1,6 @@
 package com.example.mypetlife.oauth;
 
+import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -52,7 +53,7 @@ public class OAuthAttributes {
     }
 
     public User toEntity(){
-        User user = User.createUser(name, email, null, null, null, null);
+        User user = User.createUser(name, email, null, null, null, null, Authority.ROLE_USER);
         return user;
     }
 

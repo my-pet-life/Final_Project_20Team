@@ -3,6 +3,7 @@ package com.example.mypetlife.init.community;
 import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.entity.community.comment.LikeComment;
 import com.example.mypetlife.entity.community.article.*;
+import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.UserRepository;
@@ -50,14 +51,21 @@ public class Init {
 
         public void initUser() {
 
-            User user1 = User.createUser("kim", "kim@naver.com", passwordEncoder.encode("1111"), "01012341234", "170201", PetSpecies.DOG);
+            User user1 = User.createUser("kim", "kim@naver.com", passwordEncoder.encode("1111"),
+                    "01012341234", "170201", PetSpecies.DOG, Authority.ROLE_USER);
             userRepository.save(user1);
 
-            User user2 = User.createUser("lee", "lee@naver.com", passwordEncoder.encode("2222") , "01012345678", "201212", PetSpecies.CAT);
+            User user2 = User.createUser("lee", "lee@naver.com", passwordEncoder.encode("2222") ,
+                    "01012345678", "201212", PetSpecies.CAT, Authority.ROLE_USER);
             userRepository.save(user2);
 
-            User user3 = User.createUser("park", "park@naver.com", passwordEncoder.encode("3333"), "01033332222", "220102", PetSpecies.ETC);
+            User user3 = User.createUser("park", "park@naver.com", passwordEncoder.encode("3333"),
+                    "01033332222", "220102", PetSpecies.ETC, Authority.ROLE_USER);
             userRepository.save(user3);
+
+            User admin = User.createUser("admin", "admin@naver.com", passwordEncoder.encode("1111"),
+                    "01033332222", "220102", PetSpecies.ETC, Authority.ROLE_ADMIN);
+            userRepository.save(admin);
         }
 
         public void initArticle() {
@@ -69,25 +77,20 @@ public class Init {
             // User 조회
             User kim = userRepository.findByEmail("kim@naver.com").get();
 
+            // Article 생성
+            Article article = Article.createArticle("가입인사드립니다!", "잘부탁드려요 ㅎㅎ",
+                                                    ArticleCategory.CHAT, kim);
+
             // Tag 생성
             Tag tag = Tag.createTag("가입인사");
             tagRepository.save(tag);
 
-            // ArticleTag 생성, ArticleTag 리스트 생성
-            ArticleTag articleTag = ArticleTag.createArticleTag(tag);
+            // ArticleTag
+            article.addArticleTag(ArticleTag.createArticleTag(tag));
 
-            List<ArticleTag> articleTags = new ArrayList<>();
-            articleTags.add(articleTag);
-
-            // ArticleImage 생성, ArticleImage 리스트 생성
+            // ArticleImage
             ArticleImage articleImage = ArticleImage.createArticleImage("https://t1.daumcdn.net/cfile/tistory/99CBFB3C5AE2934205");
-
-            List<ArticleImage> articleImages = new ArrayList<>();
-            articleImages.add(articleImage);
-
-            // Article 생성
-            Article article = Article.createArticle("가입인사드립니다!", "잘부탁드려요 ㅎㅎ", ArticleCategory.CHAT,
-                                                    kim, articleTags, articleImages);
+            article.addImage(articleImage);
 
             articleRepository.save(article);
 
@@ -98,25 +101,21 @@ public class Init {
             // User 조회
             User lee = userRepository.findByEmail("lee@naver.com").get();
 
+            // Article 생성
+            Article article2 = Article.createArticle("성남에 병원 추천해요!", "친절하셔서 좋았습니다",
+                                                        ArticleCategory.REVIEW, lee);
+
             // Tag 생성
             Tag tag2 = Tag.createTag("정보공유");
             tagRepository.save(tag2);
 
-            // ArticleTag 생성, ArticleTag 리스트 생성
-            ArticleTag articleTag2 = ArticleTag.createArticleTag(tag2);
+            // ArticleTag
+            article2.addArticleTag(ArticleTag.createArticleTag(tag2));
 
-            List<ArticleTag> articleTags2 = new ArrayList<>();
-            articleTags.add(articleTag2);
-
-            // ArticleImage 생성, ArticleImage 리스트 생성
+            // ArticleImage
             ArticleImage articleImage2 = ArticleImage.createArticleImage("https://t1.daumcdn.net/cfile/tistory/99CBFB3C5AE2934205");
+            article.addImage(articleImage2);
 
-            List<ArticleImage> articleImages2 = new ArrayList<>();
-            articleImages.add(articleImage2);
-
-            // Article 생성
-            Article article2 = Article.createArticle("성남에 병원 추천해요!", "친절하셔서 좋았습니다", ArticleCategory.INFORMATION,
-                                                        lee, articleTags2, articleImages2);
             articleRepository.save(article2);
 
             /*
@@ -126,26 +125,20 @@ public class Init {
             // User 조회
             User park = userRepository.findByEmail("park@naver.com").get();
 
+            // Article 생성
+            Article article3 = Article.createArticle("어떤 반려동물이 키우기 편한가요?", "추천해주세요",
+                                                        ArticleCategory.QUESTION, park);
+
             // Tag 생성
             Tag tag3 = Tag.createTag("반려동물");
             Tag tag4 = Tag.createTag("추천");
             tagRepository.save(tag3);
             tagRepository.save(tag4);
 
-            // ArticleTag 생성, ArticleTag 리스트 생성
-            ArticleTag articleTag3 = ArticleTag.createArticleTag(tag3);
-            ArticleTag articleTag4 = ArticleTag.createArticleTag(tag4);
+            // ArticleTag
+            article3.addArticleTag(ArticleTag.createArticleTag(tag3));
+            article3.addArticleTag(ArticleTag.createArticleTag(tag4));
 
-            List<ArticleTag> articleTags3 = new ArrayList<>();
-            articleTags.add(articleTag3);
-            articleTags.add(articleTag4);
-
-            // ArticleImage 생성, ArticleImage 리스트 생성
-            List<ArticleImage> articleImages3 = new ArrayList<>();
-
-            // Article 생성
-            Article article3 = Article.createArticle("어떤 반려동물이 키우기 편한가요?", "추천해주세요", ArticleCategory.QUESTION,
-                                                    park, articleTags3, articleImages3);
             articleRepository.save(article3);
         }
 

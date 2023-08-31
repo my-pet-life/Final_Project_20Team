@@ -3,6 +3,7 @@ package com.example.mypetlife.controller.community;
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.article.*;
 import com.example.mypetlife.entity.community.article.*;
+import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -15,6 +16,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,40 +51,40 @@ public class ArticleController {
         String email = jwtTokenUtils.getEmailFromHeader(request);
         User user = userService.findByEmail(email);
 
-        // List<ArticleTag>
-        List<ArticleTag> articleTags = new ArrayList<>();
+        // Article 생성
+        Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
+                ArticleCategory.valueOf(dto.getCategory().toUpperCase()), user);
 
+        // 태그 연관관계
         if(tagDtos != null) {
             for (CreateArticleTagDto tagDto : tagDtos) {
                 if(tagService.isNewTag(tagDto.getTagName())) {
-                    // 새로운 태그 -> 태그 생성 및 저장
+                    // 새로운 태그인  경우
+                    // Tag 생성 및 저장
                     Tag newTag = Tag.createTag(tagDto.getTagName());
                     tagService.saveTag(newTag);
                     // ArticleTag 생성
                     ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                    articleTags.add(articleTag);
+                    // 연관관계
+                    article.addArticleTag(articleTag);
+
                 } else {
-                    // 이미 존재하는 태그 -> DB에서 태그를 조회해와서 연결
+                    // 이미 존재하는 태그인 경우, DB에서 태그를 조회해와서 연결
                     Tag findTag = tagService.findByTagName(tagDto.getTagName());
                     // ArticleTag 생성
                     ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
+                    // 연관관계
+                    article.addArticleTag(articleTag);
                 }
             }
         }
 
-        // List<ArticleImage>
-        List<ArticleImage> articleImages = new ArrayList<>();
+        // 이미지 연관관계
         if(imageFiles != null) {
             for (MultipartFile imageFile : imageFiles) {
-                articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
+                article.addImage(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
             }
         }
-
-        // Article 생성
-        Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
-                ArticleCategory.valueOf(dto.getCategory()),
-                user, articleTags, articleImages);
 
         // 게시글 저장
         Long id = articleService.saveArticle(article);
@@ -96,40 +100,61 @@ public class ArticleController {
      * 전체 게시글 조회
      */
     @GetMapping("/community/articles")
-    public Page<ArticleListResponse> readArticles(@RequestParam(defaultValue = "latest") String order,
-                                                  @RequestParam(defaultValue = "0") int page,
-                                                  @RequestParam(defaultValue = "3") int size) {
+    public Page<ArticleListResponse> readArticles(@PageableDefault(size = 5, sort = "createdDate",
+                                                    direction = Sort.Direction.DESC) Pageable pageable,
+                                                  @RequestParam(name = "species", required = false) String species) {
 
-        Page<Article> articlePage = articleService.findAll(order, page, size);
+        Page<Article> articlePage = null;
+        if(species != null) {
+            PetSpecies petSpecies = PetSpecies.valueOf(species.toUpperCase());
+            articlePage = articleService.findAll(petSpecies, pageable);
+        } else {
+            articlePage = articleService.findAll(pageable);
+        }
+
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
     /**
      * [GET] /community/articles/{categoryName}
-     * 게시판별 게시글 조회
+     * 게시판별 조회
      */
     @GetMapping("/community/articles/{categoryName}")
     public Page<ArticleListResponse> readArticlesByCategory(@PathVariable String categoryName,
-                                                            @RequestParam(defaultValue = "latest") String order,
-                                                            @RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "3") int size) {
+                                                            @PageableDefault(size = 5, sort = "createdDate",
+                                                                    direction = Sort.Direction.DESC) Pageable pageable,
+                                                            @RequestParam(name = "species", required = false) String species) {
 
         ArticleCategory articleCategory = ArticleCategory.valueOf(categoryName.toUpperCase());
-        Page<Article> articlePage = articleService.findByCategory(articleCategory, order, page, size);
+
+        Page<Article> articlePage = null;
+        if(species != null) {
+            PetSpecies petSpecies = PetSpecies.valueOf(species.toUpperCase());
+            articlePage = articleService.findByCategory(articleCategory, petSpecies, pageable);
+        } else {
+            articlePage = articleService.findByCategory(articleCategory, pageable);
+        }
+
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
     /**
      * [GET] /community/search/tag/{tagName}
-     * 태그별 게시글 조회: 페이지
+     * 태그별 게시글 조회
      */
     @GetMapping("/community/search/tag/{tagName}")
     public Page<ArticleListResponse> readArticlesByTagName(@PathVariable String tagName,
-                                                           @RequestParam(defaultValue = "latest") String order,
-                                                           @RequestParam int page,
-                                                           @RequestParam int size) {
+                                                           @PageableDefault(size = 5, sort = "createdDate",
+                                                                   direction = Sort.Direction.DESC) Pageable pageable,
+                                                           @RequestParam(name = "species", required = false) String species) {
 
-        Page<Article> articlePage = articleService.findByTagName(tagName, order, page, size);
+        Page<Article> articlePage = null;
+        if(species != null) {
+            PetSpecies petSpecies = PetSpecies.valueOf(species.toUpperCase());
+            articlePage = articleService.findByTagName(tagName, petSpecies, pageable);
+        } else {
+            articlePage = articleService.findByTagName(tagName, pageable);
+        }
         return articlePage.map(article -> ArticleListResponse.createResponse(article));
     }
 
@@ -160,7 +185,10 @@ public class ArticleController {
         User user = article.getUser();
         validateUser(request, user);
 
-        // List<ArticleTag>
+        // 제목, 글내용, 카테고리 수정
+        articleService.updateArticle(article, dto.getTitle(), dto.getContent(), ArticleCategory.valueOf(dto.getCategory().toUpperCase()));
+
+        // 태그 수정
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
             for (CreateArticleTagDto tagDto : tagDtos) {
@@ -181,19 +209,19 @@ public class ArticleController {
             }
         }
 
-        // List<ArticleImage>
+        articleService.updateArticleTags(article, articleTags);
+
+        // 이미지 수정
         List<ArticleImage> articleImages = new ArrayList<>();
         if(imageFiles != null) {
             for (MultipartFile imageFile : imageFiles) {
                 articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
             }
         }
-
-        // 게시글 수정
-        Long id = articleService.updateArticle(article, dto.getTitle(), dto.getContent(), articleTags, articleImages);
+        articleService.updateArticleImages(article, articleImages);
 
         // 응답 생성
-        Article savedArticle = articleService.findById(id);
+        Article savedArticle = articleService.findById(articleId);
         ArticleResponse articleResponse = ArticleResponse.createResponse(savedArticle);
         return articleResponse;
     }

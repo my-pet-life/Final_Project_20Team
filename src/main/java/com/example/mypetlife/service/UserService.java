@@ -9,8 +9,8 @@ import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final JwtTokenUtils jwtTokenUtils;
-    private final UserDetailsManager manager;
+    private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
@@ -56,7 +56,7 @@ public class UserService {
         }
 
         // password 검증: 해당 email에 password가 맞는지 확인
-        CustomUserDetails user = (CustomUserDetails) manager.loadUserByUsername(email);
+        CustomUserDetails user = (CustomUserDetails) userDetailsService.loadUserByUsername(email);
         if(!passwordEncoder.matches(password, user.getPassword())){
 
             throw new CustomException(ErrorCode.WrongPassword);

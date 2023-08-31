@@ -32,9 +32,15 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers("/api/register", "/register", "/login/**", "/community/search/**", "/hospitals/**", "/access_token").permitAll()
-                                .requestMatchers(GET, "/community/articles/**").permitAll()
-                                .requestMatchers(GET, "/community").permitAll()
+                        authHttp.requestMatchers(
+                                        "/main",
+                                        "/register",
+                                        "/login",
+                                        "/community/articles/**",
+                                        "/community/search/**",
+                                        "/hospitals/**",
+                                        "/access_token").permitAll()
+                                .requestMatchers("/community/notice").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
@@ -63,9 +69,8 @@ public class WebSecurityConfig {
                     // 해당 경로는 security filter chain을 생략
                     // 즉 permitAll로 설정하여 로그인 없이 접근 가능한 URL을 아래에 추가하여
                     // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
-                    .requestMatchers("/api/register", "/register", "/login/**", "/community/search/**", "/hospitals/**", "/access_token")
-                    .requestMatchers(GET, "/community/articles/**")
-                    .requestMatchers(GET, "/community");
+                    .requestMatchers("/main", "/register",  "/login/**",  "/community/search/**", "/hospitals/**", "/access_token")
+                    .requestMatchers(GET, "/community/articles/**");
         };
 
     }
