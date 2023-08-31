@@ -1,9 +1,6 @@
 package com.example.mypetlife.config;
 
-import com.example.mypetlife.jwt.JwtAccessDeniedHandler;
-import com.example.mypetlife.jwt.JwtExceptionFilter;
-import com.example.mypetlife.jwt.JwtFilter;
-import com.example.mypetlife.jwt.JwtTokenUtils;
+import com.example.mypetlife.jwt.*;
 import com.example.mypetlife.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +26,7 @@ public class WebSecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtTokenUtils jwtTokenUtils;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
@@ -54,7 +52,9 @@ public class WebSecurityConfig {
                                 .userService(oAuth2UserService) // 소셜로그인 성공 후 후속 조치를 진행할 userService
                         )
                 )
+
                 .exceptionHandling()
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
 
