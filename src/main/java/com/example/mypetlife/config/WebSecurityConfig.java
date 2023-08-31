@@ -1,5 +1,6 @@
 package com.example.mypetlife.config;
 
+import com.example.mypetlife.jwt.JwtAccessDeniedHandler;
 import com.example.mypetlife.jwt.JwtExceptionFilter;
 import com.example.mypetlife.jwt.JwtFilter;
 import com.example.mypetlife.jwt.JwtTokenUtils;
@@ -15,9 +16,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class WebSecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final JwtTokenUtils jwtTokenUtils;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,7 +44,7 @@ public class WebSecurityConfig {
                                         "/community/search/**",
                                         "/hospitals/**",
                                         "/access_token").permitAll()
-                                .requestMatchers("/community/notice").hasRole("ADMIN")
+                                .requestMatchers(POST, "/community/notice").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
@@ -50,6 +54,10 @@ public class WebSecurityConfig {
                                 .userService(oAuth2UserService) // 소셜로그인 성공 후 후속 조치를 진행할 userService
                         )
                 )
+                .exceptionHandling()
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .and()
+
                 .sessionManagement(sessionManagment -> sessionManagment
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // JwtFilter를 SecurityChainFilter에 등록하여 특정 URL에 접근하기 전에 로그인 유무를 확인한다.
