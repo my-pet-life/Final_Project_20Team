@@ -64,8 +64,8 @@ public class CalendarService {
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         String reserveId = "";
         // 메세지 템플릿 만들기
-        String str = String.format("%s %s 에 시작해서 %s 에 종료되는 일정이 %d분 남았습니다. \ntitle: %s\nlocation: %s\n",
-                dto.getDate(), dto.getStartTime(), dto.getEndTime(), dto.getAlarm(), dto.getTitle(), dto.getLocation());
+        String str = String.format("%s, %s 에 시작하는 일정 \" %s \"이 %d분 남았습니다. (my-pet-life)",
+                dto.getDate(), dto.getStartTime(), dto.getTitle(), dto.getAlarm());
         log.info("알림 메세지: " + str);
 
         // 알림 시간 설정
