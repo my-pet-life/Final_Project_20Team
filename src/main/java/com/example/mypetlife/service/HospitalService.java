@@ -48,7 +48,7 @@ public class HospitalService {
 
 
         List<String> cityList = new ArrayList<>(set);
-        DistrictResponseDto districtResponseDto = new DistrictResponseDto(cityList);
+        DistrictResponseDto districtResponseDto = new DistrictResponseDto(city, cityList);
 
         return List.of(districtResponseDto);
     }
@@ -57,18 +57,18 @@ public class HospitalService {
     public List<SeoulHospitalInfoResponseDto> getSeoulHospital(final String city, final String district) {
         List<SeoulHospital> seoulHospitalsList
                 = seoulHospitalRepository.findBySeoulAddress_CityAndSeoulAddress_District(city, district);
-
         List<SeoulHospitalInfoResponseDto> seoulHospitalInfoResponseDto = new ArrayList<>();
         for (int i = 1; i < seoulHospitalsList.size(); i++) {
             String findCity = seoulHospitalsList.get(i).getSeoulAddress().getCity();
             String findDistrict = seoulHospitalsList.get(i).getSeoulAddress().getDistrict();
             String findStreet = seoulHospitalsList.get(i).getSeoulAddress().getStreet();
             String findHospitalStreetNumber = seoulHospitalsList.get(i).getSeoulAddress().getHospitalStreetNumber();
+            String hospitalTel = seoulHospitalsList.get(i).getHospitalTel();
             int reviewCount = seoulHospitalsList.get(i).getReviews().size();
             String findHospitalName = seoulHospitalsList.get(i).getHospitalName();
 
             seoulHospitalInfoResponseDto.add(new SeoulHospitalInfoResponseDto(findCity, findDistrict, findStreet,
-                    findHospitalStreetNumber, reviewCount, findHospitalName));
+                    findHospitalStreetNumber, hospitalTel, reviewCount, findHospitalName));
         }
 
         return seoulHospitalInfoResponseDto;

@@ -11,17 +11,20 @@ public class SeoulHospitalInfoResponseDto {
     private String street;
     private String hospitalStreetNumber;
     private String hospitalName;
+    private String hospitalTel;
     private Integer reviewCount;
 
 
     public SeoulHospitalInfoResponseDto(final String city, final String district,
                                         final String street, final String hospitalStreetNumber,
-                                        final Integer reviewCount, final String hospitalName) {
+                                        final String hospitalTel, final Integer reviewCount,
+                                        final String hospitalName) {
         this.city = city;
         this.district = district;
         this.street = street;
         this.hospitalStreetNumber = hospitalStreetNumber;
         this.hospitalName = hospitalName;
+        this.hospitalTel = hospitalTel;
         this.reviewCount = reviewCount;
     }
 }
