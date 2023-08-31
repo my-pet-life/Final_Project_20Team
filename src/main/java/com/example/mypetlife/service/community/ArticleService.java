@@ -99,10 +99,48 @@ public class ArticleService {
         return article.getId();
     }
 
+    @Transactional
+    public void updateArticle(Article article, String title, String content, ArticleCategory articleCategory) {
+
+        article.updateTitle(title);
+        article.updateContent(content);
+        article.updateCategory(articleCategory);
+    }
+
+    public void updateArticleTags(Article article, List<ArticleTag> articleTags) {
+
+//        // 기존 관계 제거
+//        List<ArticleTag> deleteArticleTags = article.getArticleTags();
+//        for (ArticleTag deleteArticleTag : deleteArticleTags) {
+//            em.remove(deleteArticleTag);
+//        }
+//        // 새로운 관계 추가
+//        article.updateArticleTags(articleTags);
+
+        article.getArticleTags().clear();
+        for (ArticleTag articleTag : articleTags) {
+            article.addArticleTag(articleTag);
+        }
+    }
+
+    @Transactional
+    public void updateArticleImages(Article article, List<ArticleImage> articleImages) {
+
+//        // 새롭게 참조하도록 (참조가 끊긴 ArticleImage는 DB에서 자동 삭제됨)
+//        article.setArticleImages(articleImages);
+        article.getArticleImages().clear();
+
+        for (ArticleImage articleImage : articleImages) {
+            article.addImage(articleImage);
+        }
+    }
+
     /* 삭제 */
     @Transactional
     public void deleteArticle(Article article) {
 
         articleRepository.delete(article);
     }
+
+
 }

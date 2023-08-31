@@ -53,6 +53,40 @@ public class Article extends BaseEntity {
     @Formula("(select count(*) from comment where comment.article_id = article_id)")
     private int commentCount;
 
+    //==생성 메서드==//
+//    public static Article createArticle(String title, String content, ArticleCategory category,
+//                                        User user, List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
+//
+//        Article article = new Article();
+//        article.title = title;
+//        article.content = content;
+//        article.category = category;
+//        article.setUser(user);
+//
+//        if(articleTags != null) {
+//            for (ArticleTag articleTag : articleTags) {
+//                article.addArticleTag(articleTag);
+//            }
+//        }
+//
+//
+//        for (ArticleImage articleImage : articleImages) {
+//            article.addImage(articleImage);
+//        }
+//
+//        return article;
+//    }
+    public static Article createArticle(String title, String content, ArticleCategory category, User user) {
+
+        Article article = new Article();
+        article.title = title;
+        article.content = content;
+        article.category = category;
+        article.setUser(user);
+
+        return article;
+    }
+
     //==연관관계 편의 메서드==//
     public void addArticleTag(ArticleTag articleTag) {
 
@@ -93,31 +127,6 @@ public class Article extends BaseEntity {
         likeArticle.setArticle(this);
     }
 
-    //==생성 메서드==//
-    public static Article createArticle(String title, String content, ArticleCategory category,
-                                        User user, List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
-
-        Article article = new Article();
-        article.title = title;
-        article.content = content;
-        article.category = category;
-        article.setUser(user);
-
-        if(articleTags != null) {
-            for (ArticleTag articleTag : articleTags) {
-                article.addArticleTag(articleTag);
-            }
-        }
-
-
-        for (ArticleImage articleImage : articleImages) {
-            article.addImage(articleImage);
-        }
-
-        return article;
-    }
-
-    //==비즈니스 메서드==//
     public void updateTitle(String title) {
 
         this.title = title;
@@ -126,5 +135,10 @@ public class Article extends BaseEntity {
     public void updateContent(String content) {
 
         this.content = content;
+    }
+
+    public void updateCategory(ArticleCategory articleCategory) {
+
+        this.category = category;
     }
 }

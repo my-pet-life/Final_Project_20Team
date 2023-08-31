@@ -51,40 +51,40 @@ public class ArticleController {
         String email = jwtTokenUtils.getEmailFromHeader(request);
         User user = userService.findByEmail(email);
 
-        // List<ArticleTag>
-        List<ArticleTag> articleTags = new ArrayList<>();
+        // Article 생성
+        Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
+                ArticleCategory.valueOf(dto.getCategory().toUpperCase()), user);
 
+        // 태그 연관관계
         if(tagDtos != null) {
             for (CreateArticleTagDto tagDto : tagDtos) {
                 if(tagService.isNewTag(tagDto.getTagName())) {
-                    // 새로운 태그 -> 태그 생성 및 저장
+                    // 새로운 태그인  경우
+                    // Tag 생성 및 저장
                     Tag newTag = Tag.createTag(tagDto.getTagName());
                     tagService.saveTag(newTag);
                     // ArticleTag 생성
                     ArticleTag articleTag = ArticleTag.createArticleTag(newTag);
-                    articleTags.add(articleTag);
+                    // 연관관계
+                    article.addArticleTag(articleTag);
+
                 } else {
-                    // 이미 존재하는 태그 -> DB에서 태그를 조회해와서 연결
+                    // 이미 존재하는 태그인 경우, DB에서 태그를 조회해와서 연결
                     Tag findTag = tagService.findByTagName(tagDto.getTagName());
                     // ArticleTag 생성
                     ArticleTag articleTag = ArticleTag.createArticleTag(findTag);
-                    articleTags.add(articleTag);
+                    // 연관관계
+                    article.addArticleTag(articleTag);
                 }
             }
         }
 
-        // List<ArticleImage>
-        List<ArticleImage> articleImages = new ArrayList<>();
+        // 이미지 연관관계
         if(imageFiles != null) {
             for (MultipartFile imageFile : imageFiles) {
-                articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
+                article.addImage(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
             }
         }
-
-        // Article 생성
-        Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
-                ArticleCategory.valueOf(dto.getCategory()),
-                user, articleTags, articleImages);
 
         // 게시글 저장
         Long id = articleService.saveArticle(article);
@@ -185,7 +185,10 @@ public class ArticleController {
         User user = article.getUser();
         validateUser(request, user);
 
-        // List<ArticleTag>
+        // 제목, 글내용, 카테고리 수정
+        articleService.updateArticle(article, dto.getTitle(), dto.getContent(), ArticleCategory.valueOf(dto.getCategory().toUpperCase()));
+
+        // 태그 수정
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
             for (CreateArticleTagDto tagDto : tagDtos) {
@@ -206,19 +209,19 @@ public class ArticleController {
             }
         }
 
-        // List<ArticleImage>
+        articleService.updateArticleTags(article, articleTags);
+
+        // 이미지 수정
         List<ArticleImage> articleImages = new ArrayList<>();
         if(imageFiles != null) {
             for (MultipartFile imageFile : imageFiles) {
                 articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
             }
         }
-
-        // 게시글 수정
-        Long id = articleService.updateArticle(article, dto.getTitle(), dto.getContent(), articleTags, articleImages);
+        articleService.updateArticleImages(article, articleImages);
 
         // 응답 생성
-        Article savedArticle = articleService.findById(id);
+        Article savedArticle = articleService.findById(articleId);
         ArticleResponse articleResponse = ArticleResponse.createResponse(savedArticle);
         return articleResponse;
     }

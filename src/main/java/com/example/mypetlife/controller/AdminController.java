@@ -42,18 +42,17 @@ public class AdminController {
         String email = jwtTokenUtils.getEmailFromHeader(request);
         User user = userService.findByEmail(email);
 
-        // List<ArticleImage>
-        List<ArticleImage> articleImages = new ArrayList<>();
-        if(imageFiles != null) {
-            for (MultipartFile imageFile : imageFiles) {
-                articleImages.add(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
-            }
-        }
-
         // Article 생성
         Article article = Article.createArticle(dto.getTitle(), dto.getContent(),
-                ArticleCategory.valueOf(dto.getCategory()),
-                user, null, articleImages);
+                                                ArticleCategory.NOTICE, user);
+
+
+        // 이미지 연관관계
+        if(imageFiles != null) {
+            for (MultipartFile imageFile : imageFiles) {
+                article.addImage(ArticleImage.createArticleImage(imageFile.getOriginalFilename()));
+            }
+        }
 
         // 게시글 저장
         Long id = articleService.saveArticle(article);
