@@ -25,9 +25,9 @@ public class ArticleResponse {
     private Integer like;
     private String username;
     private PetSpecies petSpecies;
-    private List<CommentDto> commentDtos = new ArrayList<>();
-    private List<TagDto> tagDtos = new ArrayList<>();
-    private List<ArticleImageDto> imageDtos = new ArrayList<>();
+    private List<CommentDto> comments = new ArrayList<>();
+    private List<TagDto> tags = new ArrayList<>();
+    private List<ArticleImageDto> images = new ArrayList<>();
 
     //==생성 메서드==//
     public static ArticleResponse createResponse(Article article) {
@@ -49,7 +49,7 @@ public class ArticleResponse {
             for (Comment comment : comments) {
                 commentDtos.add(CommentDto.createDto(comment));
             }
-            response.commentDtos = commentDtos;
+            response.comments = commentDtos;
         }
 
         if(!article.getArticleTags().isEmpty()) {
@@ -59,7 +59,7 @@ public class ArticleResponse {
                 Tag tag = articleTag.getTag();
                 tagDtos.add(TagDto.createDto(tag));
             }
-            response.tagDtos = tagDtos;
+            response.tags = tagDtos;
         }
 
         if(!article.getArticleImages().isEmpty()) {
@@ -68,7 +68,7 @@ public class ArticleResponse {
             for (ArticleImage articleImage : articleImages) {
                 articleImageDtos.add(ArticleImageDto.createDto(articleImage));
             }
-            response.imageDtos = articleImageDtos;
+            response.images = articleImageDtos;
         }
 
         return response;

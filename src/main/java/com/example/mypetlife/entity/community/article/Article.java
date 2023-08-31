@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,28 +53,6 @@ public class Article extends BaseEntity {
     private int commentCount;
 
     //==생성 메서드==//
-//    public static Article createArticle(String title, String content, ArticleCategory category,
-//                                        User user, List<ArticleTag> articleTags, List<ArticleImage> articleImages) {
-//
-//        Article article = new Article();
-//        article.title = title;
-//        article.content = content;
-//        article.category = category;
-//        article.setUser(user);
-//
-//        if(articleTags != null) {
-//            for (ArticleTag articleTag : articleTags) {
-//                article.addArticleTag(articleTag);
-//            }
-//        }
-//
-//
-//        for (ArticleImage articleImage : articleImages) {
-//            article.addImage(articleImage);
-//        }
-//
-//        return article;
-//    }
     public static Article createArticle(String title, String content, ArticleCategory category, User user) {
 
         Article article = new Article();
@@ -112,32 +89,24 @@ public class Article extends BaseEntity {
         this.user = user;
     }
 
-    public void updateArticleTags(List<ArticleTag> articleTags) {
-
-        this.articleTags = articleTags;
-    }
-
-    public void setArticleImages(List<ArticleImage> articleImages) {
-        this.articleImages = articleImages;
-    }
-
     public void addLike(LikeArticle likeArticle) {
 
         this.likeArticles.add(likeArticle);
         likeArticle.setArticle(this);
     }
 
-    public void updateTitle(String title) {
+    //==수정 메서드==//
+    public void setTitle(String title) {
 
         this.title = title;
     }
 
-    public void updateContent(String content) {
+    public void setContent(String content) {
 
         this.content = content;
     }
 
-    public void updateCategory(ArticleCategory articleCategory) {
+    public void setCategory(ArticleCategory category) {
 
         this.category = category;
     }
