@@ -37,6 +37,9 @@ public class User {
     @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
     private List<Message> receiveMessages;
 
+    @OneToMany(mappedBy ="chatRoomUser")
+    private List<ChatRoom> chatRooms;
+
     @OneToMany(mappedBy = "userId")
     private List<Calendar> calendars = new ArrayList<>();
 
