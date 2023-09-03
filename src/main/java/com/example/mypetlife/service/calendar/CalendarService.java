@@ -52,8 +52,15 @@ public class CalendarService {
         calendar.setContent(dto.getContent());
         calendar.setLocation(dto.getLocation());
         calendar.setAlarm(dto.getAlarm());
+
         if(dto.getAlarm() != null) {
-            calendar.setReserveId(sendMessage(dto, user.getPhone()));
+            if(user.getPhone() == null)
+                throw new CustomException(ErrorCode.NOT_FOUND_PHONE);
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            if (calDateTime(dto.getDate(), dto.getStartTime(), dto.getAlarm()).isAfter(currentTime.plusMinutes(10))) {
+                calendar.setReserveId(sendMessage(dto, user.getPhone()));
+            } else throw new CustomException(ErrorCode.WrongTimeOfAlarm);
         }
 
         log.info(calendar.toString());
@@ -80,6 +87,13 @@ public class CalendarService {
         SmsResponseDto smsResponseDto = smsService.sendSms(messageDto, messageDate);
         log.info(String.valueOf(smsResponseDto));
         return smsResponseDto.getRequestId();
+    }
+
+    public LocalDateTime calDateTime(LocalDate date, String start, Integer alarm) {
+        LocalTime startTime = LocalTime.parse(start);
+        Duration alarmDuration = Duration.ofMinutes(alarm);
+        LocalDateTime scheduleDateTime = date.atTime(startTime);
+        return scheduleDateTime.minus(alarmDuration);
     }
 
     public String calDate(ScheduleRequestDto dto) {
@@ -118,7 +132,7 @@ public class CalendarService {
     // TODO 일정 단일 조회
     public ScheduleResponseDto readSchedule(HttpServletRequest request, Long scheduleId){
         Calendar calendar = calendarRepository.findById(scheduleId).orElseThrow(() ->
-                new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+                 new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
         if(!user.equals(calendar.getUserId()))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
@@ -129,7 +143,7 @@ public class CalendarService {
         dto.setContent(calendar.getContent());
         dto.setStartTime(calendar.getStartTime());
         dto.setEndTime(calendar.getEndTime());
-        dto.setIsAlarm(calendar.getAlarm() != null);
+        dto.setIsAlarm(calendar.getAlarm() != 0);
         dto.setLocation(calendar.getLocation());
         return dto;
     }
@@ -176,6 +190,7 @@ public class CalendarService {
         if(!user.equals(calendar.getUserId()))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
+        // dto 에서 null 이 아닌 값만 변경
         updateFieldIfNotNull(dto.getDate(), calendar::setDate);
         updateFieldIfNotNull(dto.getStartTime(), calendar::setStartTime);
         updateFieldIfNotNull(dto.getEndTime(), calendar::setEndTime);
@@ -201,9 +216,17 @@ public class CalendarService {
             newCalendar.setReserveId(null);
             calendarRepository.save(newCalendar);
             log.info("예약 메세지 알림이 취소되었습니다.");
-        }
+        } else throw new CustomException(ErrorCode.NOT_FOUND_SCHEDULE_ALARM);
 
         if (newCalendar.getAlarm() != 0) {
+            if(user.getPhone() == null)
+                throw new CustomException(ErrorCode.NOT_FOUND_PHONE);
+
+            LocalDateTime currentTime = LocalDateTime.now();
+            if (calDateTime(dto.getDate(), dto.getStartTime(), dto.getAlarm()).isAfter(currentTime.plusMinutes(10))) {
+                calendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
+            } else throw new CustomException(ErrorCode.WrongTimeOfAlarm);
+
             newCalendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
             calendarRepository.save(newCalendar);
             log.info("예약 메세지 알림이 등록되었습니다.");
@@ -226,7 +249,7 @@ public class CalendarService {
 
         log.info(calendar.getReserveId());
 
-        if(calendar.getReserveId() == null) new CustomException(ErrorCode.NOT_FOUND_SCHEDULE);
+        if(calendar.getReserveId() == null) new CustomException(ErrorCode.NOT_FOUND_SCHEDULE_ALARM);
         return smsService.getReserveMessages(calendar.getReserveId());
     }
 
@@ -239,7 +262,7 @@ public class CalendarService {
         if(!user.equals(calendar.getUserId()))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
-        smsService.deleteSms(calendar.getReserveId());
+        if(calendar.getReserveId() != null) smsService.deleteSms(calendar.getReserveId());
         calendarRepository.delete(calendar);
     }
 
