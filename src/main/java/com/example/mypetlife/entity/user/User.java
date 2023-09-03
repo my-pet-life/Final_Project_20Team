@@ -1,6 +1,7 @@
 package com.example.mypetlife.entity.user;
 
 import com.example.mypetlife.entity.Calendar;
+import com.example.mypetlife.entity.ChatRoom;
 import com.example.mypetlife.entity.Message;
 import com.example.mypetlife.entity.Review;
 import com.example.mypetlife.entity.community.article.Article;
@@ -55,6 +56,9 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<LikeArticle> likeArticles = new ArrayList<>();
+
+    @OneToMany(mappedBy ="chatRoomUser")
+    private List<ChatRoom> chatRooms;
 
     //==생성 메서드==//
     public static User createUser(String username, String email, String password, String phone,
