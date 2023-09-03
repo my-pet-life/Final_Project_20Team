@@ -58,7 +58,8 @@ public class CalendarController {
     }
 
     @DeleteMapping("/{scheduleId}")
-    public MessageResponse deleteSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId) {
+    public MessageResponse deleteSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId)
+            throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.deleteSchedule(request, scheduleId);
         return responseDto("삭제가 완료되었습니다.");
     }

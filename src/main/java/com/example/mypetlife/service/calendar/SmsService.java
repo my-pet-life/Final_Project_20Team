@@ -10,9 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -77,6 +75,29 @@ public class SmsService {
         return response;
     }
 
+    public void deleteSms(String reserveId)
+            throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException{
+        Long time = System.currentTimeMillis();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("x-ncp-apigw-timestamp", time.toString());
+        headers.set("x-ncp-iam-access-key", accessKey);
+        headers.set("x-ncp-apigw-signature-v2", makeSignature(time, reserveId));
+
+        HttpEntity<String> httpEntity = new HttpEntity<>(headers);
+        URI canecelUri = new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/reservations/" + reserveId);
+        RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
+        ResponseEntity<String> response = restTemplate.exchange(canecelUri, HttpMethod.DELETE, httpEntity, String.class);
+
+        if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
+            System.out.println("예약된 메시지가 성공적으로 취소되었습니다.");
+        } else {
+            System.err.println("예약된 메시지 취소에 실패하였습니다. HTTP 상태 코드: " + response.getStatusCode());
+        }
+    }
+
+
     public String makeSignature(Long time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String space = " ";
         String newLine = "\n";
@@ -95,6 +116,39 @@ public class SmsService {
                 .append(newLine)
                 .append(accessKey)
                 .toString();
+
+        log.info(message);
+
+        SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+        Mac mac = Mac.getInstance("HmacSHA256");
+        mac.init(signingKey);
+
+        byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
+        String encodeBase64String = Base64.encodeBase64String(rawHmac);
+
+        return encodeBase64String;
+    }
+
+    public String makeSignature(Long time, String reserveId) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        String space = " ";
+        String newLine = "\n";
+        String method = "DELETE";
+        String url = "/sms/v2/services/"+ this.serviceId + "/reservations/" + reserveId;
+        String timestamp = time.toString();
+        String accessKey = this.accessKey;
+        String secretKey = this.secretKey;
+
+        String message = new StringBuilder()
+                .append(method)
+                .append(space)
+                .append(url)
+                .append(newLine)
+                .append(timestamp)
+                .append(newLine)
+                .append(accessKey)
+                .toString();
+
+        log.info(message);
 
         SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
         Mac mac = Mac.getInstance("HmacSHA256");

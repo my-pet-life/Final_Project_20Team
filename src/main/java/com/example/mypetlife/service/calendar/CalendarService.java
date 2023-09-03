@@ -62,9 +62,9 @@ public class CalendarService {
     // TODO 일정 등록 시, 알람이 설정되어 있으면 예약 메세지 전송
     public String sendMessage(ScheduleRequestDto dto, String phoneNumber)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-        String reserveId = "";
+
         // 메세지 템플릿 만들기
-        String str = String.format("%s, %s 에 시작하는 일정 \" %s \"이 %d분 남았습니다. (my-pet-life)",
+        String str = String.format("%s, %s 에 시작하는 일정 [ %s ] 이 %d분 남았습니다.(my-pet-life)",
                 dto.getDate(), dto.getStartTime(), dto.getTitle(), dto.getAlarm());
         log.info("알림 메세지: " + str);
 
@@ -180,6 +180,8 @@ public class CalendarService {
         updateFieldIfNotNull(dto.getContent(), calendar::setContent);
         updateFieldIfNotNull(dto.getLocation(), calendar::setLocation);
         updateFieldIfNotNull(dto.getAlarm(), calendar::setAlarm);
+
+
         calendarRepository.save(calendar);
     }
 
@@ -189,13 +191,15 @@ public class CalendarService {
 
 
     // TODO 일정 삭제
-    public void deleteSchedule(HttpServletRequest request, Long scheduleId) {
+    public void deleteSchedule(HttpServletRequest request, Long scheduleId)
+            throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         Calendar calendar = calendarRepository.findById(scheduleId).orElseThrow(()
                 -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
         if(!user.equals(calendar.getUserId()))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
+        smsService.deleteSms(calendar.getReserveId());
         calendarRepository.delete(calendar);
     }
 
