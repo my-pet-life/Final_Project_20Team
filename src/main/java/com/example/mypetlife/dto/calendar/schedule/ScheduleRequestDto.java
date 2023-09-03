@@ -1,4 +1,4 @@
-package com.example.mypetlife.dto.calendar;
+package com.example.mypetlife.dto.calendar.schedule;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

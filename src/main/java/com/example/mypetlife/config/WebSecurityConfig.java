@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @RequiredArgsConstructor
@@ -32,15 +33,10 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers(
-                                        "/main",
-                                        "/register",
-                                        "/login",
-                                        "/community/articles/**",
-                                        "/community/search/**",
-                                        "/hospitals/**",
-                                        "/access_token").permitAll()
-                                .requestMatchers("/community/notice").hasRole("ADMIN")
+                        authHttp.requestMatchers("/api/register", "/register", "/login/**", "/community/search/**", "/hospitals/**", "/access_token").permitAll()
+                                .requestMatchers(GET, "/community/articles/**").permitAll()
+                                .requestMatchers(GET, "/community").permitAll()
+                                .requestMatchers(POST, "/sms/send/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
@@ -69,8 +65,10 @@ public class WebSecurityConfig {
                     // 해당 경로는 security filter chain을 생략
                     // 즉 permitAll로 설정하여 로그인 없이 접근 가능한 URL을 아래에 추가하여
                     // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
-                    .requestMatchers("/main", "/register",  "/login/**",  "/community/search/**", "/hospitals/**", "/access_token")
-                    .requestMatchers(GET, "/community/articles/**");
+                    .requestMatchers("/api/register", "/register", "/login/**", "/community/search/**", "/hospitals/**", "/access_token")
+                    .requestMatchers(GET, "/community/articles/**")
+                    .requestMatchers(POST, "/sms/send/**")
+                    .requestMatchers(GET, "/community");
         };
 
     }
