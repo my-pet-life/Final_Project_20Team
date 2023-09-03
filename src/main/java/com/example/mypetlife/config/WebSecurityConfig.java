@@ -4,7 +4,6 @@ import com.example.mypetlife.jwt.JwtExceptionFilter;
 import com.example.mypetlife.jwt.JwtFilter;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.oauth.OAuth2SuccessHandler;
-import com.example.mypetlife.oauth.OAuth2UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +17,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
-import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpMethod.GET;
 
 @Configuration
@@ -34,9 +32,17 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers("/register", "/login/**").permitAll()
-//                                .requestMatchers(POST, "/community").authenticated())
-                                .anyRequest().authenticated())
+                        authHttp.requestMatchers(
+                                        "/main",
+                                        "/register",
+                                        "/login",
+                                        "/community/articles/**",
+                                        "/community/search/**",
+                                        "/hospitals/**",
+                                        "/access_token").permitAll()
+                                .requestMatchers("/community/notice").hasRole("ADMIN")
+                                .anyRequest().authenticated()
+                )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
                         .successHandler(oAuth2SuccessHandler)
@@ -61,8 +67,12 @@ public class WebSecurityConfig {
         return web -> {
             web.ignoring()
                     // 해당 경로는 security filter chain을 생략
-                    .requestMatchers("/register", "/login/**");
+                    // 즉 permitAll로 설정하여 로그인 없이 접근 가능한 URL을 아래에 추가하여
+                    // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
+                    .requestMatchers("/main", "/register",  "/login/**",  "/community/search/**", "/hospitals/**", "/access_token")
+                    .requestMatchers(GET, "/community/articles/**");
         };
+
     }
 
     @Bean
