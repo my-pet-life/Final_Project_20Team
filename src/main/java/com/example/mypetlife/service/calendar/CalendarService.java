@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
@@ -166,7 +167,8 @@ public class CalendarService {
     }
 
     // TODO 일정 수정
-    public void updateSchedule(HttpServletRequest request, Long scheduleId, UpdatedScheduleDto dto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
+    public void updateSchedule(HttpServletRequest request, Long scheduleId, UpdatedScheduleDto dto)
+            throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         Calendar calendar = calendarRepository.findById(scheduleId).orElseThrow(()
                 -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
@@ -212,6 +214,21 @@ public class CalendarService {
         if (newValue != null) updateFunction.accept(newValue);
     }
 
+    // TODO 알림 메세지 상태 조회
+    public ResponseEntity<String> getReservedMessageStatus(HttpServletRequest request, Long scheduleId)
+            throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException {
+        Calendar calendar = calendarRepository.findById(scheduleId).orElseThrow(() ->
+                new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+
+        User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
+        if(!user.equals(calendar.getUserId()))
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+
+        log.info(calendar.getReserveId());
+
+        if(calendar.getReserveId() == null) new CustomException(ErrorCode.NOT_FOUND_SCHEDULE);
+        return smsService.getReserveMessages(calendar.getReserveId());
+    }
 
     // TODO 일정 삭제
     public void deleteSchedule(HttpServletRequest request, Long scheduleId)

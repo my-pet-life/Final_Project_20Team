@@ -40,7 +40,7 @@ public class SmsService {
     @Value("${naver-cloud-sms.senderPhone}")
     private String phone;
 
-    // TODO 메세지 전송 테스트
+    // TODO 예약 메세지 전송
     public SmsResponseDto sendSms(MessageDto messageDto, String reserveTime)
             throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
         Long time = System.currentTimeMillis();
@@ -49,7 +49,7 @@ public class SmsService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("x-ncp-apigw-timestamp", time.toString());
         headers.set("x-ncp-iam-access-key", accessKey);
-        headers.set("x-ncp-apigw-signature-v2", makeSignature(time));
+        headers.set("x-ncp-apigw-signature-v2", makeSignatureOfCreate(time));
 
         List<MessageDto> messages = new ArrayList<>();
         messages.add(messageDto);
@@ -75,15 +75,16 @@ public class SmsService {
         return response;
     }
 
+    // TODO 예약 메세지 삭제
     public void deleteSms(String reserveId)
-            throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException{
+            throws RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException{
         Long time = System.currentTimeMillis();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("x-ncp-apigw-timestamp", time.toString());
         headers.set("x-ncp-iam-access-key", accessKey);
-        headers.set("x-ncp-apigw-signature-v2", makeSignature(time, reserveId));
+        headers.set("x-ncp-apigw-signature-v2", makeSignatureOfDelete(time, reserveId));
 
         HttpEntity<String> httpEntity = new HttpEntity<>(headers);
         URI canecelUri = new URI("https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/reservations/" + reserveId);
@@ -97,8 +98,65 @@ public class SmsService {
         }
     }
 
+    // TODO 메세지 상태 조회
+    public ResponseEntity<String> getReserveMessages(String reserveId)
+            throws URISyntaxException, UnsupportedEncodingException, NoSuchAlgorithmException, InvalidKeyException {
+        Long time = System.currentTimeMillis();
 
-    public String makeSignature(Long time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+        // API 엔드포인트 URL 설정
+        String apiBaseUrl = "https://sens.apigw.ntruss.com/sms/v2/services/" + serviceId + "/reservations/" + reserveId + "/reserve-status";
+
+        // 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+        headers.set("x-ncp-apigw-timestamp", String.valueOf(System.currentTimeMillis()));
+        headers.set("x-ncp-iam-access-key", accessKey);
+        headers.set("x-ncp-apigw-signature-v2", makeSignatureOfSearch(time, reserveId));
+
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        // REST 호출
+        RestTemplate restTemplate = new RestTemplate();
+        URI uri = new URI(apiBaseUrl);
+
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+        return response;
+    }
+
+    // TODO 메세지 상태 조회 시, 시그니처 생성 로직 메소드
+    public String makeSignatureOfSearch(Long time, String reserveId) throws NoSuchAlgorithmException, InvalidKeyException, UnsupportedEncodingException {
+        String space = " ";
+        String newLine = "\n";
+        String method = "GET"; // 또는 API 요청에 맞는 HTTP 메서드를 사용
+        String url = "/sms/v2/services/" + this.serviceId + "/reservations/" + reserveId + "/reserve-status"; // API 엔드포인트 URL
+        String timestamp = time.toString();
+        String accessKey = this.accessKey;
+        String secretKey = this.secretKey;
+
+        String message = new StringBuilder()
+                .append(method)
+                .append(space)
+                .append(url)
+                .append(newLine)
+                .append(timestamp)
+                .append(newLine)
+                .append(accessKey)
+                .toString();
+
+        log.info(message);
+
+        SecretKeySpec signingKey = new SecretKeySpec(secretKey.getBytes("UTF-8"), "HmacSHA256");
+        Mac mac = Mac.getInstance("HmacSHA256");
+        mac.init(signingKey);
+
+        byte[] rawHmac = mac.doFinal(message.getBytes("UTF-8"));
+        String encodeBase64String = Base64.encodeBase64String(rawHmac);
+
+        return encodeBase64String;
+    }
+
+    // TODO 메세지 등록 시, 시그니처 생성 로직 메소드
+    public String makeSignatureOfCreate(Long time) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String space = " ";
         String newLine = "\n";
         String method = "POST";
@@ -129,7 +187,8 @@ public class SmsService {
         return encodeBase64String;
     }
 
-    public String makeSignature(Long time, String reserveId) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
+    // TODO 메세지 삭제 시, 시그니처 생성 로직 메소드
+    public String makeSignatureOfDelete(Long time, String reserveId) throws NoSuchAlgorithmException, UnsupportedEncodingException, InvalidKeyException {
         String space = " ";
         String newLine = "\n";
         String method = "DELETE";

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -49,6 +50,12 @@ public class CalendarController {
     @GetMapping("/readall/alarm")
     public List<AlarmScheduleListDto> readAllAlarmSchedule(HttpServletRequest request) {
         return calendarService.readAllAlarmSchedule(request);
+    }
+
+    @GetMapping("/read/message-status/{scheduleId}")
+    public ResponseEntity<String> getReservedMessageStatus(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId)
+            throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException {
+        return calendarService.getReservedMessageStatus(request, scheduleId);
     }
 
     @PutMapping("/{scheduleId}")

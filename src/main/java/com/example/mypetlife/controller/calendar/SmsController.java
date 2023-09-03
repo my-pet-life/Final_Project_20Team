@@ -6,9 +6,8 @@ import com.example.mypetlife.service.calendar.SmsService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestClientException;
 
 import java.io.UnsupportedEncodingException;
@@ -24,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 public class SmsController {
     private final SmsService smsService;
 
+    // TODO 메세지 전송 테스트
     @PostMapping("/sms/send/test")
     public SmsResponseDto sendSms(@RequestBody MessageDto dto)
             throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -36,6 +36,4 @@ public class SmsController {
         log.info("reserved Time: " + formattedTime);
         return smsService.sendSms(dto, formattedTime);
     }
-
-
 }
