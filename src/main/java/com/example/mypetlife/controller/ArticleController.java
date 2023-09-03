@@ -2,7 +2,7 @@ package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.community.article.CreateArticleRequest;
 import com.example.mypetlife.dto.community.article.CreateArticleResponse;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.entity.article.Article;
 import com.example.mypetlife.entity.article.ArticleImage;
 import com.example.mypetlife.entity.article.CategoryArticle;
@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,7 +1,7 @@
 package com.example.mypetlife.entity.article;
 
 import com.example.mypetlife.entity.Comment;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

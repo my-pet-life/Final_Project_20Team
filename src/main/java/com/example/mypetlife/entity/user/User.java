@@ -1,5 +1,9 @@
-package com.example.mypetlife.entity;
+package com.example.mypetlife.entity.user;
 
+import com.example.mypetlife.entity.Calendar;
+import com.example.mypetlife.entity.ChatRoom;
+import com.example.mypetlife.entity.Message;
+import com.example.mypetlife.entity.Review;
 import com.example.mypetlife.entity.article.Article;
 import jakarta.persistence.*;
 import lombok.Getter;

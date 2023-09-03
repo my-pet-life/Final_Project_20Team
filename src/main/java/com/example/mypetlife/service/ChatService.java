@@ -8,7 +8,7 @@ import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.webSocket.MsgRoom;
 import com.example.mypetlife.entity.ChatRoom;
 import com.example.mypetlife.entity.Message;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.repository.ChatRoomRepository;
 import com.example.mypetlife.repository.MessageRepository;
 import com.example.mypetlife.repository.UserRepository;

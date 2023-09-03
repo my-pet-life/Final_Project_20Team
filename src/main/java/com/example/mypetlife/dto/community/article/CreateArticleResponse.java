@@ -1,11 +1,6 @@
 package com.example.mypetlife.dto.community.article;
 
-import com.example.mypetlife.entity.Comment;
-import com.example.mypetlife.entity.User;
-import com.example.mypetlife.entity.article.ArticleImage;
 import com.example.mypetlife.entity.article.CategoryArticle;
-import com.example.mypetlife.entity.article.Tag;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;

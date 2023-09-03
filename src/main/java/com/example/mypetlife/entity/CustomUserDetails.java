@@ -1,5 +1,6 @@
 package com.example.mypetlife.entity;
 
+import com.example.mypetlife.entity.user.User;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

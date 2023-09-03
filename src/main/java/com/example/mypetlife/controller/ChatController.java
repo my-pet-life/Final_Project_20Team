@@ -2,7 +2,7 @@ package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.chat.ChatMessageListDto;
 import com.example.mypetlife.repository.ChatRoomRepository;
-import com.example.mypetlife.entity.User;
+import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.ChatService;
 import com.example.mypetlife.service.UserService;
