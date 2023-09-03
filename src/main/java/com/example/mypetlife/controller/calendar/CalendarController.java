@@ -52,7 +52,7 @@ public class CalendarController {
     }
 
     @PutMapping("/{scheduleId}")
-    public MessageResponse updateSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId, @RequestBody UpdatedScheduleDto dto){
+    public MessageResponse updateSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId, @RequestBody UpdatedScheduleDto dto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.updateSchedule(request, scheduleId, dto);
         return responseDto("수정이 완료되었습니다.");
     }

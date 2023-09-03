@@ -166,10 +166,11 @@ public class CalendarService {
     }
 
     // TODO 일정 수정
-    public void updateSchedule(HttpServletRequest request, Long scheduleId, UpdatedScheduleDto dto) {
+    public void updateSchedule(HttpServletRequest request, Long scheduleId, UpdatedScheduleDto dto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         Calendar calendar = calendarRepository.findById(scheduleId).orElseThrow(()
                 -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
+
         if(!user.equals(calendar.getUserId()))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
@@ -180,9 +181,31 @@ public class CalendarService {
         updateFieldIfNotNull(dto.getContent(), calendar::setContent);
         updateFieldIfNotNull(dto.getLocation(), calendar::setLocation);
         updateFieldIfNotNull(dto.getAlarm(), calendar::setAlarm);
-
-
         calendarRepository.save(calendar);
+
+        Calendar newCalendar = calendarRepository.findById(scheduleId).get();
+
+        ScheduleRequestDto scheduleRequestDto = new ScheduleRequestDto();
+        scheduleRequestDto.setDate(newCalendar.getDate());
+        scheduleRequestDto.setStartTime(newCalendar.getStartTime());
+        scheduleRequestDto.setEndTime(newCalendar.getEndTime());
+        scheduleRequestDto.setTitle(newCalendar.getTitle());
+        scheduleRequestDto.setContent(newCalendar.getContent());
+        scheduleRequestDto.setLocation(newCalendar.getLocation());
+        scheduleRequestDto.setAlarm(newCalendar.getAlarm());
+
+        if(newCalendar.getReserveId() != null) {
+            smsService.deleteSms(newCalendar.getReserveId());
+            newCalendar.setReserveId(null);
+            calendarRepository.save(newCalendar);
+            log.info("예약 메세지 알림이 취소되었습니다.");
+        }
+
+        if (newCalendar.getAlarm() != 0) {
+            newCalendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
+            calendarRepository.save(newCalendar);
+            log.info("예약 메세지 알림이 등록되었습니다.");
+        }
     }
 
     private <T> void updateFieldIfNotNull(T newValue, Consumer<T> updateFunction) {
