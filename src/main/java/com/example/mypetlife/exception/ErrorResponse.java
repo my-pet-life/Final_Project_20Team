@@ -75,7 +75,7 @@ public class ErrorResponse {
                 .body(ErrorResponse.builder()
                         .errorName("AuthenticationException")
                         .httpStatus(HttpStatus.UNAUTHORIZED.name())
-                        .message("인증에 실패했습니다")
+                        .message(e.getMessage())
                         .build());
     }
 

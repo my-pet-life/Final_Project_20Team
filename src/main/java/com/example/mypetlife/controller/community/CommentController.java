@@ -2,7 +2,7 @@ package com.example.mypetlife.controller.community;
 
 import com.example.mypetlife.dto.MessageResponse;
 import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
-import com.example.mypetlife.dto.community.comment.CreateCommentResponse;
+import com.example.mypetlife.dto.community.comment.CommentResponse;
 import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.entity.community.article.Article;
 import com.example.mypetlife.entity.user.User;
@@ -15,6 +15,7 @@ import com.example.mypetlife.service.community.CommentService;
 import com.example.mypetlife.service.community.LikeCommentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,9 +33,9 @@ public class CommentController {
      * 댓글 등록
      */
     @PostMapping("/community/article/{articleId}/comment")
-    public CreateCommentResponse addComment(@RequestBody CreateAndUpdateCommentRequest dto,
-                           @PathVariable Long articleId,
-                           HttpServletRequest request) {
+    public CommentResponse addComment(@RequestBody @Validated CreateAndUpdateCommentRequest dto,
+                                      @PathVariable Long articleId,
+                                      HttpServletRequest request) {
 
         // 회원
         String email = jwtTokenUtils.getEmailFromHeader(request);
@@ -47,7 +48,7 @@ public class CommentController {
         Comment comment = Comment.createComment(dto.getContent(), user, article);
         commentService.saveComment(comment);
 
-        return CreateCommentResponse.createResponse(comment, user, article);
+        return CommentResponse.createResponse(comment, article);
     }
 
     /**
@@ -55,10 +56,10 @@ public class CommentController {
      * 댓글 수정
      */
     @PutMapping("/community/article/{articleId}/{commentId}")
-    public CreateCommentResponse updateComment(@RequestBody CreateAndUpdateCommentRequest dto,
-                                               @PathVariable Long articleId,
-                                               @PathVariable Long commentId,
-                                               HttpServletRequest request) {
+    public CommentResponse updateComment(@RequestBody CreateAndUpdateCommentRequest dto,
+                                         @PathVariable Long articleId,
+                                         @PathVariable Long commentId,
+                                         HttpServletRequest request) {
 
         // 회원 검증
         String email = jwtTokenUtils.getEmailFromHeader(request);
@@ -72,7 +73,7 @@ public class CommentController {
         // 댓글 수정
         commentService.updateComment(comment, dto.getContent());
 
-        return CreateCommentResponse.createResponse(comment, loginUser, comment.getArticle());
+        return CommentResponse.createResponse(comment, comment.getArticle());
     }
 
     /**
@@ -104,7 +105,9 @@ public class CommentController {
      * 댓글 좋아요 누르기
      */
     @PostMapping("/community/article/{articleId}/{commentId}/like")
-    public String likeComment(@PathVariable Long commentId, HttpServletRequest request) {
+    public CommentResponse likeComment(@PathVariable Long articleId,
+                                       @PathVariable Long commentId,
+                                       HttpServletRequest request) {
 
         // 회원 조회
         String email = jwtTokenUtils.getEmailFromHeader(request);
@@ -112,6 +115,9 @@ public class CommentController {
 
         likeCommentService.likeComment(user, commentId);
 
-        return "ok";
+        Comment comment = commentService.findById(commentId);
+        Article article = articleService.findById(articleId);
+
+        return CommentResponse.createResponse(comment, article);
     }
 }

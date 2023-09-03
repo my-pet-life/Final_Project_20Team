@@ -1,5 +1,7 @@
 package com.example.mypetlife.service.community;
 
+import com.example.mypetlife.entity.community.article.Article;
+import com.example.mypetlife.entity.community.article.LikeArticle;
 import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.entity.community.comment.LikeComment;
 import com.example.mypetlife.entity.user.User;
