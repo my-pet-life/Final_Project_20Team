@@ -46,6 +46,9 @@ public class CalendarService {
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
         calendar.setUserId(user);
         calendar.setDate(dto.getDate());
+        if(dto.getDate() == null)
+            throw new CustomException(ErrorCode.NOT_FOUND_DATE);
+
         calendar.setStartTime(dto.getStartTime());
         calendar.setEndTime(dto.getEndTime());
         calendar.setTitle(dto.getTitle());

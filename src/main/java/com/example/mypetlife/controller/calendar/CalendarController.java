@@ -5,6 +5,14 @@ import com.example.mypetlife.dto.calendar.alarm.AlarmScheduleListDto;
 import com.example.mypetlife.dto.calendar.schedule.*;
 import com.example.mypetlife.service.calendar.CalendarService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +30,33 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/calendar")
+@Tag(name = "Calendar", description = "반려 동물 일정 관리 API")
 public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
+    @Operation(summary = "일정 등록하기", description = "반려 동물의 일정을 등록합니다.")
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponse(
+            responseCode = "200",
+            description = "일정 조회 성공",
+            content = @Content(
+                    schema = @Schema(implementation = MessageResponse.class),
+                    examples = @ExampleObject(
+                            value = "{\"message\": \"일정이 등록되었습니다.\"}"
+                    )
+            )
+    )
+    @RequestBody(
+            description = "일정 등록을 위한 JSON 데이터",
+            required = true,
+            content = @Content(
+                    schema = @Schema(implementation = ScheduleRequestDto.class),
+                    examples = @ExampleObject(
+                            value = "{\"date\":\"2023-09-04\",\"startTime\":\"19:00\",\"endTime\":\"20:00\",\"title\":\"산책\",\"content\":\"오랜만에 나들이\",\"location\":\"집 앞\",\"alarm\":30}"
+                    )
+            )
+    )
     public MessageResponse create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.create(request, dto);
