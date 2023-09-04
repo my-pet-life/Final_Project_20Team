@@ -36,6 +36,8 @@ public class WebSecurityConfig {
                                         "/main",
                                         "/register",
                                         "/login",
+                                        "/api/hospitals/**/",
+                                        "/","/v3/api-docs/**", "/swagger-ui/**",
                                         "/community/articles/**",
                                         "/community/search/**",
                                         "/hospitals/**",
@@ -69,7 +71,10 @@ public class WebSecurityConfig {
                     // 해당 경로는 security filter chain을 생략
                     // 즉 permitAll로 설정하여 로그인 없이 접근 가능한 URL을 아래에 추가하여
                     // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
-                    .requestMatchers("/main", "/register",  "/login/**",  "/community/search/**", "/hospitals/**", "/access_token")
+                    .requestMatchers("/main", "/register",  "/login/**",
+                            "/api/hospitals/**/",
+                            "/","/v3/api-docs/**", "/swagger-ui/**",
+                            "/community/search/**", "/hospitals/**", "/access_token")
                     .requestMatchers(GET, "/community/articles/**");
         };
 
