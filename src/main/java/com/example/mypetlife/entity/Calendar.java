@@ -39,4 +39,7 @@ public class Calendar {
 
     @Column(name = "alarm")
     private Integer alarm;
+
+    @Column(name = "reserved_id")
+    private String reserveId;
 }
