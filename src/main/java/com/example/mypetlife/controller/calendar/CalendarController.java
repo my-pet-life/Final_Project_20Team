@@ -7,10 +7,8 @@ import com.example.mypetlife.service.calendar.CalendarService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,27 +33,12 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    @Operation(summary = "일정 등록하기", description = "반려 동물의 일정을 등록합니다.")
+    @Operation(summary = "일정 등록", description = "반려 동물의 일정을 등록합니다.")
     @SecurityRequirement(name = "bearerAuth")
-    @ApiResponse(
-            responseCode = "200",
-            description = "일정 조회 성공",
-            content = @Content(
-                    schema = @Schema(implementation = MessageResponse.class),
-                    examples = @ExampleObject(
-                            value = "{\"message\": \"일정이 등록되었습니다.\"}"
-                    )
-            )
-    )
-    @RequestBody(
-            description = "일정 등록을 위한 JSON 데이터",
+    @ApiResponse(responseCode = "200", description = "일정 등록 성공")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
-            content = @Content(
-                    schema = @Schema(implementation = ScheduleRequestDto.class),
-                    examples = @ExampleObject(
-                            value = "{\"date\":\"2023-09-04\",\"startTime\":\"19:00\",\"endTime\":\"20:00\",\"title\":\"산책\",\"content\":\"오랜만에 나들이\",\"location\":\"집 앞\",\"alarm\":30}"
-                    )
-            )
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ScheduleRequestDto.class))
     )
     public MessageResponse create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
@@ -64,38 +47,56 @@ public class CalendarController {
     }
 
     @GetMapping("/readList")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "일정 날짜 조회", description = "반려 동물의 일정을 날짜별로 조회합니다.")
     public List<ScheduleListResponseDto> readDate(HttpServletRequest request, @RequestParam("date") String date) {
         return calendarService.readDateSchedule(request, date);
     }
 
     @GetMapping("/{scheduleId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "일정 단일 조회", description = "반려 동물의 일정을 조회합니다.")
     public ScheduleResponseDto readSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId){
         return calendarService.readSchedule(request, scheduleId);
     }
 
     @GetMapping("/readall")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "일정 전체 조회", description = "반려 동물의 전체 일정을 최신순으로 조회합니다.")
     public List<ScheduleAllListResponseDto> readAll(HttpServletRequest request) {
         return calendarService.readAllSchedule(request);
     }
 
     @GetMapping("/readall/alarm")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "알림 설정 일정 조회", description = "반려 동물의 일정 중, 알림 설정한 일정만 조회합니다.")
     public List<AlarmScheduleListDto> readAllAlarmSchedule(HttpServletRequest request) {
         return calendarService.readAllAlarmSchedule(request);
     }
 
     @GetMapping("/read/message-status/{scheduleId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "알림 메세지 상태 조회", description = "반려 동물의 일정 중, 알림 설정된 일정의 메세지 상태를 조회합니다.")
     public ResponseEntity<String> getReservedMessageStatus(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException {
         return calendarService.getReservedMessageStatus(request, scheduleId);
     }
 
     @PutMapping("/{scheduleId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "일정 수정", description = "반려 동물의 일정을 수정합니다.")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UpdatedScheduleDto.class))
+    )
     public MessageResponse updateSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId, @RequestBody UpdatedScheduleDto dto) throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.updateSchedule(request, scheduleId, dto);
         return responseDto("수정이 완료되었습니다.");
     }
 
     @DeleteMapping("/{scheduleId}")
+    @SecurityRequirement(name = "bearerAuth")
+    @Operation(summary = "일정 삭제", description = "반려 동물의 일정을 삭제합니다.")
     public MessageResponse deleteSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.deleteSchedule(request, scheduleId);
