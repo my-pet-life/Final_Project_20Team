@@ -104,9 +104,10 @@ public class JwtTokenUtils {
 
         String accessToken = Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + 60)) // 60초 (1분)
+                .setIssuedAt(Date.from(Instant.now()))
+                .setExpiration(Date.from(Instant.now().plusSeconds(60 * 30)))
                 .signWith(SignatureAlgorithm.HS256, signingKey) // 사용할 암호화 알고리즘과 secret 값
+                .setHeaderParam("type","jwt")
                 .compact();
 
         return accessToken;

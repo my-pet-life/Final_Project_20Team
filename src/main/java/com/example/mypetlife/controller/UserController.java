@@ -1,8 +1,8 @@
 package com.example.mypetlife.controller;
 
-import com.example.mypetlife.dto.user.LoginRequestDto;
+import com.example.mypetlife.dto.user.LoginRequest;
 import com.example.mypetlife.dto.user.RegisterRequest;
-import com.example.mypetlife.dto.user.RegisterResponseDto;
+import com.example.mypetlife.dto.user.RegisterResponse;
 import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.PetSpecies;
 import com.example.mypetlife.entity.user.User;
@@ -11,7 +11,6 @@ import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.jwt.RefreshTokenDto;
 import com.example.mypetlife.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
+
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
@@ -31,9 +31,8 @@ public class UserController {
      * 회원가입
      */
     @PostMapping("/register")
-    public RegisterResponseDto register(@RequestBody @Validated RegisterRequest dto) {
+    public RegisterResponse register(@RequestBody @Validated RegisterRequest dto) {
 
-        log.info("{}", PetSpecies.valueOf("DOG"));
         // 회원 생성
         User user = User.createUser(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
                                     dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices()),
@@ -41,11 +40,10 @@ public class UserController {
 
         // 회원가입
         Long id = userService.register(user);
-        log.info("id={}", id);
 
         User savedUser = userService.findById(id);
 
-        return new RegisterResponseDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(),
+        return new RegisterResponse(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(),
                 savedUser.getPetSpecies(), savedUser.getCreatedAt());
     }
 
@@ -54,7 +52,7 @@ public class UserController {
      * 일반 회원 로그인: JWT 토큰 발급
      */
     @PostMapping("/login")
-    public JwtTokenDto login(@RequestBody @Validated LoginRequestDto dto) {
+    public JwtTokenDto login(@RequestBody @Validated LoginRequest dto) {
 
         JwtTokenDto token = userService.login(dto.getEmail(), dto.getPassword());
 

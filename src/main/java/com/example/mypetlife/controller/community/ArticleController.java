@@ -44,7 +44,7 @@ public class ArticleController {
     @PostMapping("/community")
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
-                                       @RequestPart(required = false) List<CreateArticleTagDto> tagDtos,
+                                       @RequestPart(required = false) List<CreateArticleTagRequest> tagDtos,
                                        @RequestPart(required = false) List<MultipartFile> imageFiles) {
 
         // User 조회
@@ -57,7 +57,7 @@ public class ArticleController {
 
         // 태그 연관관계
         if(tagDtos != null) {
-            for (CreateArticleTagDto tagDto : tagDtos) {
+            for (CreateArticleTagRequest tagDto : tagDtos) {
                 if(tagService.isNewTag(tagDto.getTagName())) {
                     // 새로운 태그인  경우
                     // Tag 생성 및 저장
@@ -176,7 +176,7 @@ public class ArticleController {
     @PutMapping("/community/article/{articleId}")
     public ArticleResponse updateArticle(@PathVariable Long articleId,
                                          @RequestPart @Validated UpdateArticleRequest dto,
-                                         @RequestPart(required = false) List<CreateArticleTagDto> tagDtos,
+                                         @RequestPart(required = false) List<CreateArticleTagRequest> tagDtos,
                                          @RequestPart(required = false) List<MultipartFile> imageFiles,
                                          HttpServletRequest request) {
 
@@ -191,7 +191,7 @@ public class ArticleController {
         // 태그 수정
         List<ArticleTag> articleTags = new ArrayList<>();
         if(tagDtos != null) {
-            for (CreateArticleTagDto tagDto : tagDtos) {
+            for (CreateArticleTagRequest tagDto : tagDtos) {
                 if(tagService.isNewTag(tagDto.getTagName())) {
                     // 새로운 태그 -> 태그 생성 및 저장
                     Tag newTag = Tag.createTag(tagDto.getTagName());
