@@ -18,6 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 
 @Configuration
 @RequiredArgsConstructor
@@ -75,6 +76,7 @@ public class WebSecurityConfig {
                             "/api/hospitals/**/",
                             "/","/v3/api-docs/**", "/swagger-ui/**",
                             "/community/search/**", "/hospitals/**", "/access_token")
+                    .requestMatchers(POST, "/sms/send/**")
                     .requestMatchers(GET, "/community/articles/**");
         };
 
