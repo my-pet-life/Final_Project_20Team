@@ -2,32 +2,32 @@ package com.example.mypetlife.dto.community.comment;
 
 import com.example.mypetlife.entity.community.comment.Comment;
 import com.example.mypetlife.entity.community.article.Article;
-import com.example.mypetlife.entity.user.User;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CreateCommentResponse {
+public class CommentResponse {
 
     private String content;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
     private String username;
     private Long articleId;
+    private int likeCount;
 
-    public static CreateCommentResponse createResponse(Comment comment, User user, Article article) {
+    public static CommentResponse createResponse(Comment comment, Article article) {
 
-        CreateCommentResponse response = new CreateCommentResponse();
+        CommentResponse response = new CommentResponse();
         response.content = comment.getContent();
         response.createdDate = comment.getCreatedDate();
         response.updatedDate = comment.getUpdatedDate();
-        response.username = user.getUsername();
+        response.username = comment.getUser().getUsername();
         response.articleId = article.getId();
+        response.likeCount = comment.getLikeComments().size();
 
         return response;
     }

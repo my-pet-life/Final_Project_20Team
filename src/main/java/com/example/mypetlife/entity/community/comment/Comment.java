@@ -32,7 +32,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name = "article_id")
     private Article article;
 
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.REMOVE)
     private List<LikeComment> likeComments = new ArrayList<>();
 
     //==생성 메서드==//

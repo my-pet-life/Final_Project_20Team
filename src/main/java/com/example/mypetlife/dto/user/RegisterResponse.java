@@ -1,7 +1,6 @@
 package com.example.mypetlife.dto.user;
 
 import com.example.mypetlife.entity.user.PetSpecies;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
-public class RegisterResponseDto {
+public class RegisterResponse {
 
     private final Long id;
     private final String username;

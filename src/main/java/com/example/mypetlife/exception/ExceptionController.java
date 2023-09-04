@@ -2,9 +2,13 @@ package com.example.mypetlife.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
@@ -15,7 +19,7 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
 
-        log.error("MethodArgumentNotValidException 발생: {}", e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+        log.error("MethodArgumentNotValidException 발생");
         return ErrorResponse.createErrorResponse(e);
     }
 
@@ -23,15 +27,23 @@ public class ExceptionController {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ErrorResponse> handleCustomException(CustomException e) {
 
-        log.error("CustomException 발생: {}", e.getErrorCode().getMessage());
-        return ErrorResponse.createErrorResponse(e.getErrorCode());
+        log.error("CustomException 발생");
+        return ErrorResponse.createErrorResponse(e);
     }
 
-    // ExpiredJwtException 예외 처리
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResponse> handleExpiredJwtException(ExpiredJwtException e) {
+    // AuthenticationException 예외 처리
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
 
-        log.error("ExpiredJwtException 발생, 재로그인 필요");
+        log.error("AuthenticationException 발생");
+        return ErrorResponse.createErrorResponse(e);
+    }
+
+    // AccessDeniedException 예외 처리
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {
+
+        log.error("AccessDeniedException 발생");
         return ErrorResponse.createErrorResponse(e);
     }
 }

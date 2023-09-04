@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+/*
+ * 게시글 목록 조회
+ */
 @Data
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ArticleListResponse {
@@ -19,7 +22,7 @@ public class ArticleListResponse {
     private LocalDateTime updatedDate;
     private Integer like;
     private String username;
-    private Integer commentsCount;
+    private Integer commentCount;
 
     public static ArticleListResponse createResponse(Article article) {
 
@@ -31,7 +34,7 @@ public class ArticleListResponse {
         response.updatedDate = article.getUpdatedDate();
         response.like = article.getLikeArticles().size();
         response.username = article.getUser().getUsername();
-        response.commentsCount = article.getComments().size();
+        response.commentCount = article.getComments().size();
 
         return response;
     }

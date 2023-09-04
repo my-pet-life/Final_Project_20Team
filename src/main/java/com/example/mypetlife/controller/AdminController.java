@@ -2,23 +2,19 @@ package com.example.mypetlife.controller;
 
 import com.example.mypetlife.dto.community.article.ArticleResponse;
 import com.example.mypetlife.dto.community.article.CreateArticleRequest;
-import com.example.mypetlife.dto.community.article.CreateArticleTagDto;
 import com.example.mypetlife.entity.community.article.*;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
-import io.jsonwebtoken.Jwt;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
