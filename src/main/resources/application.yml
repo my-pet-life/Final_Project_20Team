@@ -1,4 +1,8 @@
 spring:
+  # spirng 2.6 이상 swagger3 부터 매칭 전략을 수정
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: # 입력
@@ -42,3 +46,14 @@ logging:
 
 jwt:
   secret: # 입력
+
+# springdoc, swagger3 설정
+springdoc:
+  packages-to-scan: com.example.mypetlife.controller
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha
