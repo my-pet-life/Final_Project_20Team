@@ -43,6 +43,11 @@ public class ArticleService {
     }
 
     /* 전체 조회 */
+    public List<Article> findAll() {
+
+        return articleRepository.findAll();
+    }
+
     public Page<Article> findAll(Pageable pageable) {
 
         return articleRepository.findAll(pageable);
