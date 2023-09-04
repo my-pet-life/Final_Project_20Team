@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.security.Key;
 import java.time.Instant;
@@ -144,6 +145,20 @@ public class JwtTokenUtils {
 
         String token = getTokenFromHeader(request);
         String email = jwtParser.parseClaimsJws(token).getBody().getSubject();
+        return email;
+    }
+
+    // WebSocketSession -> 사용자 정보
+    public String getEmailFromSession(WebSocketSession session){
+        String token = session.getHandshakeHeaders().get("Authorization").get(0);
+        String jwt = "";
+        if(token != null && token.startsWith("Bearer ")) {
+            jwt= token.split(" ")[1];
+        } else {
+            log.info("요청 헤더에 토큰이 없음");
+            throw new JwtException("요청 헤더에 토큰이 없습니다");
+        }
+        String email = jwtParser.parseClaimsJws(jwt).getBody().getSubject();
         return email;
     }
 }

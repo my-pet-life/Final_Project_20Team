@@ -7,36 +7,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "message")
+@Table(name = "chatroom")
 @SuperBuilder(toBuilder = true)
 @NoArgsConstructor
-public class Message {
+public class ChatRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String content;
-
-    @Column(name = "send_date")
-    private LocalTime sendTime;
-
-    // sender_id
-    @ManyToOne
-    @JoinColumn(name = "sender_id")
-    @JsonIgnore
-    private User sender;
 
     // receiver_id
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "receiver_id")
-    @JsonIgnore
-    private User receiver;
+    private User chatRoomUser;
 
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name="chatRoom_id")
-    private ChatRoom chatRoom;
+    @OneToMany(mappedBy = "chatRoom")
+    private List<Message> messages = new ArrayList<>();
+
+    public void addMessage(Message message){
+        this.messages.add(message);
+    }
 }
