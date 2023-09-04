@@ -13,6 +13,7 @@ import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.community.CommentService;
 import com.example.mypetlife.service.community.LikeCommentService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@io.swagger.v3.oas.annotations.tags.Tag(name = "댓글", description = "댓 관련 api")
 public class CommentController {
 
     private final CommentService commentService;
@@ -33,6 +35,7 @@ public class CommentController {
      * 댓글 등록
      */
     @PostMapping("/community/article/{articleId}/comment")
+    @Operation(summary = "댓글 등록")
     public CommentResponse addComment(@RequestBody @Validated CreateAndUpdateCommentRequest dto,
                                       @PathVariable Long articleId,
                                       HttpServletRequest request) {
@@ -56,6 +59,7 @@ public class CommentController {
      * 댓글 수정
      */
     @PutMapping("/community/article/{articleId}/{commentId}")
+    @Operation(summary = "댓글 수정")
     public CommentResponse updateComment(@RequestBody CreateAndUpdateCommentRequest dto,
                                          @PathVariable Long articleId,
                                          @PathVariable Long commentId,
@@ -81,6 +85,7 @@ public class CommentController {
      * 댓글 삭제
      */
     @DeleteMapping("/community/article/{articleId}/{commentId}")
+    @Operation(summary = "댓글 삭제")
     public MessageResponse deleteComment(@PathVariable Long articleId,
                                                @PathVariable Long commentId,
                                                HttpServletRequest request) {
@@ -105,6 +110,7 @@ public class CommentController {
      * 댓글 좋아요 누르기
      */
     @PostMapping("/community/article/{articleId}/{commentId}/like")
+    @Operation(summary = "댓글 좋아요 등록/취소")
     public CommentResponse likeComment(@PathVariable Long articleId,
                                        @PathVariable Long commentId,
                                        HttpServletRequest request) {

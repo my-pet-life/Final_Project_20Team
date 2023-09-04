@@ -1,4 +1,4 @@
-package com.example.mypetlife.controller;
+package com.example.mypetlife.controller.user;
 
 import com.example.mypetlife.dto.community.article.ArticleResponse;
 import com.example.mypetlife.dto.community.article.CreateArticleRequest;
@@ -7,6 +7,7 @@ import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@io.swagger.v3.oas.annotations.tags.Tag(name = "관리자", description = "관리자 관련 api")
 public class AdminController {
 
     private final ArticleService articleService;
@@ -30,6 +32,7 @@ public class AdminController {
      * 관리자: 공지글 작성
      */
     @PostMapping("/community/notice")
+    @Operation(summary = "관리자: 공지 작성")
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
                                        @RequestPart(required = false) List<MultipartFile> imageFiles) {
