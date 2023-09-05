@@ -29,8 +29,8 @@ spring:
         # 2. 클라이언트를 식별하기 위한 정보
         registration:
           kakao:
-            client-id: 587183b7a230a0d57f3a8851b6118c49
-            client-secret: esiLrz4s3oMl7nX726quDsThILTH9S6f
+            client-id: #입력
+            client-secret: #입력
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
