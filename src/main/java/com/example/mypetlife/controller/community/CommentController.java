@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@io.swagger.v3.oas.annotations.tags.Tag(name = "댓글", description = "댓 관련 api")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "댓글", description = "댓글 관련 api")
 public class CommentController {
 
     private final CommentService commentService;
