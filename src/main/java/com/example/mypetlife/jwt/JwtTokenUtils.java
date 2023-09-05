@@ -69,13 +69,10 @@ public class JwtTokenUtils {
             jwtParser.parseClaimsJws(accessToken); // jwt 해석
             return true;
         } catch (MalformedJwtException e) {
-            log.info("유효하지 않은 토큰");
             throw new JwtException("유효하지 않은 토큰입니다");
         } catch (ExpiredJwtException e) {
-            log.info("만료된 토큰");
             throw new JwtException("만료된 토큰입니다. Refresh Token을 전달해 Access Token을 재발급하세요");
         } catch (io.jsonwebtoken.JwtException e) {
-            log.info("잘못된 토큰");
             throw new JwtException("잘못된 토큰입니다");
         }
     }
@@ -122,7 +119,6 @@ public class JwtTokenUtils {
         if(header != null && header.startsWith("Bearer ")) {
             return header.split(" ")[1];
         } else {
-            log.info("요청 헤더에 토큰이 없음");
             throw new JwtException("요청 헤더에 토큰이 없습니다");
         }
     }
