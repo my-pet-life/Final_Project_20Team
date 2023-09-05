@@ -27,6 +27,7 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         log.info("JwtExceptionFilter 실행");
+        log.info(request.getRequestURL().toString());
         try {
             filterChain.doFilter(request, response);
             log.info("JwtExceptionFilter 끝");

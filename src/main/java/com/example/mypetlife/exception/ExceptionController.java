@@ -1,6 +1,7 @@
 package com.example.mypetlife.exception;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +32,19 @@ public class ExceptionController {
         return ErrorResponse.createErrorResponse(e);
     }
 
-    // AuthenticationException 예외 처리
+//    // AuthenticationException 예외 처리
+//    @ExceptionHandler(AuthenticationException.class)
+//    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+//
+//        log.error("AuthenticationException 발생");
+//        return ErrorResponse.createErrorResponse(e);
+//    }
+// AuthenticationException 예외 처리
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e) {
+    public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
 
         log.error("AuthenticationException 발생");
+        log.info(request.getRequestURL().toString());
         return ErrorResponse.createErrorResponse(e);
     }
 
