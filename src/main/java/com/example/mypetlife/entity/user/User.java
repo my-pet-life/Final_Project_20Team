@@ -3,9 +3,10 @@ package com.example.mypetlife.entity.user;
 import com.example.mypetlife.entity.Calendar;
 import com.example.mypetlife.entity.ChatRoom;
 import com.example.mypetlife.entity.Message;
-import com.example.mypetlife.entity.Review;
 import com.example.mypetlife.entity.community.article.Article;
 import com.example.mypetlife.entity.community.article.LikeArticle;
+import com.example.mypetlife.entity.review.GyeonggiReview;
+import com.example.mypetlife.entity.review.SeoulReview;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -52,7 +53,10 @@ public class User {
     private List<Calendar> calendars = new ArrayList<>();
 
     @OneToMany(mappedBy = "userId")
-    private List<Review> reviews = new ArrayList<>();
+    private List<GyeonggiReview> gyeonggiReviews = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userId")
+    private List<SeoulReview> seoulReviews = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<LikeArticle> likeArticles = new ArrayList<>();
