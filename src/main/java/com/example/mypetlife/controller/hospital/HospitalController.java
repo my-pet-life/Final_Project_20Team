@@ -1,4 +1,4 @@
-package com.example.mypetlife.controller.api;
+package com.example.mypetlife.controller.hospital;
 
 import com.example.mypetlife.dto.hospital.DistrictResponseDto;
 import com.example.mypetlife.dto.hospital.gyeonggiDo.GyeonggiHospitalCountryResponseDto;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "동물병원 API", description = "Swagger 테스트 API")
+@Tag(name = "1. 동물병원 API", description = "Swagger 테스트 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/hospitals")
