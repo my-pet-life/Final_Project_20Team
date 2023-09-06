@@ -40,7 +40,7 @@ public class User {
     private Authority authority;
 
     @OneToMany(mappedBy = "user")
-    private List<Article> articles;
+    private List<Article> articles = new ArrayList<>();
 
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
     private List<Message> sentMessages;

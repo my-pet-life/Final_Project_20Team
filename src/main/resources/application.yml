@@ -1,13 +1,12 @@
 spring:
-  # spirng 2.6 이상 swagger3 부터 매칭 전략을 수정
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: # 입력
+    url: #입력
     username: root
-    password: # 입력
+    password: #입력
 
   jpa:
     hibernate:
@@ -30,8 +29,8 @@ spring:
         # 2. 클라이언트를 식별하기 위한 정보
         registration:
           kakao:
-            client-id: # 입력
-            client-secret: # 입력
+            client-id: #입력
+            client-secret: #입력
             redirect-uri: http://localhost:8080/login/oauth2/code/kakao
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
@@ -45,7 +44,7 @@ logging:
     org.hibernate.SQL: debug
 
 jwt:
-  secret: # 입력
+  secret: #입력
 
 naver-cloud-sms:
   accessKey : # 입력
