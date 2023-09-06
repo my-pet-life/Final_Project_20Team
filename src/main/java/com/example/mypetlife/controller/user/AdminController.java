@@ -1,12 +1,17 @@
-package com.example.mypetlife.controller;
+package com.example.mypetlife.controller.user;
 
 import com.example.mypetlife.dto.community.article.ArticleResponse;
 import com.example.mypetlife.dto.community.article.CreateArticleRequest;
+import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
 import com.example.mypetlife.entity.community.article.*;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.ArticleService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@io.swagger.v3.oas.annotations.tags.Tag(name = "관리자", description = "관리자 API")
 public class AdminController {
 
     private final ArticleService articleService;
@@ -30,6 +36,15 @@ public class AdminController {
      * 관리자: 공지글 작성
      */
     @PostMapping("/community/notice")
+    @Operation(summary = "공지 글 등록")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"title\":\"공지입니다.\",\"content\":\"기존 공지글 확인하시고 이용부탁드립니다.\",\"category\":\"notice\"}"),
+                    schema = @Schema(implementation = CreateArticleRequest.class))
+    )
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
                                        @RequestPart(required = false) List<MultipartFile> imageFiles) {

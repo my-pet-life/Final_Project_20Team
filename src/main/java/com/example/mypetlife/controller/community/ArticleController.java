@@ -12,6 +12,10 @@ import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.LikeArticleService;
 import com.example.mypetlife.service.community.TagService;
+import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +33,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@io.swagger.v3.oas.annotations.tags.Tag(name = "게시글", description = "게시글 API")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -42,6 +47,15 @@ public class ArticleController {
      * 게시글 등록
      */
     @PostMapping("/community")
+    @Operation(summary = "게시글 등록")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"title\":\"서울에 동물병원 추천해주세요\",\"content\":\"과잉진료 없는 곳으로 부탁드립니다!\",\"category\":\"question\"}"),
+                    schema = @Schema(implementation = CreateArticleRequest.class))
+    )
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
                                        @RequestPart(required = false) List<CreateArticleTagRequest> tagDtos,
@@ -100,6 +114,7 @@ public class ArticleController {
      * 전체 게시글 조회
      */
     @GetMapping("/community/articles")
+    @Operation(summary = "전체 게시글 조회")
     public Page<ArticleListResponse> readArticles(@PageableDefault(size = 5, sort = "createdDate",
                                                     direction = Sort.Direction.DESC) Pageable pageable,
                                                   @RequestParam(name = "species", required = false) String species) {
@@ -120,6 +135,7 @@ public class ArticleController {
      * 게시판별 조회
      */
     @GetMapping("/community/articles/{categoryName}")
+    @Operation(summary = "게시판별 조회")
     public Page<ArticleListResponse> readArticlesByCategory(@PathVariable String categoryName,
                                                             @PageableDefault(size = 5, sort = "createdDate",
                                                                     direction = Sort.Direction.DESC) Pageable pageable,
@@ -143,6 +159,7 @@ public class ArticleController {
      * 태그별 게시글 조회
      */
     @GetMapping("/community/search/tag/{tagName}")
+    @Operation(summary = "태그별 조회")
     public Page<ArticleListResponse> readArticlesByTagName(@PathVariable String tagName,
                                                            @PageableDefault(size = 5, sort = "createdDate",
                                                                    direction = Sort.Direction.DESC) Pageable pageable,
@@ -163,6 +180,7 @@ public class ArticleController {
      * 게시글 단일 조회
      */
     @GetMapping("/community/article/{articleId}")
+    @Operation(summary = "단일 게시글 조회")
     public ArticleResponse readArticle(@PathVariable Long articleId) {
 
         Article article = articleService.findById(articleId);
@@ -174,6 +192,15 @@ public class ArticleController {
      * 게시글 수정
      */
     @PutMapping("/community/article/{articleId}")
+    @Operation(summary = "게시글 수정")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"title\":\"서울 관악구 동물병원 추천해주세요\",\"content\":\"과잉진료 없는 곳으로 부탁드립니다!\",\"category\":\"question\"}"),
+                    schema = @Schema(implementation = CreateArticleRequest.class))
+    )
     public ArticleResponse updateArticle(@PathVariable Long articleId,
                                          @RequestPart @Validated UpdateArticleRequest dto,
                                          @RequestPart(required = false) List<CreateArticleTagRequest> tagDtos,
@@ -231,6 +258,7 @@ public class ArticleController {
      * 게시글 삭제
      */
     @DeleteMapping("/community/article/{articleId}")
+    @Operation(summary = "게시글 삭제")
     public MessageResponse DeleteArticle(@PathVariable Long articleId, HttpServletRequest request) {
 
         // 회원 검증
@@ -250,6 +278,7 @@ public class ArticleController {
      * 게시글 좋아요 누르기
      */
     @PostMapping("/community/article/{articleId}/like")
+    @Operation(summary = "게시글 좋아요 등록/취소")
     public ArticleResponse likeArticle(HttpServletRequest request, @PathVariable Long articleId) {
 
         // 회원 조회
