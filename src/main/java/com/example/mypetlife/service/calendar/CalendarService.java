@@ -40,7 +40,7 @@ public class CalendarService {
     private final JwtTokenUtils jwtTokenUtils;
 
     // TODO 일정 등록
-    public void create(HttpServletRequest request, ScheduleRequestDto dto)
+    public Long create(HttpServletRequest request, ScheduleRequestDto dto)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         Calendar calendar = new Calendar();
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
@@ -64,7 +64,7 @@ public class CalendarService {
         }
 
         log.info(calendar.toString());
-        calendarRepository.save(calendar);
+        return calendarRepository.save(calendar).getId();
     }
 
     // TODO 일정 등록 시, 알람이 설정되어 있으면 예약 메세지 전송
