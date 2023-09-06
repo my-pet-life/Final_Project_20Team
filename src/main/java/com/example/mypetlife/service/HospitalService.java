@@ -64,7 +64,7 @@ public class HospitalService {
             String findStreet = seoulHospitalsList.get(i).getSeoulAddress().getStreet();
             String findHospitalStreetNumber = seoulHospitalsList.get(i).getSeoulAddress().getHospitalStreetNumber();
             String hospitalTel = seoulHospitalsList.get(i).getHospitalTel();
-            int reviewCount = seoulHospitalsList.get(i).getReviews().size();
+            int reviewCount = seoulHospitalsList.get(i).getSeoulReviewEntities().size();
             String findHospitalName = seoulHospitalsList.get(i).getHospitalName();
 
             seoulHospitalInfoResponseDto.add(new SeoulHospitalInfoResponseDto(findCity, findDistrict, findStreet,
@@ -89,7 +89,7 @@ public class HospitalService {
             String findDistrict = gyeonggiDoHospitalsCountryList.get(i).getGyeonggiDoAddress().getDistrict();
             String findStreet = gyeonggiDoHospitalsCountryList.get(i).getGyeonggiDoAddress().getStreet();
             String findHospitalStreetNumber = gyeonggiDoHospitalsCountryList.get(i).getGyeonggiDoAddress().getHospitalStreetNumber();
-            int reviewCount = gyeonggiDoHospitalsCountryList.get(i).getReviews().size();
+            int reviewCount = gyeonggiDoHospitalsCountryList.get(i).getReviewEntities().size();
             String findHospitalName = gyeonggiDoHospitalsCountryList.get(i).getHospitalName();
 
             gyeonggiHospitalInfoResponseDto.add(new GyeonggiHospitalInfoResponseDto(findCity, findCountry, findDistrict, findStreet,
@@ -119,7 +119,7 @@ public class HospitalService {
             String findDistrict = gyeonggiDoHospitalsList.get(i).getGyeonggiDoAddress().getDistrict();
             String findStreet = gyeonggiDoHospitalsList.get(i).getGyeonggiDoAddress().getStreet();
             String findHospitalStreetNumber = gyeonggiDoHospitalsList.get(i).getGyeonggiDoAddress().getHospitalStreetNumber();
-            int reviewCount = gyeonggiDoHospitalsList.get(i).getReviews().size();
+            int reviewCount = gyeonggiDoHospitalsList.get(i).getReviewEntities().size();
             String findHospitalName = gyeonggiDoHospitalsList.get(i).getHospitalName();
 
 
