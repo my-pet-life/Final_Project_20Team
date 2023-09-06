@@ -1,5 +1,4 @@
 package com.example.mypetlife.config;
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -21,7 +20,6 @@ public class SwaggerConfig {
                         .scheme("bearer")
                         .bearerFormat("JWT")
                         .in(SecurityScheme.In.HEADER).name("Authorization"));
-
 
         return new OpenAPI()
                 .info(apiInfo())
