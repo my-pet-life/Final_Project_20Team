@@ -40,6 +40,7 @@ public class WebSecurityConfig {
                                         "/swagger-ui/**",
                                         "/community/articles/**",
                                         "/community/search/**",
+                                        "/swagger",
                                         "/hospitals/**",
                                         "/access_token").permitAll()
                                 .requestMatchers(POST, "/sms/send/**").permitAll()

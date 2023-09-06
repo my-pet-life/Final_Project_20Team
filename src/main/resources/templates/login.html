@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .login-form {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .login-form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .login-form input[type="text"],
+        .login-form input[type="password"] {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>My-Pet-Life</h1>
+
+    <div class="login-form">
+        <h2 style="text-align: center">로그인</h2>
+        <form id="login-form" action="login.php" method="POST">
+            <label for="email">E-mail:</label>
+            <input type="text" id="email" name="email" required>
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="login-button">로그인</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('login-form').addEventListener('submit', function (event){
+        event.preventDefault();
+
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        const apiUrl = 'http://localhost:8080/login';
+
+        const requestOptions = {
+            method: 'POST', // HTTP 메서드
+            headers: {
+                'Content-Type': 'application/json' // 요청 헤더 설정
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }) // 요청 본문 데이터 (JSON 문자열로 변환)
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if(!response.ok) throw new Error("서버 내에서 예외 발생");
+                return response.json();
+            })
+            .then(data => {
+                console.log("data 파싱 결과: ", data);
+
+                // 토큰 저장
+                const accessToken = data.accessToken;
+                localStorage.setItem('accessToken', accessToken);
+                alert('로그인 성공!');
+
+                    // 페이지 이동
+                    // window.location.href = '/main-success'; // 이동할 페이지 URL
+            })
+            .catch(error => {
+                console.error("오류: ", error);
+            });
+
+
+    });
+</script>
+</body>
+</html>
