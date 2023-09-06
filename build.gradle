@@ -56,6 +56,8 @@ dependencies {
 	implementation 'commons-logging:commons-logging:1.2'
 
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.0'
 }
 
 tasks.named('test') {
