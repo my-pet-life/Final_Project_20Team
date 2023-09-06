@@ -11,6 +11,8 @@ import com.example.mypetlife.jwt.JwtTokenDto;
 import com.example.mypetlife.jwt.JwtTokenUtils;
 import com.example.mypetlife.jwt.RefreshTokenDto;
 import com.example.mypetlife.service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +37,7 @@ public class UserController {
 
         // 회원 생성
         User user = User.createUser(dto.getUsername(), dto.getEmail(), passwordEncoder.encode(dto.getPassword()),
-                                    dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices()),
+                                    dto.getPhone(), dto.getBirthDate(), PetSpecies.valueOf(dto.getPetSpices().toUpperCase()),
                                     Authority.ROLE_USER);
 
         // 회원가입
@@ -74,14 +76,16 @@ public class UserController {
      * [POST] /access_token
      * Refresh Token 검증 후 유효하면 새로운 Access Token 발급, 유효하지 않으면 재로그인하도록
      */
-    @PostMapping("/access_token")
     public AccessTokenDto recreationAccessToke(@RequestBody RefreshTokenDto refreshTokenDto) {
 
         String refreshToken = refreshTokenDto.getRefreshToken();
 
         // Refresh Token 유효성 검증 후 유효하면 새로운 Access Token 발급
-        String accessToken = jwtTokenUtils.validateRefreshToken(refreshToken);
-
-        return new AccessTokenDto(accessToken);
+        try {
+            String accessToken = jwtTokenUtils.validateRefreshToken(refreshToken);
+            return new AccessTokenDto(accessToken);
+        } catch (ExpiredJwtException e) {
+            throw new JwtException("만료된 refresh token입니다.");
+        }
     }
 }
