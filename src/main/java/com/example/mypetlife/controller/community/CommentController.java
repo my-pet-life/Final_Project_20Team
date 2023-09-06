@@ -1,6 +1,7 @@
 package com.example.mypetlife.controller.community;
 
 import com.example.mypetlife.dto.MessageResponse;
+import com.example.mypetlife.dto.community.article.CreateArticleRequest;
 import com.example.mypetlife.dto.community.comment.CreateAndUpdateCommentRequest;
 import com.example.mypetlife.dto.community.comment.CommentResponse;
 import com.example.mypetlife.entity.community.comment.Comment;
@@ -14,6 +15,9 @@ import com.example.mypetlife.service.community.ArticleService;
 import com.example.mypetlife.service.community.CommentService;
 import com.example.mypetlife.service.community.LikeCommentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@io.swagger.v3.oas.annotations.tags.Tag(name = "댓글", description = "댓글 관련 api")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "댓글", description = "댓글 API")
 public class CommentController {
 
     private final CommentService commentService;
@@ -36,6 +40,14 @@ public class CommentController {
      */
     @PostMapping("/community/article/{articleId}/comment")
     @Operation(summary = "댓글 등록")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"content\":\"안녕하세요~\"}"),
+                    schema = @Schema(implementation = CreateAndUpdateCommentRequest.class))
+    )
     public CommentResponse addComment(@RequestBody @Validated CreateAndUpdateCommentRequest dto,
                                       @PathVariable Long articleId,
                                       HttpServletRequest request) {
@@ -60,6 +72,14 @@ public class CommentController {
      */
     @PutMapping("/community/article/{articleId}/{commentId}")
     @Operation(summary = "댓글 수정")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"content\":\"안녕하세요~ 반갑습니다\"}"),
+                    schema = @Schema(implementation = CreateAndUpdateCommentRequest.class))
+    )
     public CommentResponse updateComment(@RequestBody CreateAndUpdateCommentRequest dto,
                                          @PathVariable Long articleId,
                                          @PathVariable Long commentId,

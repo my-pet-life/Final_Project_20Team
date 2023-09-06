@@ -13,6 +13,9 @@ import com.example.mypetlife.service.UserService;
 import com.example.mypetlife.service.community.LikeArticleService;
 import com.example.mypetlife.service.community.TagService;
 import io.swagger.v3.oas.annotations.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +33,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@io.swagger.v3.oas.annotations.tags.Tag(name = "게시글", description = "게시글 관련 api")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "게시글", description = "게시글 API")
 public class ArticleController {
 
     private final ArticleService articleService;
@@ -45,6 +48,14 @@ public class ArticleController {
      */
     @PostMapping("/community")
     @Operation(summary = "게시글 등록")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"title\":\"서울에 동물병원 추천해주세요\",\"content\":\"과잉진료 없는 곳으로 부탁드립니다!\",\"category\":\"question\"}"),
+                    schema = @Schema(implementation = CreateArticleRequest.class))
+    )
     public ArticleResponse postArticle(HttpServletRequest request,
                                        @RequestPart @Validated CreateArticleRequest dto,
                                        @RequestPart(required = false) List<CreateArticleTagRequest> tagDtos,
@@ -182,6 +193,14 @@ public class ArticleController {
      */
     @PutMapping("/community/article/{articleId}")
     @Operation(summary = "게시글 수정")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            required = true,
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"title\":\"서울 관악구 동물병원 추천해주세요\",\"content\":\"과잉진료 없는 곳으로 부탁드립니다!\",\"category\":\"question\"}"),
+                    schema = @Schema(implementation = CreateArticleRequest.class))
+    )
     public ArticleResponse updateArticle(@PathVariable Long articleId,
                                          @RequestPart @Validated UpdateArticleRequest dto,
                                          @RequestPart(required = false) List<CreateArticleTagRequest> tagDtos,
