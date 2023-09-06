@@ -193,7 +193,7 @@ public class CalendarService {
         if(!user.equals(calendar.getUserId()))
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
-        // dto 에서 null 이 아닌 값만 변경
+        // dto에서 변경할 필드만 업데이트
         updateFieldIfNotNull(dto.getDate(), calendar::setDate);
         updateFieldIfNotNull(dto.getStartTime(), calendar::setStartTime);
         updateFieldIfNotNull(dto.getEndTime(), calendar::setEndTime);
@@ -219,14 +219,15 @@ public class CalendarService {
             newCalendar.setReserveId(null);
             calendarRepository.save(newCalendar);
             log.info("예약 메세지 알림이 취소되었습니다.");
-        } else throw new CustomException(ErrorCode.NOT_FOUND_SCHEDULE_ALARM);
+        }
 
         if (newCalendar.getAlarm() != 0) {
             if(user.getPhone() == null)
                 throw new CustomException(ErrorCode.NOT_FOUND_PHONE);
 
             LocalDateTime currentTime = LocalDateTime.now();
-            if (calDateTime(dto.getDate(), dto.getStartTime(), dto.getAlarm()).isAfter(currentTime.plusMinutes(10))) {
+            if (calDateTime(scheduleRequestDto.getDate(), scheduleRequestDto.getStartTime(), scheduleRequestDto.getAlarm())
+                    .isAfter(currentTime.plusMinutes(10))) {
                 calendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
             } else throw new CustomException(ErrorCode.WrongTimeOfAlarm);
 

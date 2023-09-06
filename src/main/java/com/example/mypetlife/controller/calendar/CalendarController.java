@@ -7,6 +7,7 @@ import com.example.mypetlife.service.calendar.CalendarService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.*;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,7 +37,11 @@ public class CalendarController {
     @Operation(summary = "일정 등록", description = "반려 동물의 일정을 등록합니다.")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ScheduleRequestDto.class))
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"date\":\"2023-09-13\",\"startTime\":\"15:00\",\"endTime\":\"16:00\",\"title\":\"병원 방문\",\"content\":\"검진\",\"location\":\"xx동물병원\",\"alarm\":60}"),
+                    schema = @Schema(implementation = ScheduleRequestDto.class))
     )
     public MessageResponseDto create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
@@ -87,7 +92,11 @@ public class CalendarController {
     @Operation(summary = "일정 수정", description = "반려 동물의 일정을 수정합니다.")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(
             required = true,
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UpdatedScheduleDto.class))
+            content = @Content(
+                    mediaType = "application/json",
+                    examples = @ExampleObject(value =
+                            "{\"date\":\"2023-09-13\",\"startTime\":\"17:00\",\"endTime\":\"18:00\",\"title\":\"병원 방문\",\"content\":\"검진\",\"location\":\"xx동물병원\",\"alarm\":60}"),
+                    schema = @Schema(implementation = UpdatedScheduleDto.class))
     )
     public MessageResponse updateSchedule(HttpServletRequest request,
                                           @Parameter(name = "scheduleId", description = "사용자가 수정하고 싶은 일정 ID")
