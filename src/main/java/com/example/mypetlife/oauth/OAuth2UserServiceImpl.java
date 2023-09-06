@@ -51,8 +51,10 @@ public class OAuth2UserServiceImpl extends DefaultOAuth2UserService {
     private User saveOrUpdate(OAuthAttributes attributes){
 
         // 회원가입
-        if(userRepository.findByEmail(attributes.getEmail()) == null) {
+        if(userRepository.findByEmail(attributes.getEmail()).isEmpty()) {
+
             User user = attributes.toEntity();
+            log.info("db 저장 성공");
             userRepository.save(user);
             return user;
         }
