@@ -43,7 +43,6 @@ public class OAuthAttributes {
         log.info("이름:{}", (String) kakaoProfile.get("nickname"));
         log.info("이메일:{}", (String) kakaoAccount.get("email"));
 
-
         return OAuthAttributes.builder()
                 .name((String) kakaoProfile.get("nickname"))
                 .email((String) kakaoAccount.get("email"))

@@ -35,7 +35,7 @@ class ArticleServiceTest {
     LikeArticleService likeArticleService;
 
     @Test
-    void 게시글_저장() {
+    void 게시글_등록() {
 
         //given
         User user = User.createUser("kim", "kim@naver.com", passwordEncoder.encode("1111"),
