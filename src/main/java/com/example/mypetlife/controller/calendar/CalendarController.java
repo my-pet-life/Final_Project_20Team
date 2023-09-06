@@ -26,10 +26,12 @@ public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    public MessageResponse create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
+    public MessageResponseDto create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
-        calendarService.create(request, dto);
-        return responseDto("일정이 등록되었습니다.");
+        MessageResponseDto messageDto = new MessageResponseDto();
+        messageDto.setId(calendarService.create(request, dto));
+        messageDto.setMessage("일정이 등록되었습니다.");
+        return messageDto;
     }
 
     @GetMapping("/readList")
@@ -68,7 +70,7 @@ public class CalendarController {
     public MessageResponse deleteSchedule(HttpServletRequest request, @PathVariable("scheduleId") Long scheduleId)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         calendarService.deleteSchedule(request, scheduleId);
-        return responseDto("삭제가 완료되었습니다.");
+        return responseDto("일정이 삭제되었습니다.");
     }
 
     public MessageResponse responseDto(String message) {
