@@ -44,7 +44,7 @@ logging:
     org.hibernate.SQL: debug
 
 jwt:
-  secret: aaaaabbbbbcccccddddeeeeffffgggghhhhiiiijjj
+  secret: #입력
 
 naver-cloud-sms:
   accessKey : # 입력
@@ -62,9 +62,3 @@ springdoc:
     disable-swagger-default-url: true
     display-request-duration: true
     operations-sorter: alpha
-
-naver-cloud-sms:
-  accessKey : W5ApII2lReyzXR3lFhwx
-  secretKey : svXItz8F1r7fRo9AkuhqJZ616R0jzdD5jsZvubO4
-  serviceId : ncp:sms:kr:264202430202:my-pet-life
-  senderPhone : #입력
