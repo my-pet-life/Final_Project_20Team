@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface GyeonggiDoHospitalRepository extends JpaRepository<GyeonggiDoHospital, Long> {
 
@@ -25,4 +26,15 @@ public interface GyeonggiDoHospitalRepository extends JpaRepository<GyeonggiDoHo
             (@Param("city") final String city,
              @Param("country") final String country,
              @Param("district") final String district);
+
+    @Query("SELECT gyeonggi FROM GyeonggiDoHospital gyeonggi " +
+            "WHERE gyeonggi.gyeonggiDoAddress.city = :city " +
+            "AND gyeonggi.gyeonggiDoAddress.country = :country " +
+            "AND gyeonggi.gyeonggiDoAddress.district = :district " +
+            "AND gyeonggi.hospitalName = :hospitalName")
+    Optional<GyeonggiDoHospital> findByGyeonggiDoAddress_CityAndGyeonggiDoAddress_CountryAndAndGyeonggiDoAddress_DistrictAndHospitalName(
+            @Param("city") final String city,
+            @Param("country") final String country,
+            @Param("district") final String district,
+            @Param("hospitalName") final String hospitalName);
 }
