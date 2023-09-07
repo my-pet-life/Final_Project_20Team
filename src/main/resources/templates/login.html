@@ -16,7 +16,7 @@
             padding: 20px;
             text-align: center;
         }
-        .button {
+        .login-button {
             display: inline-block;
             padding: 10px 20px;
             margin: 10px;
@@ -61,15 +61,15 @@
 </head>
 <body>
 <div class="container">
-    <h1>My-Pet-Life</h1>
+    <h1>로그인</h1>
 
     <div class="login-form">
-        <h2 style="text-align: center">로그인</h2>
-        <form id="login-form" action="login.php" method="POST">
-            <label for="email">E-mail:</label>
+        <form id="login-form" action="/login" method="POST">
+            <label for="email"><br>E-mail:</label>
             <input type="text" id="email" name="email" required>
-            <label for="password">비밀번호:</label>
+            <label for="password"><br>비밀번호:</label>
             <input type="password" id="password" name="password" required>
+            <br><br>
             <button type="submit" class="login-button">로그인</button>
         </form>
     </div>
@@ -82,8 +82,6 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        const apiUrl = 'http://localhost:8080/api/login';
-
         const requestOptions = {
             method: 'POST', // HTTP 메서드
             headers: {
@@ -95,7 +93,7 @@
             }) // 요청 본문 데이터 (JSON 문자열로 변환)
         };
 
-        fetch(apiUrl, requestOptions)
+        fetch('/api/login', requestOptions)
             .then(response => {
                 if(!response.ok) {
                     alert("로그인에 실패했습니다. 다시 입력하세요.");
@@ -115,7 +113,7 @@
                 window.location.href = '/main-success';
             })
             .catch(error => {
-                console.error("오류: ", error);
+                console.error("로그인 오류: ", error);
             });
 
 

@@ -36,7 +36,7 @@ public class WebSecurityConfig {
                                         "/main", "/login", "/register", "/main-success"
                                 ).permitAll()
                                 .requestMatchers(
-                                        "/api/register",
+                                        "/api/register/**",
                                         "/api/login/**",
                                         "/api/hospitals/**/",
                                         "/", "/v3/api-docs/**",

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .form {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: left;
+        }
+        .form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .form input[type="text"],
+        .form input[type="password"] {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>회원 가입</h1>
+    <div class="form">
+        <form id="register-form" action="/register" method="POST">
+            <label for="username"><br>사용자 이름 :</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email"><br>이메일 :</label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="password"><br>비밀번호 :</label>
+            <input type="password" id="password" name="password" required>
+
+            <label for="phone"><br>전화번호 :</label>
+            <input type="text" id="phone" name="phone" required>
+
+            <label for="petSpices"><br>반려동물 종류 :</label>
+            <select id="petSpices" name="petSpices" class="form-select">
+                <option value="DOG">강아지</option>
+                <option value="CAT">고양이</option>
+                <option value="HAMSTER">햄스터</option>
+                <option value="HEDGEHOG">고슴도치</option>
+                <option value="BIRDS">조류</option>
+                <option value="REPTILE">파충류</option>
+                <option value="FISH">어류</option>
+                <option value="TURTLE">거북이</option>
+                <option value="ETC">기타</option>
+            </select>
+            <br><br>
+            <button type="submit">가입하기</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('register-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // 입력 데이터 추출
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const password = document.getElementById('password').value;
+        const petSpices = document.getElementById('petSpices').value;
+
+        fetch('/api/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                phone: phone,
+                password: password,
+                petSpices: petSpices
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                alert('회원 가입에 실패하셨습니다. 모두 기입하셨는지 확인해주세요.');
+                throw new Error('회원 가입 실패');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // 회원 가입 성공 시 처리
+            console.log('회원 가입 성공:', data);
+            alert('회원 가입에 성공하였습니다. 메인 화면으로 돌아가 로그인해주세요.');
+
+            window.location.href = '/main';
+        })
+        .catch(error => {
+            console.error('회원 가입 오류:', error);
+        });
+    });
+</script>
+</body>
+</html>
