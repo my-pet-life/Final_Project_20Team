@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/calendar")
+@RequestMapping("/api/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
 

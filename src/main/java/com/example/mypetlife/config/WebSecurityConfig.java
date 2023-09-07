@@ -31,12 +31,15 @@ public class WebSecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
-                        authHttp.requestMatchers(
-                                        "/main",
-                                        "/register",
-                                        "/login/**",
+                        authHttp
+                                .requestMatchers(
+                                        "/main", "/login", "/register", "/main-success"
+                                ).permitAll()
+                                .requestMatchers(
+                                        "/api/register",
+                                        "/api/login/**",
                                         "/api/hospitals/**/",
-                                        "/","/v3/api-docs/**",
+                                        "/", "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/community/articles/**",
                                         "/community/search/**",

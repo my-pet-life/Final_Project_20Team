@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -82,7 +82,7 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        const apiUrl = 'http://localhost:8080/login';
+        const apiUrl = 'http://localhost:8080/api/login';
 
         const requestOptions = {
             method: 'POST', // HTTP 메서드
@@ -97,7 +97,11 @@
 
         fetch(apiUrl, requestOptions)
             .then(response => {
-                if(!response.ok) throw new Error("서버 내에서 예외 발생");
+                if(!response.ok) {
+                    alert("로그인에 실패했습니다. 다시 입력하세요.");
+                    throw new Error("서버 내에서 예외 발생");
+                }
+                alert('로그인에 성공했습니다.');
                 return response.json();
             })
             .then(data => {
@@ -106,10 +110,9 @@
                 // 토큰 저장
                 const accessToken = data.accessToken;
                 localStorage.setItem('accessToken', accessToken);
-                alert('로그인 성공!');
 
-                    // 페이지 이동
-                    // window.location.href = '/main-success'; // 이동할 페이지 URL
+                // 페이지 이동
+                window.location.href = '/main-success';
             })
             .catch(error => {
                 console.error("오류: ", error);
