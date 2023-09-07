@@ -29,14 +29,22 @@
 </head>
 <body>
 <div class="container">
-    <h1>My-Pet-Life</h1>
-    <a href="#" class="button">일정</a>
+    <h1>My Pet Life</h1>
+    <a href="/calendar" id="calendar" class="button">일정</a>
     <a href="#" class="button">병원</a>
     <a href="#" class="button">커뮤니티</a>
     <a href="#" class="button">챗봇</a><br><br>
     <a href="/main" id="logout" class="button">로그아웃</a>
 </div>
+<script>
+    document.getElementById('logout').addEventListener('click', function (event) {
+        const token = localStorage.getItem('accessToken');
+        // alert(token);
 
-<script src="/static/logout.js"></script>
+        // 토큰 데이터 삭제
+        localStorage.removeItem("accessToken");
+        alert("로그아웃 되었습니다.");
+    });
+</script>
 </body>
 </html>

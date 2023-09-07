@@ -1,13 +1,12 @@
 package com.example.mypetlife.controller.view;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @Slf4j
-public class MainController {
+public class ViewController {
 
     @GetMapping("/")
     public String root(){
@@ -26,13 +25,16 @@ public class MainController {
 
     @GetMapping("/register")
     public String register(){
-        return "/register";
+        return "register";
     }
 
     @GetMapping("/main-success")
-    public String mainSuccess(HttpServletRequest request){
-        String token = request.getParameter("accessToken");
-        log.info("token: " + token);
+    public String mainSuccess(){
         return "mainSuccess";
+    }
+
+    @GetMapping("/calendar")
+    public String calendar(){
+        return "calendar";
     }
 }
