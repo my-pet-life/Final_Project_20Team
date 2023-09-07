@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -77,7 +76,7 @@ public class UserController {
      * [POST] /access_token
      * Refresh Token 검증 후 유효하면 새로운 Access Token 발급, 유효하지 않으면 재로그인하도록
      */
-    public AccessTokenDto recreationAccessToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+    public AccessTokenDto recreationAccessToke(@RequestBody RefreshTokenDto refreshTokenDto) {
 
         String refreshToken = refreshTokenDto.getRefreshToken();
 
