@@ -1,4 +1,4 @@
-package com.example.mypetlife.controller.api;
+package com.example.mypetlife.controller.hospital;
 
 import com.example.mypetlife.dto.hospital.DistrictResponseDto;
 import com.example.mypetlife.dto.hospital.gyeonggiDo.GyeonggiHospitalCountryResponseDto;
