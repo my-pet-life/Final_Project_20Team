@@ -19,7 +19,7 @@
         }
         p {
             font-family: Arial, sans-serif;
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
         }
 
@@ -68,7 +68,7 @@
 
         /* 일정 목록 내용 스타일 */
         #schedule-list li {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: bold;
             color: #333;
         }
@@ -146,12 +146,13 @@
 </script>
 <script>
     document.getElementById('logout').addEventListener('click', function (event) {
-        const token = localStorage.getItem('accessToken');
+        // const token = localStorage.getItem('accessToken');
         // alert(token);
 
         // 토큰 데이터 삭제
         localStorage.removeItem("accessToken");
         alert("로그아웃 되었습니다.");
+        window.location.href = "/main";
     });
 </script>
 </html>
