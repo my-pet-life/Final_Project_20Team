@@ -29,17 +29,17 @@ jobs:
 
     - name: Set Yml
       run: |
-        echo "DATASOURCE_URL=${{ secrets.DATASOURCE_URL }}" >> application.yml
-        echo "DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USERNAME }}" >> application.yml
-        echo "DATASOURCE_PASSWORD=${{ secrets.DATASOURCE_PASSWORD }}" >> application.yml
-        echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> application.yml
-        echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> application.yml
-        echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> application.yml
-        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> application.yml
-        echo "NAVER_CLOUD_SMS_ACCESS_KEY=${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}" >> application.yml
-        echo "NAVER_CLOUD_SMS_SECRET_KEY=${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}" >> application.yml
-        echo "NAVER_CLOUD_SMS_SERVICE_ID=${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}" >> application.yml
-        echo "NAVER_CLOUD_SMS_SENDER_PHONE=${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}" >> application.yml
+        echo "DATASOURCE_URL=${{ secrets.DATASOURCE_URL }}" >> src/main/resources/env.yml
+        echo "DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USERNAME }}" >> src/main/resources/env.yml
+        echo "DATASOURCE_PASSWORD=${{ secrets.DATASOURCE_PASSWORD }}" >> src/main/resources/env.yml
+        echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> src/main/resources/env.yml
+        echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> src/main/resources/env.yml
+        echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> src/main/resources/env.yml
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> src/main/resources/env.yml
+        echo "NAVER_CLOUD_SMS_ACCESS_KEY=${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}" >> src/main/resources/env.yml
+        echo "NAVER_CLOUD_SMS_SECRET_KEY=${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}" >> src/main/resources/env.yml
+        echo "NAVER_CLOUD_SMS_SERVICE_ID=${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}" >> src/main/resources/env.yml
+        echo "NAVER_CLOUD_SMS_SENDER_PHONE=${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}" >> src/main/resources/env.yml
       
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
