@@ -1,4 +1,7 @@
 spring:
+  config:
+    import: env.yml
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
