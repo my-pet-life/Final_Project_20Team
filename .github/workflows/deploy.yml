@@ -28,19 +28,19 @@ jobs:
         distribution: 'temurin'
                 
     - name: Set Yml
-      run: |
-          echo "DATASOURCE_URL=${{ secrets.DATASOURCE_URL }}" >> src/main/resources/secret.yml
-          echo "DATASOURCE_USERNAME=${{ secrets.DATASOURCE_USERNAME }}" >> src/main/resources/secret.yml
-          echo "DATASOURCE_PASSWORD=${{ secrets.DATASOURCE_PASSWORD }}" >> src/main/resources/secret.yml
-          echo "KAKAO_CLIENT_ID=${{ secrets.KAKAO_CLIENT_ID }}" >> src/main/resources/secret.yml
-          echo "KAKAO_CLIENT_SECRET=${{ secrets.KAKAO_CLIENT_SECRET }}" >> src/main/resources/secret.yml
-          echo "KAKAO_REDIRECT_URI=${{ secrets.KAKAO_REDIRECT_URI }}" >> src/main/resources/secret.yml
-          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> src/main/resources/secret.yml
-          echo "NAVER_CLOUD_SMS_ACCESS_KEY=${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}" >> src/main/resources/secret.yml
-          echo "NAVER_CLOUD_SMS_SECRET_KEY=${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}" >> src/main/resources/secret.yml
-          echo "NAVER_CLOUD_SMS_SERVICE_ID=${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}" >> src/main/resources/secret.yml
-          echo "NAVER_CLOUD_SMS_SENDER_PHONE=${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}" >> src/main/resources/secret.yml
-        
+      env:
+        DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }} 
+        DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }} 
+        DATASOURCE_PASSWORD: ${{ secrets.DATASOURCE_PASSWORD }} 
+        KAKAO_CLIENT_ID: ${{ secrets.KAKAO_CLIENT_ID }} 
+        KAKAO_CLIENT_SECRET: ${{ secrets.KAKAO_CLIENT_SECRET }} 
+        KAKAO_REDIRECT_URI: ${{ secrets.KAKAO_REDIRECT_URI }} 
+        JWT_SECRET: ${{ secrets.JWT_SECRET }} 
+        NAVER_CLOUD_SMS_ACCESS_KEY: ${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}
+        NAVER_CLOUD_SMS_SECRET_KEY: ${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}
+        NAVER_CLOUD_SMS_SERVICE_ID: ${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}
+        NAVER_CLOUD_SMS_SENDER_PHONE: ${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}
+
     - name: Build with Gradle
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
