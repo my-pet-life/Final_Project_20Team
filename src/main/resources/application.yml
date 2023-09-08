@@ -4,7 +4,7 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: #입력
+    url: jdbc:mysql://ec2-54-180-112-30.ap-northeast-2.compute.amazonaws.com:3333/pet?serverTimezone=Asia/Seoul
     username: root
     password: #입력
 
