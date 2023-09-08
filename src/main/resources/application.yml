@@ -4,9 +4,9 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://ec2-43-201-73-151.ap-northeast-2.compute.amazonaws.com:3333/pet?serverTimezone=Asia/Seoul
-    username: root
-    password: #입력
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
 
   jpa:
     hibernate:
@@ -18,20 +18,17 @@ spring:
   security:
     oauth2:
       client:
-        # 1. 서비스 제공자에 대한 정보
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
-        # 2. 클라이언트를 식별하기 위한 정보
         registration:
           kakao:
-            client-id: #입력
-            client-secret: #입력
-            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
             authorization-grant-type: authorization_code
             client-authentication-method: client_secret_post
             client-name: Kakao
@@ -44,19 +41,13 @@ logging:
     org.hibernate.SQL: debug
 
 jwt:
-  secret: #입력
+  secret: ${JWT_SECRET}
 
 naver-cloud-sms:
-  accessKey : # 입력
-  secretKey : # 입력
-  serviceId : # 입력
-  senderPhone : # 입력
-
-naver-cloud-sms:
-  accessKey : # 입력
-  secretKey : # 입력
-  serviceId : # 입력
-  senderPhone : # 입력
+  accessKey : ${NAVER_CLOUD_SMS_ACCESS_KEY}
+  secretKey : ${NAVER_CLOUD_SMS_SECRET_KEY}
+  serviceId : ${NAVER_CLOUD_SMS_SERVICE_ID}
+  senderPhone : ${NAVER_CLOUD_SMS_SENDER_PHONE}
 
 # springdoc, swagger3 설정
 springdoc:
