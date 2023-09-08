@@ -28,6 +28,7 @@ jobs:
         distribution: 'temurin'
                 
     - name: Set Yml
+      uses: getsentry/action-release@v1
       env:
         DATASOURCE_URL: ${{ secrets.DATASOURCE_URL }} 
         DATASOURCE_USERNAME: ${{ secrets.DATASOURCE_USERNAME }} 
