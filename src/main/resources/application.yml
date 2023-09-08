@@ -1,7 +1,6 @@
 spring:
   config:
     import: env.yml
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -10,14 +9,12 @@ spring:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
     password: ${DATASOURCE_PASSWORD}
-
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
-
   security:
     oauth2:
       client:
