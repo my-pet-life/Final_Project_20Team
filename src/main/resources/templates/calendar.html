@@ -43,15 +43,15 @@
         }
 
         #schedule-list {
-            margin: 0 auto; /* 수평 가운데 정렬 */
-            max-width: 400px; /* 박스 최대 너비 설정 */
+            margin: 0 auto;
+            max-width: 400px;
             padding: 10px;
             background-color: #fff;
             border-radius: 5px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             text-align: left;
-            height: 300px; /* 원하는 높이 설정 */
-            overflow-y: auto; /* 내용이 넘칠 경우 스크롤 표시 */
+            height: 300px;
+            overflow-y: auto;
         }
 
         #schedule-list li {
@@ -66,14 +66,12 @@
             background-color: #e0e0e0;
         }
 
-        /* 일정 목록 내용 스타일 */
         #schedule-list li {
             font-size: 18px;
             font-weight: bold;
             color: #333;
         }
 
-        /* 추가한 스타일 */
         #schedule-list a {
             color: #007bff;
             text-decoration: none;
@@ -88,9 +86,9 @@
 <body>
 <div class="container">
     <H1>Schedule Management</H1>
-    <a href="#" class="button">Create</a>
-    <a href="#" class="button">Update</a>
-    <a href="#" class="button">Delete</a><br><br>
+    <a href="#" class="button">일정 등록하기</a><br>
+    <a href="#" class="button">해당하는 날짜로 일정 조회하기</a><br>
+    <a href="#" class="button">알림 설정한 일정 리스트 확인하기</a><br>
     <a href="/main" id="logout" class="button">로그아웃</a>
 </div>
 
@@ -116,8 +114,8 @@
         fetch(apiUrl, requestOptions)
             .then(response => {
                 if (!response.ok) {
-                    alert("로그인 후 이용하실 수 있습니다");
-                    window.location.href = "/main";
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    throw new Error("로그인 후 이용하실 수 있습니다.");
                 }
                 return response.json();
             })
@@ -134,7 +132,13 @@
                 } else {
                     data.forEach(schedule => {
                         const scheduleItem = document.createElement('li');
-                        scheduleItem.textContent = `${schedule.date} ${schedule.startTime}-${schedule.endTime} : ${schedule.title}`;
+                        console.log(schedule)
+                        scheduleItem.textContent = `${schedule.date} ${schedule.startTime} - ${schedule.endTime} : ${schedule.title}`;
+                        scheduleItem.addEventListener('click', function () {
+                            localStorage.setItem("scheduleId", schedule.id);
+                            window.location.href = `/schedules`;
+                        });
+
                         scheduleList.appendChild(scheduleItem);
                     });
                 }

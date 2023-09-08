@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Data
 public class ScheduleAllListResponseDto {
+    private Long id;
     private LocalDate date;
     private String startTime;
     private String endTime;

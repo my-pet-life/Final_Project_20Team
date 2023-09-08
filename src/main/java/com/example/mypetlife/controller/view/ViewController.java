@@ -37,4 +37,10 @@ public class ViewController {
     public String calendar(){
         return "calendar";
     }
+
+    @GetMapping("/schedules")
+    public String schedules(){
+        return "schedules";
+    }
+
 }

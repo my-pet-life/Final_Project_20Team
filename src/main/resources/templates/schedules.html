@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Schedule Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .container a.button:hover {
+            background-color: #0056b3;
+        }
+
+        #schedule-detail {
+            margin: 0 auto;
+            max-width: 400px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        #schedule-detail p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Schedule Detail</h1>
+    <a href="/main-success" class="button">돌아가기</a>
+</div>
+
+<div id="schedule-detail">
+    <!-- 일정 상세 정보가 여기에 추가될 것입니다. -->
+</div>
+<div class="container">
+    <a href="#" class="button">수정하기</a>
+    <a href="#" class="button">삭제하기</a>
+</div>
+
+<!--페이지 이동 시 ID 삭제 -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const scheduleId = localStorage.getItem("scheduleId");
+
+        if (!scheduleId) {
+            const scheduleDetail = document.getElementById('schedule-detail');
+            const errorMessage = document.createElement('p');
+            errorMessage.textContent = '일정을 찾을 수 없습니다.';
+            scheduleDetail.appendChild(errorMessage);
+        } else {
+            const apiUrl = `/api/calendar/${scheduleId}`;
+            const accessToken = localStorage.getItem('accessToken');
+            console.log(accessToken);
+
+            const requestOptions = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            };
+
+            fetch(apiUrl, requestOptions)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('서버 내에서 예외 발생');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+
+                    const scheduleDetail = document.getElementById('schedule-detail');
+                    scheduleDetail.innerHTML = '';
+
+                    const scheduleInfo = document.createElement('p');
+
+                    let alarm = "";
+                    if(data.isAlarm === true) alarm = "ON";
+                    else alarm = "OFF";
+
+                    scheduleInfo.innerHTML = `
+                    <p> 일정 날짜: ${data.date}</p>
+                    <p> 시작 시간: ${data.startTime}</p>
+                    <p> 종료 시간: ${data.endTime}</p>
+                    <p> 제목: ${data.title}</p>
+                    <p> 내용: ${data.content}</p>
+                    <p> 위치: ${data.location}</p>
+                    <p> 알림 설정: ${alarm}</p>`;
+                    scheduleDetail.appendChild(scheduleInfo);
+                })
+                .catch(error => {
+                    console.error('오류:', error);
+                });
+        }
+    });
+</script>
+</body>
+</html>
