@@ -50,4 +50,4 @@ jobs:
         arguments: build
 
     - name: Run chmod to make gradlew executable
-      run: chmod +x ./gradlew
+      run: chmod +x gradlew
