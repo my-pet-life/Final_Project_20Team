@@ -6,9 +6,9 @@ spring:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${DATASOURCE_URL}
-    username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWORD}
+    url: jdbc:mysql://localhost:3333/pet?createDatabaseIfNotExist=true&serverTimezone=Asia/Seoul     # createDatabaseIfNotExist=true: url 매핑 관련
+    username: root
+    password: 12345
   jpa:
     hibernate:
       ddl-auto: create
