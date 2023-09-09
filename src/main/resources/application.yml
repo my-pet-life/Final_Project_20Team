@@ -1,20 +1,20 @@
 spring:
-  config:
-    import: env.yml
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3333/pet?createDatabaseIfNotExist=true&serverTimezone=Asia/Seoul     # createDatabaseIfNotExist=true: url 매핑 관련
-    username: root
-    password: 12345
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+
   security:
     oauth2:
       client:
@@ -24,6 +24,7 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
         registration:
           kakao:
             client-id: ${KAKAO_CLIENT_ID}
@@ -48,12 +49,6 @@ naver-cloud-sms:
   secretKey : ${NAVER_CLOUD_SMS_SECRET_KEY}
   serviceId : ${NAVER_CLOUD_SMS_SERVICE_ID}
   senderPhone : ${NAVER_CLOUD_SMS_SENDER_PHONE}
-
-naver-cloud-sms:
-  accessKey : # 입력
-  secretKey : # 입력
-  serviceId : # 입력
-  senderPhone : # 입력
 
 # springdoc, swagger3 설정
 springdoc:
