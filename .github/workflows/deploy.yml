@@ -69,4 +69,4 @@ jobs:
           --deployment-config-name CodeDeployDefault.AllAtOnce \
           --application-name ${{ env.CODE_DEPLOY_APP_NAME }} \
           --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=${{ env.BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip
+          --s3-location bucket=${{ env.BUCKET_NAME }},bundleType=zip,key=my-pet-life.zip
