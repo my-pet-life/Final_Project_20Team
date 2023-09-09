@@ -2,8 +2,9 @@ version: 0.0
 os: linux
 
 files:
-  - source: / # CodeDeploy가 다운받을 경로 (/ : 전체 파일 다운)
-    destination: /home/ubuntu/my-pet-life # ec2 서버에서 어느 경로에 해당 코드를 저장할지
+  - source: / # CodeDeploy가 다운받을 경로 (전체 파일 다운)
+    destination: /home/ubuntu/my-pet-life # ec2 서버에서 파일이 저장될 위치
+    overwrite: yes
 permissions:
   - object: /home/ubuntu/my-pet-life
     owner: ubuntu
