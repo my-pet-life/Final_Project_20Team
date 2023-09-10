@@ -68,3 +68,8 @@ tasks.named('test') {
 tasks.withType(Test) {
 	enabled = false
 }
+
+// plain 파일은 빌드에서 제외
+jar {
+	enabled = false
+}
