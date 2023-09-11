@@ -1,7 +1,9 @@
 spring:
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DATASOURCE_URL}
@@ -54,13 +56,6 @@ naver-cloud-sms:
   serviceId : ${NAVER_CLOUD_SMS_SERVICE_ID}
   senderPhone : ${NAVER_CLOUD_SMS_SENDER_PHONE}
 
-naver-cloud-sms:
-  accessKey : # 입력
-  secretKey : # 입력
-  serviceId : # 입력
-  senderPhone : # 입력
-
-# springdoc, swagger3 설정
 springdoc:
   packages-to-scan: com.example.mypetlife.controller
   default-consumes-media-type: application/json;charset=UTF-8
