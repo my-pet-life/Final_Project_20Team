@@ -33,19 +33,21 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authHttp ->
                         authHttp
                                 .requestMatchers(
-                                        "/main", "/login", "/register", "/main-success"
+                                        "/main", "/login", "/register", "/main-success",
+                                        "/calendar", "/schedules","/create-schedule"
                                 ).permitAll()
                                 .requestMatchers(
                                         "/api/register/**",
                                         "/api/login/**",
-                                        "/api/hospitals/**/",
+                                        "/api/hospitals/**",
                                         "/", "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/community/articles/**",
                                         "/community/search/**",
                                         "/swagger",
                                         "/hospitals/**",
-                                        "/access_token").permitAll()
+                                        "/access_token",
+                                        "/js/**").permitAll()
                                 .requestMatchers(POST, "/sms/send/**").permitAll()
                                 .requestMatchers("/community/notice").hasRole("ADMIN")
                                 .anyRequest().authenticated()
