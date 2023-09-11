@@ -1,6 +1,5 @@
 package com.example.mypetlife.controller.view;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,16 +35,21 @@ public class ViewController {
 
     @GetMapping("/calendar")
     public String calendar(){
-        return "calendar";
+        return "/calendar/calendar";
     }
 
     @GetMapping("/schedules")
     public String schedules(){
-        return "schedules";
+        return "/calendar/schedules";
     }
 
     @GetMapping("/create-schedule")
     public String createSchedule(){
-        return "createSchedule";
+        return "/calendar/createSchedule";
+    }
+
+    @GetMapping("/update-schedule")
+    public String updateSchedule(){
+        return "/calendar/updateSchedule";
     }
 }

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .container a.button:hover {
+            background-color: #0056b3;
+        }
+
+        #content-wrapper {
+            display: flex; /* 가로로 나란히 배치하기 위해 flex 사용 */
+            justify-content: space-between; /* 간격을 최대화하여 나란히 배치 */
+            align-items: flex-start; /* 상단 정렬 */
+            max-width: 800px; /* 최대 가로 길이 설정 */
+            margin: 0 auto; /* 수평 가운데 정렬 */
+
+        }
+
+        #schedule-detail,
+        #schedule-form {
+            flex-basis: calc(50% - 10px); /* 가로 공간을 50%로 나누고 간격을 두기 위해 10px 제외 */
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin: 0 auto; /* 가운데 정렬 */
+        }
+
+        #schedule-detail {
+            margin-right: 20px; /* 스케줄 상세 정보와 수정 폼 사이에 간격 추가 */
+        }
+
+        #schedule-detail p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #schedule-form label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #schedule-form input[type="text"] {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #schedule-form input[type="number"] {
+            width: 15%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #schedule-form input[type="date"] {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #schedule-form select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Update Schedule</h1>
+</div>
+
+<div id="content-wrapper">
+    <div id="schedule-detail">
+        <!-- 일정 상세 정보 -->
+    </div>
+
+    <form id="schedule-form">
+        <label for="date">일정 날짜:</label>
+        <input type="date" id="date" name="date">
+
+        <label for="startTime">시작 시간:</label>
+        <input type="number" id="startTime" name="startTime" required> : <input type="number" id="startTime-minute"
+                                                                                name="startTime-minute" required>
+
+        <label for="endTime">종료 시간:</label>
+        <input type="number" id="endTime" name="endTime" required> : <input type="number" id="endTime-minute"
+                                                                            name="endTime-minute" required>
+
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title">
+
+        <label for="content">내용:</label>
+        <input type="text" id="content" name="content">
+
+        <label for="location">위치:</label>
+        <input type="text" id="location" name="location">
+
+        <label for="alarm">알림 설정:</label>
+        <select id="alarm" name="alarm">
+            <option value="OFF">OFF</option>
+            <option value="ON">ON</option>
+        </select>
+
+        <!-- 알림 시각 설정 (ON일 때 활성화) -->
+        <label for="notificationTime">알림 시각:</label>
+        <select id="notificationTime" name="notificationTime" disabled>
+            <option value="0">정각</option>
+            <option value="30">30분 전</option>
+            <option value="60">1시간 전</option>
+            <option value="120">2시간 전</option>
+            <option value="180">3시간 전</option>
+            <option value="360">6시간 전</option>
+            <option value="1440">하루 전</option>
+        </select>
+
+        <button type="submit" class="button">수정하기</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const scheduleId = localStorage.getItem("scheduleId");
+
+        const apiUrl = `/api/calendar/${scheduleId}`;
+        const accessToken = localStorage.getItem('accessToken');
+        console.log(accessToken);
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('서버 내에서 예외 발생');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+
+                const scheduleDetail = document.getElementById('schedule-detail');
+                scheduleDetail.innerHTML = '';
+
+                const scheduleInfo = document.createElement('p');
+
+                let alarm = "";
+                if (data.isAlarm === true) alarm = "ON";
+                else alarm = "OFF";
+
+                scheduleInfo.innerHTML = `
+              <p> 일정 날짜: ${data.date}</p>
+              <p> 시작 시간: ${data.startTime}</p>
+              <p> 종료 시간: ${data.endTime}</p>
+              <p> 제목: ${data.title}</p>
+              <p> 내용: ${data.content}</p>
+              <p> 위치: ${data.location}</p>
+              <p> 알림 설정: ${alarm}</p>`;
+                scheduleDetail.appendChild(scheduleInfo);
+            })
+            .catch(error => {
+                console.error('오류:', error);
+            });
+
+        // 알림 설정 변경에 따라 알림 시각 입력 활성화/비활성화
+        const alarmSelect = document.getElementById('alarm');
+        const notificationTimeSelect = document.getElementById('notificationTime');
+
+        alarmSelect.addEventListener('change', function(){
+            if(alarmSelect.value === 'ON'){
+                notificationTimeSelect.disabled = false;
+            }else{
+                notificationTimeSelect.disabled = true;
+            }
+        })
+    });
+</script>
+<script>
+    document.getElementById('schedule-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // 사용자 입력값 가져오기
+        const date = document.getElementById('date').value;
+        const startTimeHours = document.getElementById('startTime').value;
+        const startTimeMinutes = document.getElementById('startTime-minute').value;
+        const endTimeHours = document.getElementById('endTime').value;
+        const endTimeMinutes = document.getElementById('endTime-minute').value;
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const location = document.getElementById('location').value;
+        const alarm = document.getElementById('alarm').value;
+        const notificationTime = document.getElementById('notificationTime').value;
+
+        // 시작 시간 및 종료 시간을 원하는 형식으로 변환
+        const startTime = `${startTimeHours}:${startTimeMinutes}`;
+        const endTime = `${endTimeHours}:${endTimeMinutes}`;
+
+        // 폼 데이터 생성
+        const formData = {
+            date, startTime, endTime, title, content, location,
+            alarm: alarm === 'ON' ? notificationTime : null
+        };
+
+        const scheduleId = localStorage.getItem("scheduleId");
+
+        const apiUrl = `/api/calendar/${scheduleId}`;
+        const accessToken = localStorage.getItem('accessToken');
+
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(formData)
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('서버 내에서 예외 발생');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message);
+                window.location.href = "/calendar";
+            })
+            .catch(error => {
+                alert(error.message);
+            })
+    });
+</script>
+</body>
+</html>
