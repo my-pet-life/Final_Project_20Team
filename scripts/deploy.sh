@@ -6,11 +6,6 @@ PROJECT_NAME=my-pet-life
 cd $REPOSITORY
 cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
 
-#APP_NAME=my-pet-life
-#JAR_NAME=$(ls $REPOSITORY/build/libs/ | grep 'SNAPSHOT.jar' | tail -n 1)
-#JAR_PATH=$REPOSITORY/build/libs/$JAR_NAME
-
-#CURRENT_PID=$(pgrep -f $APP_NAME)
 CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
 
 if [ -z $CURRENT_PID ]
@@ -22,5 +17,8 @@ else
   sleep 5
 fi
 
-echo "> $JAR_PATH 배포"
-nohup java -jar $JAR_PATH > /dev/null 2> /dev/null < /dev/null &
+echo "> 새 애플리케이션 배포"
+JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
+
+echo "> Jar Name: $JAR_NAME"
+nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
