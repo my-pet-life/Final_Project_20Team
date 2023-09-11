@@ -37,6 +37,10 @@ spring:
               - profile_nickname
               - account_email
 
+server:
+  tomcat:
+    connection-timeout: -1
+
 logging:
   level:
     org.hibernate.SQL: debug
