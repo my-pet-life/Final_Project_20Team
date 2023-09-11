@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .container a.button:hover {
+            background-color: #0056b3;
+        }
+
+        #schedule-form {
+            margin: 0 auto;
+            max-width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        #schedule-form label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        #schedule-form input[type="text"] {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #schedule-form input[type="number"] {
+            width: 15%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #schedule-form input[type="date"] {
+            width: 95%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+
+        #schedule-form select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Create Schedule</h1>
+    <a href="/main-success" class="button">돌아가기</a>
+</div>
+
+<div id="schedule-form">
+    <!-- 일정 입력 폼이 여기에 추가될 것입니다. -->
+    <form id="scheduleForm" action="/calendar" method="POST">
+        <label for="date">일정 날짜:</label>
+        <input type="date" id="date" name="date" required>
+
+        <label for="startTime">시작 시간:</label>
+        <input type="number" id="startTime" name="startTime" required> : <input type="number" id="startTime-minute" name="startTime-minute" required>
+
+        <label for="endTime">종료 시간:</label>
+        <input type="number" id="endTime" name="endTime" required> : <input type="number" id="endTime-minute" name="endTime-minute" required>
+
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="content">내용:</label>
+        <input type="text" id="content" name="content">
+
+        <label for="location">위치:</label>
+        <input type="text" id="location" name="location">
+
+        <label for="alarm">알림 설정:</label>
+        <select id="alarm" name="alarm">
+            <option value="OFF">OFF</option>
+            <option value="ON">ON</option>
+        </select>
+
+        <!-- 알림 시각 설정 (ON일 때 활성화) -->
+        <label for="notificationTime">알림 시각:</label>
+        <select id="notificationTime" name="notificationTime" disabled>
+            <option value="0">정각</option>
+            <option value="30">30분 전</option>
+            <option value="60">1시간 전</option>
+            <option value="120">2시간 전</option>
+            <option value="180">3시간 전</option>
+            <option value="360">6시간 전</option>
+            <option value="1440">하루 전</option>
+        </select>
+        <button type="submit" class="container button">일정 등록</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 알림 설정 변경에 따라 알림 시각 입력 활성화/비활성화
+        const alarmSelect = document.getElementById('alarm');
+        const notificationTimeSelect = document.getElementById('notificationTime');
+
+        alarmSelect.addEventListener('change', function () {
+            if (alarmSelect.value === 'ON') {
+                notificationTimeSelect.disabled = false;
+            } else {
+                notificationTimeSelect.disabled = true;
+            }
+        });
+    });
+</script>
+<script>
+    document.getElementById('scheduleForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // 사용자 입력 값 가져오기
+        const date = document.getElementById('date').value;
+        const startTimeHours = document.getElementById('startTime').value;
+        const startTimeMinutes = document.getElementById('startTime-minute').value;
+        const endTimeHours = document.getElementById('endTime').value;
+        const endTimeMinutes = document.getElementById('endTime-minute').value;
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const location = document.getElementById('location').value;
+        const alarm = document.getElementById('alarm').value;
+        const notificationTime = document.getElementById('notificationTime').value;
+
+        // 시작 시간 및 종료 시간을 원하는 형식으로 변환
+        const startTime = `${startTimeHours}:${startTimeMinutes}`;
+        const endTime = `${endTimeHours}:${endTimeMinutes}`;
+
+        // 폼 데이터 생성
+        const formData = {
+            date,
+            startTime,
+            endTime,
+            title,
+            content,
+            location,
+            alarm: alarm === 'ON' ? notificationTime : null
+        };
+
+        const apiUrl = '/api/calendar';
+        const accessToken = localStorage.getItem('accessToken');
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify(formData)
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('서버 내에서 예외 발생');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert(data.message); // 등록 성공 시 메시지 출력
+                window.location.href = "/calendar";
+            })
+            .catch(error => {
+                alert(error.message); // 예외 발생 시 메시지 출력
+            });
+    });
+</script>
+
+</body>
+</html>
