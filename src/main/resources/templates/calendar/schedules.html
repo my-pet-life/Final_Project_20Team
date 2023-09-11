@@ -66,7 +66,7 @@
 </div>
 <div class="container">
     <a href="/update-schedule" class="button">수정하기</a>
-    <a href="#" class="button">삭제하기</a>
+    <a id="delete" class="button">삭제하기</a>
 </div>
 
 <script>
@@ -107,7 +107,7 @@
                     const scheduleInfo = document.createElement('p');
 
                     let alarm = "";
-                    if(data.isAlarm === true) alarm = "ON";
+                    if (data.isAlarm === true) alarm = "ON";
                     else alarm = "OFF";
 
                     scheduleInfo.innerHTML = `
@@ -124,6 +124,37 @@
                     console.error('오류:', error);
                 });
         }
+    });
+
+    document.getElementById('delete').addEventListener('click', function (event) {
+        const scheduleId = localStorage.getItem("scheduleId");
+
+        const apiUrl = `/api/calendar/${scheduleId}`;
+        const accessToken = localStorage.getItem('accessToken');
+        console.log(accessToken);
+
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        fetch(apiUrl, requestOptions)
+            .then(response =>{
+                if (!response.ok) {
+                    throw new Error('서버 내에서 예외 발생');
+                }
+                return response.json();
+            })
+            .then(data =>{
+                alert(data.message);
+                window.location.href = "/calendar";
+            })
+            .catch(error =>{
+                console.error('오류:',error);
+            })
     });
 </script>
 </body>
