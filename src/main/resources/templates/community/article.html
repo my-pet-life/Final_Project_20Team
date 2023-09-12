@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>게시글 조회</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .post-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #article-content {
+            font-size: 20px;
+        }
+
+        #hashTag {
+            font-size: 15px;
+        }
+
+        .comments {
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+        }
+
+        .comment {
+            margin-bottom: 10px;
+        }
+
+        #comment-form {
+            margin-top: 20px;
+        }
+
+        #comment-form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #comment-form textarea {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: vertical;
+            margin: 0 auto;
+        }
+
+        #comment-form button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 id="category">카테고리</h1>
+    <a href="/community" class="button">게시글 목록으로 돌아가기</a>
+    <div class="post-content">
+        <h2 id="article-title">게시글 제목</h2>
+        <a id="article-content">게시글 내용이 여기에 들어갑니다. 이 부분에 실제 게시글 내용을 표시하세요.</a><br><br>
+        <a id="hashTag">#해시태그</a>
+    </div>
+    <div class="container">
+        <a href="/update-schedule" class="button">수정하기</a>
+        <a id="delete" class="button">삭제하기</a>
+    </div>
+</div>
+<div class="comments">
+    <h2>댓글</h2>
+    <div class="comment">
+        <p><strong>사용자 1:</strong> 댓글 내용이 여기에 들어갑니다.</p>
+    </div>
+    <div class="comment">
+        <p><strong>사용자 2:</strong> 댓글 내용이 여기에 들어갑니다.</p>
+    </div>
+    <!-- 댓글을 추가할 수 있는 입력 폼 -->
+    <form id="comment-form">
+        <label for="comment">댓글 작성:</label>
+        <textarea id="comment" name="comment" rows="4" cols="50"></textarea>
+        <button type="submit" class="button">댓글 남기기</button>
+    </form>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const accessToken = localStorage.getItem('accessToken');
+        const articleId = localStorage.getItem('articleId');
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+        const apiUrl = `/api/community/article/${articleId}`;
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    window.location.href = "/main";
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+                document.getElementById("category").innerText = data["category"];
+                document.getElementById("article-title").innerText = data["title"];
+                document.getElementById("article-content").innerText = data["content"];
+                let hashtagList = data["tags"];
+                let hashtagText = "";
+                hashtagList.forEach(hashtag => {
+                    hashtagText= hashtagText+`#${hashtag["tagName"]} `;
+                })
+                document.getElementById("hashTag").innerText=hashtagText;
+            })
+
+        // TODO 댓글
+    })
+</script>
+</body>
+</html>

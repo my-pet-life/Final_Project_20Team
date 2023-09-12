@@ -55,4 +55,7 @@ public class ViewController {
 
     @GetMapping("/community")
     public String community(){return "/community/community";}
+
+    @GetMapping("/article")
+    public String article(){return "/community/article";}
 }

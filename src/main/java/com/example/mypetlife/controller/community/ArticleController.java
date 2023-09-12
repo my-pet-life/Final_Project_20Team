@@ -160,7 +160,7 @@ public class ArticleController {
     }
 
     /**
-     * [GET] /community/article/{articleId}
+     * [GET] /community/article.html/{articleId}
      * 게시글 단일 조회
      */
     @GetMapping("/community/article/{articleId}")
@@ -171,7 +171,7 @@ public class ArticleController {
     }
 
     /**
-     * [PUT] /community/article/{articleId}
+     * [PUT] /community/article.html/{articleId}
      * 게시글 수정
      */
     @PutMapping("/community/article/{articleId}")
@@ -228,7 +228,7 @@ public class ArticleController {
     }
 
     /**
-     * [DELETE] /community/article/{articleId}
+     * [DELETE] /community/article.html/{articleId}
      * 게시글 삭제
      */
     @DeleteMapping("/community/article/{articleId}")
@@ -247,7 +247,7 @@ public class ArticleController {
     }
 
     /**
-     * [POST] /community/article/{articleId}/like
+     * [POST] /community/article.html/{articleId}/like
      * 게시글 좋아요 누르기
      */
     @PostMapping("/community/article/{articleId}/like")

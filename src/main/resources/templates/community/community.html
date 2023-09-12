@@ -153,10 +153,7 @@
                 return response.json();
             })
             .then(data=>{
-                console.log(data.content);
                 data.content.forEach(article =>{
-                    console.log(article);
-                    console.log(article["title"]);
                     const parent = document.getElementById("board");
 
                     const newDiv = document.createElement('div');
@@ -178,6 +175,12 @@
                     newDiv.appendChild(titleDiv);
                     newDiv.appendChild(contentDiv);
                     newDiv.appendChild(dateDiv);
+
+                    newDiv.addEventListener('click',function(){
+                        console.log("click");
+                        localStorage.setItem("articleId", article["id"]);
+                        window.location.href ="/article";
+                    })
 
                     parent.appendChild(newDiv);
                 })
