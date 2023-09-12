@@ -52,4 +52,7 @@ public class ViewController {
     public String updateSchedule(){
         return "/calendar/updateSchedule";
     }
+
+    @GetMapping("/community")
+    public String community(){return "/community/community";}
 }
