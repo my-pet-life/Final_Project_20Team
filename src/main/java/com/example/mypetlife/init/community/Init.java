@@ -25,7 +25,7 @@ public class Init {
 
     private final InitService initService;
 
-    //@PostConstruct
+    @PostConstruct
     public void init() {
         initService.initUser();
         initService.initArticle();
