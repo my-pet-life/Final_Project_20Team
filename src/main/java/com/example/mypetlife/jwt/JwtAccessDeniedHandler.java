@@ -38,8 +38,6 @@ public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
 
-        log.info("JwtAccessDeniedHandler 실행");
-
         // HandlerExceptionResolver에게 예외 처리를 위임
         resolver.resolveException(request, response, null, e);
     }

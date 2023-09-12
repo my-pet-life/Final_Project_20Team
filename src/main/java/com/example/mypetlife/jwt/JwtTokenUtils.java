@@ -152,7 +152,6 @@ public class JwtTokenUtils {
         if(token != null && token.startsWith("Bearer ")) {
             jwt= token.split(" ")[1];
         } else {
-            log.info("요청 헤더에 토큰이 없음");
             throw new JwtException("요청 헤더에 토큰이 없습니다");
         }
         String email = jwtParser.parseClaimsJws(jwt).getBody().getSubject();
