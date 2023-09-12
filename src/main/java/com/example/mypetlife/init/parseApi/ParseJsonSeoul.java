@@ -21,9 +21,7 @@ import java.util.List;
 public class ParseJsonSeoul {
     private final SeoulHospitalRepository seoulHospitalRepository;
 
-    // DB 저장
-    // 인텔리제이 시작할때 제일 먼저 실행
-//    @PostConstruct
+    //@PostConstruct
     public String storeSeoulPetHospital() throws IOException, ParseException {
         List<SeoulHospital> addressList = new ArrayList<>();
         // 2079

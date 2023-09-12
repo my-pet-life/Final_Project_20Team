@@ -1,0 +1,72 @@
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  PROJECT_NAME: my-pet-life
+  BUCKET_NAME: my-pet-life
+  CODE_DEPLOY_APP_NAME: my-pet-life
+  DEPLOYMENT_GROUP_NAME: my-pet-life
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set Yml
+        uses: microsoft/variable-substitution@v1
+        with:
+          files: ./src/main/resources/application.yml
+        env:
+          spring.datasource.url: ${{ secrets.DATASOURCE_URL }}
+          spring.datasource.username: ${{ secrets.DATASOURCE_USERNAME }}
+          spring.datasource.password: ${{ secrets.DATASOURCE_PASSWORD }}
+          spring.security.oauth2.client.registration.kakao.client-id: ${{ secrets.KAKAO_CLIENT_ID }}
+          spring.security.oauth2.client.registration.kakao.client-secret: ${{ secrets.KAKAO_CLIENT_SECRET }}
+          spring.security.oauth2.client.registration.kakao.redirect-uri: ${{ secrets.KAKAO_REDIRECT_URI }}
+          jwt.secret: ${{ secrets.JWT_SECRET }}
+          naver-cloud-sms.accessKey: ${{ secrets.NAVER_CLOUD_SMS_ACCESS_KEY }}
+          naver-cloud-sms.secretKey: ${{ secrets.NAVER_CLOUD_SMS_SECRET_KEY }}
+          naver-cloud-sms.serviceId: ${{ secrets.NAVER_CLOUD_SMS_SERVICE_ID }}
+          naver-cloud-sms.senderPhone: ${{ secrets.NAVER_CLOUD_SMS_SENDER_PHONE }}
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Make zip file
+        run: zip -r ./$GITHUB_SHA.zip .
+        shell: bash
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 ./$GITHUB_SHA.zip s3://$BUCKET_NAME/$GITHUB_SHA.zip
+
+      - name: Code Deploy
+        run: |
+          aws deploy create-deployment \
+          --deployment-config-name CodeDeployDefault.AllAtOnce \
+          --application-name ${{ env.CODE_DEPLOY_APP_NAME }} \
+          --deployment-group-name ${{ env.DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=${{ env.BUCKET_NAME }},bundleType=zip,key=$GITHUB_SHA.zip

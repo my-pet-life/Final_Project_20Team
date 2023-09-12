@@ -1,7 +1,7 @@
 package com.example.mypetlife.entity.hospital;
 
-import com.example.mypetlife.entity.Review;
 import com.example.mypetlife.entity.hospital.address.GyeonggiDoAddress;
+import com.example.mypetlife.entity.review.GyeonggiReview;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,8 +31,14 @@ public class GyeonggiDoHospital {
     @Column(name = "hospital_operation")
     private String hospitalOperation;
 
+    @Column(name = "next_review_id")
+    private Long nextReviewId = 1L; // 다음 리뷰의 ID를 관리, 초기값은 1
+
+    @Column(name = "review_count")
+    private Integer reviewCount = 0;
+
     @OneToMany(mappedBy = "gyeonggiDoHospitalId")
-    private List<Review> reviews = new ArrayList<>();
+    private List<GyeonggiReview> reviewEntities = new ArrayList<>();
 
     public static GyeonggiDoHospital saveHospitalInfo(final String hospitalName,
                                                       final GyeonggiDoAddress gyeonggiDoAddress, final String hospitalOperation) {
@@ -42,5 +48,14 @@ public class GyeonggiDoHospital {
         gyeonggiDoHospital.hospitalOperation = hospitalOperation;
 
         return gyeonggiDoHospital;
+    }
+
+    public void increaseReviewCount() {
+        this.reviewCount++;
+    }
+
+    public void increaseNextReviewCount() {
+        // 다음 리뷰의 ID를 증가시킴
+        this.nextReviewId++;
     }
 }
