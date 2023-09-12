@@ -22,7 +22,7 @@ import java.util.List;
 public class ParseJsonGyeonggiDo {
     private final GyeonggiDoHospitalRepository gyeonggiDoHospitalRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public String storeGyeonggiPetHospital() throws IOException, ParseException {
         List<GyeonggiDoHospital> addressList = new ArrayList<>();
         //2311
