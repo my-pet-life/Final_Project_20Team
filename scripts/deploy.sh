@@ -2,7 +2,7 @@
 
 REPOSITORY=/home/ubuntu
 PROJECT_NAME=my-pet-life
-CURRENT_PID=$(ps -ef | grep ${PROJECT_NAME} | grep jar | awk '{print $2}')
+CURRENT_PID=$(ps -ef | grep my-pet-life.*.jar | awk '{print $2}')
 
 echo "> Build 파일 복사"
 cd $REPOSITORY
