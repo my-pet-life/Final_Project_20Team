@@ -2,12 +2,11 @@
 
 REPOSITORY=/home/ubuntu
 PROJECT_NAME=my-pet-life
+CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
 
+echo "> Build 파일 복사"
 cd $REPOSITORY
 cp $REPOSITORY/$PROJECT_NAME/build/libs/*.jar $REPOSITORY/
-
-echo "> 현재 구동중인 애플리케이션 pid 확인"
-CURRENT_PID=$(pgrep -f ${PROJECT_NAME}.*.jar)
 
 echo "> 현재 구동 중인 애플리케이션 pid: $CURRENT_PID"
 if [ -z $CURRENT_PID ]
@@ -23,4 +22,7 @@ echo "> 새 애플리케이션 배포"
 JAR_NAME=$(ls -tr $REPOSITORY/ | grep jar | tail -n 1)
 
 echo "> Jar Name: $JAR_NAME"
-nohup java -jar $REPOSITORY/$JAR_NAME 2>&1 &
+echo "> $JAR_NAME에 실행권한 추가"
+chmod +x $JAR_NAME
+
+nohup java -jar $REPOSITORY/$JAR_NAME 1>/dev/null 2>&1 &
