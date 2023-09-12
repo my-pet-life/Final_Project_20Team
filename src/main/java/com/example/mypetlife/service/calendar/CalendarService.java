@@ -51,7 +51,7 @@ public class CalendarService {
         calendar.setTitle(dto.getTitle());
         calendar.setContent(dto.getContent());
         calendar.setLocation(dto.getLocation());
-        calendar.setAlarm(dto.getAlarm());
+        calendar.setAlarm(dto.getAlarm() == null ? -1 : dto.getAlarm());
 
         if(dto.getAlarm() != null) {
             if(user.getPhone() == null)
@@ -138,12 +138,13 @@ public class CalendarService {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
 
         ScheduleResponseDto dto = new ScheduleResponseDto();
+        dto.setId(calendar.getId());
         dto.setDate(calendar.getDate());
         dto.setTitle(calendar.getTitle());
         dto.setContent(calendar.getContent());
         dto.setStartTime(calendar.getStartTime());
         dto.setEndTime(calendar.getEndTime());
-        dto.setIsAlarm(calendar.getAlarm() != 0);
+        dto.setIsAlarm(calendar.getAlarm() != -1);
         dto.setLocation(calendar.getLocation());
         return dto;
     }
@@ -154,6 +155,7 @@ public class CalendarService {
         return calendarRepository.findAllByUserId(user).stream()
                 .map(calendar -> {
                     ScheduleAllListResponseDto dto = new ScheduleAllListResponseDto();
+                    dto.setId(calendar.getId());
                     dto.setDate(calendar.getDate());
                     dto.setStartTime(calendar.getStartTime());
                     dto.setEndTime(calendar.getEndTime());
@@ -197,7 +199,8 @@ public class CalendarService {
         updateFieldIfNotNull(dto.getTitle(), calendar::setTitle);
         updateFieldIfNotNull(dto.getContent(), calendar::setContent);
         updateFieldIfNotNull(dto.getLocation(), calendar::setLocation);
-        updateFieldIfNotNull(dto.getAlarm(), calendar::setAlarm);
+        calendar.setAlarm(dto.getAlarm() != null ? dto.getAlarm() : calendar.getAlarm());
+//        updateFieldIfNotNull(dto.getAlarm(), calendar::setAlarm);
         calendarRepository.save(calendar);
 
         Calendar newCalendar = calendarRepository.findById(scheduleId).get();
@@ -218,17 +221,20 @@ public class CalendarService {
             log.info("예약 메세지 알림이 취소되었습니다.");
         }
 
-        if (newCalendar.getAlarm() != 0) {
+        if (newCalendar.getAlarm() != -1) {
             if(user.getPhone() == null)
                 throw new CustomException(ErrorCode.NOT_FOUND_PHONE);
 
             LocalDateTime currentTime = LocalDateTime.now();
             if (calDateTime(scheduleRequestDto.getDate(), scheduleRequestDto.getStartTime(), scheduleRequestDto.getAlarm())
                     .isAfter(currentTime.plusMinutes(10))) {
-                calendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
-            } else throw new CustomException(ErrorCode.WrongTimeOfAlarm);
+                newCalendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
+            } else {
+                newCalendar.setAlarm(-1);
+                calendarRepository.save(newCalendar);
+                throw new CustomException(ErrorCode.WrongTimeOfAlarm);
+            }
 
-            newCalendar.setReserveId(sendMessage(scheduleRequestDto, user.getPhone()));
             calendarRepository.save(newCalendar);
             log.info("예약 메세지 알림이 등록되었습니다.");
         }

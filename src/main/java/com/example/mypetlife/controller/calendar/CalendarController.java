@@ -21,12 +21,12 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/calendar")
+@RequestMapping("/api/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
 
     @PostMapping
-    public MessageResponseDto create(HttpServletRequest request, @Valid @RequestBody ScheduleRequestDto dto)
+    public MessageResponseDto create(HttpServletRequest request, @RequestBody ScheduleRequestDto dto)
             throws UnsupportedEncodingException, URISyntaxException, NoSuchAlgorithmException, InvalidKeyException, JsonProcessingException {
         MessageResponseDto messageDto = new MessageResponseDto();
         messageDto.setId(calendarService.create(request, dto));

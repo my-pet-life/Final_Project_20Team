@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        p {
+            font-family: Arial, sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .container a.button:hover {
+            background-color: #0056b3;
+        }
+
+        #schedule-list {
+            margin: 0 auto;
+            max-width: 400px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            height: 300px;
+            overflow-y: auto;
+        }
+
+        #schedule-list li {
+            list-style-type: none;
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        #schedule-list li:hover {
+            background-color: #e0e0e0;
+        }
+
+        #schedule-list li {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #schedule-list a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: normal;
+        }
+
+        #schedule-list a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <H1>Schedule Management</H1>
+    <a href="/create-schedule" class="button">일정 등록하기</a><br>
+    <a href="#" class="button">해당하는 날짜로 일정 조회하기</a><br>
+    <a href="#" class="button">알림 설정한 일정 리스트 확인하기</a><br>
+    <a href="/main" id="logout" class="button">로그아웃</a>
+</div>
+
+<div id="schedule-list">
+    <!-- 일정 목록 -->
+</div>
+
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const accessToken = localStorage.getItem('accessToken');
+
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        const apiUrl = '/api/calendar/readall';
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    window.location.href = "/main";
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log(data);
+
+                const scheduleList = document.getElementById('schedule-list');
+                scheduleList.innerHTML = '';
+
+                if (data.length === 0) {
+                    const noScheduleMessage = document.createElement('p');
+                    noScheduleMessage.textContent = '  등록된 일정이 없습니다.';
+                    scheduleList.appendChild(noScheduleMessage);
+                } else {
+                    data.forEach(schedule => {
+                        const scheduleItem = document.createElement('li');
+                        console.log(schedule)
+                        scheduleItem.textContent = `${schedule.date} ${schedule.startTime} - ${schedule.endTime} : ${schedule.title}`;
+                        scheduleItem.addEventListener('click', function () {
+                            localStorage.setItem("scheduleId", schedule.id);
+                            window.location.href = `/schedules`;
+                        });
+
+                        scheduleList.appendChild(scheduleItem);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('오류:', error);
+            });
+    });
+</script>
+<script>
+    document.getElementById('logout').addEventListener('click', function (event) {
+        // const token = localStorage.getItem('accessToken');
+        // alert(token);
+
+        // 토큰 데이터 삭제
+        localStorage.removeItem("accessToken");
+        alert("로그아웃 되었습니다.");
+        window.location.href = "/main";
+    });
+</script>
+</html>

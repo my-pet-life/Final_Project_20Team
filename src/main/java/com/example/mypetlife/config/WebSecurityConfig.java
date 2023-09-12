@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
+
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 @Configuration
@@ -29,18 +30,22 @@ public class WebSecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
                         authHttp.requestMatchers(
-                                        "/main",
-                                        "/register",
-                                        "/login/**",
-                                        "/api/hospitals/**/",
-                                        "/api/seoul/reviews/**/",
-                                        "/api/gyeonggi/reviews/**/",
-                                        "/","/v3/api-docs/**",
+                                        "/main", "/login", "/register", "/main-success", "/calendar", "/schedules", "/create-schedule", "/update-schedule"
+                                ).permitAll()
+                                .requestMatchers(
+                                        "/api/register/**",
+                                        "/api/login/**",
+                                        "/api/hospitals/**",
+                                        "/api/seoul/reviews/**",
+                                        "/api/gyeonggi/reviews/**",
+                                        "/", "/v3/api-docs/**",
                                         "/swagger-ui/**",
                                         "/community/articles/**",
                                         "/community/search/**",
+                                        "/swagger",
                                         "/hospitals/**",
-                                        "/access_token").permitAll()
+                                        "/access_token",
+                                        "/js/**").permitAll()
                                 .requestMatchers(POST, "/sms/send/**").permitAll()
                                 .requestMatchers("/community/notice").hasRole("ADMIN")
                                 .anyRequest().authenticated()
@@ -65,29 +70,6 @@ public class WebSecurityConfig {
 //                .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
         ;
         return http.build();
-    }
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> {
-            web.ignoring()
-                    // 해당 경로는 security filter chain을 생략
-                    // 즉 permitAll로 설정하여 로그인 없이 접근 가능한 URL을 아래에 추가하여
-                    // 해당 URL 요청들은 JwtFilter, JwtExceptionFilter를 포함한 스프링 시큐리티의 필터 체인을 생략
-                    .requestMatchers(
-                            "/main",
-                            "/register",
-                            "/login/**",
-                            "/api/hospitals/**/",
-                            "/api/seoul/reviews/**/",
-                            "/api/gyeonggi/reviews/**/",
-                            "/","/v3/api-docs/**",
-                            "/swagger-ui/**",
-                            "/community/search/**",
-                            "/hospitals/**",
-                            "/access_token")
-                    .requestMatchers(POST, "/sms/send/**")
-                    .requestMatchers(GET, "/community/articles/**");
-        };
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
