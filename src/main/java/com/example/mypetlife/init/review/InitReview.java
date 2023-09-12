@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class InitReview {
     private final InitReviewService initReviewService;
 
-    //@PostConstruct
+    @PostConstruct
     public void init() {
         initReviewService.postGyeonggiReview();
         initReviewService.postSeoulReview();

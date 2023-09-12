@@ -16,16 +16,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
-public class Init {
+public class InitUserAndCommunity {
 
     private final InitService initService;
 
-    //@PostConstruct
+    @PostConstruct
     public void init() {
         initService.initUser();
         initService.initArticle();
