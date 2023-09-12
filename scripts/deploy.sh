@@ -2,7 +2,7 @@
 
 REPOSITORY=/home/ubuntu
 PROJECT_NAME=my-pet-life
-CURRENT_PID=$(ps -ef | grep my-pet-life.*.jar | awk '{print $2}')
+CURRENT_PID=$(pgrep -f /home/ubuntu/mypetlife-0.0.1-SNAPSHOT.jar)
 
 echo "> Build 파일 복사"
 cd $REPOSITORY
@@ -13,8 +13,8 @@ if [ -z $CURRENT_PID ]
 then
   echo "> 현재 구동 중인 애플리케이션 없음"
 else
-  echo "> kill -9 $CURRENT_PID"
-  kill -9 $CURRENT_PID
+  echo "> kill -15 $CURRENT_PID"
+  kill -15 $CURRENT_PID
   sleep 5
 fi
 
