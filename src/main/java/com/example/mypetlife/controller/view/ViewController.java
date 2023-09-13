@@ -52,4 +52,9 @@ public class ViewController {
     public String updateSchedule(){
         return "/calendar/updateSchedule";
     }
+
+    @GetMapping("/select-city")
+    public String selectCity(){
+        return "/selectCity";
+    }
 }
