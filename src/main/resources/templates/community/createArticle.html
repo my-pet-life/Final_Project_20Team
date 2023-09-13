@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>글 작성</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        textarea {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: left;
+        }
+
+        .form label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .form input[type="text"],
+        .form input[type="content"] {
+            width: 97%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>글 작성</h1>
+    <div class="form">
+        <form id="article-form" action="/create-article" method="POST" enctype="multipart/form-data">
+            <label for="category"><br>카테고리 :</label>
+            <select id="category" name="category" class="form-select">
+                <option value="NOTICE">공지사항</option>
+                <option value="REVIEW">리뷰</option>
+                <option value="QUESTION">질문</option>
+                <option value="CHAT">친목</option>
+            </select>
+
+            <label for="title"><br>제목 :</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="content"><br>내용 :</label>
+            <textarea id="content" name="content" rows="4" cols="50" required></textarea>
+
+            <label for="hashtag"><br>해시태그 :</label>
+            <input type="text" id="hashtag" name="hashtag">
+
+            <br><br>
+            <button type="submit">글 작성하기</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('article-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const accessToken = localStorage.getItem("accessToken");
+
+        // 입력 데이터 추출
+        const category = document.getElementById('category').value;
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const hashtag = document.getElementById('hashtag').value;
+
+        let hashtagList = hashtag.replace(/\s+/g, "").split("#");
+
+        const articleDate = {
+            category, title, content
+        };
+        const formData = new FormData();
+        formData.append('article', JSON.stringify(articleDate));
+        formData.append('hashtag', JSON.stringify(hashtagList));
+
+
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: formData
+        };
+
+        const apiUrl = '/api/community';
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if(!response.ok){
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    // window.location.href="/main";
+                }
+                return response.json();
+            })
+            .then(response => {
+                console.log(response);
+            })
+            .catch(error => {
+                console.error('오류:', error);
+            });
+    });
+</script>
+</body>
+</html>
