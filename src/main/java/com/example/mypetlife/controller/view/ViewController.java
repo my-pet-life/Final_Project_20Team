@@ -25,7 +25,7 @@ public class ViewController {
 
     @GetMapping("/register")
     public String register(){
-        return "register";
+        return "/register";
     }
 
     @GetMapping("/main-success")
@@ -53,5 +53,9 @@ public class ViewController {
         return "/calendar/updateSchedule";
     }
 
+    @GetMapping("/community")
+    public String community(){return "/community/community";}
 
+    @GetMapping("/article")
+    public String article(){return "/community/article";}
 }

@@ -1,4 +1,5 @@
 package com.example.mypetlife.config;
+
 import com.example.mypetlife.jwt.*;
 import com.example.mypetlife.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.security.web.access.intercept.AuthorizationFilter;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
+
 @Configuration
 @RequiredArgsConstructor
 public class WebSecurityConfig {
@@ -25,17 +27,20 @@ public class WebSecurityConfig {
     private final JwtTokenUtils jwtTokenUtils;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authHttp ->
                         authHttp.requestMatchers(
-                                        "/main", "/login", "/register", "/main-success", "/calendar", "/schedules", "/create-schedule", "/update-schedule"
+                                        "/main", "/login", "/register", "/main-success", "/calendar", "/schedules", "/create-schedule", "/update-schedule",
+                                        "/community", "/article"
                                 ).permitAll()
                                 .requestMatchers(GET,"/register").permitAll()
                                 .requestMatchers(
                                         "/api/register/**",
                                         "/api/login/**",
+                                        "/api/access_token",
                                         "/api/hospitals/**",
                                         "/api/seoul/reviews/**",
                                         "/api/gyeonggi/reviews/**",
@@ -71,6 +76,7 @@ public class WebSecurityConfig {
         ;
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
