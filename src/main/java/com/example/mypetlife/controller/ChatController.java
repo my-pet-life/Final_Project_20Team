@@ -45,7 +45,7 @@ public class ChatController {
         return chatService.createRoom(user);
     }
 
-    // 채팅 메세지 삭제
+    // 채팅방, 메세지 삭제
     @DeleteMapping("/{roomId}")
     public String deleteMessage(
             HttpServletRequest request,
@@ -53,9 +53,11 @@ public class ChatController {
         // 채팅을 생성한 유저이거나 관리자일 경우 삭제가능
         if(chatService.userCheck(request, roomId) || chatService.adminCheck(request)) {
             chatService.deleteMessage(roomId);
-            return "채팅이 삭제되었습니다.";
+        }else{
+            throw new CustomException(ErrorCode.UNAUTHORIZED_CHATROOM);
         }
-        throw new CustomException(ErrorCode.UNAUTHORIZED_CHATROOM);
+        chatService.deleteRoom(roomId);
+        return "채팅방이 삭제되었습니다.";
     }
 
 

@@ -85,7 +85,6 @@ public class ChatService {
         }else{
             throw new CustomException(ErrorCode.ALREADY_EXIST_CHATROOM);
         }
-
     }
 
     @Transactional
@@ -115,6 +114,14 @@ public class ChatService {
         for (Message message:messageList) {
             messageRepository.delete(message);
         }
+    }
+
+    @Transactional
+    public void deleteRoom(Long roomId){
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CHATROOM));
+
+        chatRoomRepository.deleteById(roomId);
     }
 
     public <T> void sendMessage(WebSocketSession session, T message){
