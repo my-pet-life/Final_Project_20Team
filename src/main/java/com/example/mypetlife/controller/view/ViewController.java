@@ -35,27 +35,27 @@ public class ViewController {
 
     @GetMapping("/calendar")
     public String calendar(){
-        return "/calendar/calendar";
+        return "calendar/calendar";
     }
 
     @GetMapping("/schedules")
     public String schedules(){
-        return "/calendar/schedules";
+        return "calendar/schedules";
     }
 
     @GetMapping("/create-schedule")
     public String createSchedule(){
-        return "/calendar/createSchedule";
+        return "calendar/createSchedule";
     }
 
     @GetMapping("/update-schedule")
     public String updateSchedule(){
-        return "/calendar/updateSchedule";
+        return "calendar/updateSchedule";
     }
 
     @GetMapping("/community")
-    public String community(){return "/community/community";}
+    public String community(){return "community/community";}
 
     @GetMapping("/article")
-    public String article(){return "/community/article";}
+    public String article(){return "community/article";}
 }
