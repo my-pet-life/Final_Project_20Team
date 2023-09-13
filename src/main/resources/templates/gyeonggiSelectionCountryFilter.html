@@ -8,16 +8,95 @@
     <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=7h474v6iy2&submodules=geocoder"></script>
     <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+      .container h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
+
+      .container a.button:hover {
+        background-color: #0056b3;
+      }
+
+      .search {
+        /*text-align: center;*/
+        margin-top: 20px;
+        margin-left: 20px;
+      }
+
+      .search input[type="text"] {
+        width: 60%;
+        padding: 10px;
+        margin-right: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+
+      .search input[type="button"] {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+      }
+
+      #map {
+        width: 100%;
+        height: 500px;
+        margin-left: 20px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      table, th, td {
+        border: 1px solid #ccc;
+      }
+
+      th, td {
+        padding: 10px;
+        text-align: left;
+      }
+    </style>
   </head>
 </head>
 <body>
-<h1>Select a Country</h1>
+<h1>Hospital List</h1>
 <div th:each="city : ${selectCity}">
   <ul>
     <li th:each="countryList : ${countryList}">
       <ul th:each="countryInfo : ${countryList.getGyeonggiHospitalInfo()}">
         <li>
-
           <p><span th:text="${countryInfo.city}"></span></p>
           <p><strong> 시 : </strong> <span th:text="${countryInfo.country}"></span></p>
           <p><strong> 구 / 군 : </strong> <span th:text="${countryInfo.district}"></span></p>
@@ -43,7 +122,7 @@
   <input id="address" type="text" placeholder="검색할 주소">
   <input id="submit" type="button" value="주소검색">
 </div>
-<div id="map" style="width:1000px;height:500px;"></div>
+<div id="map" style="width:70%;height:700px;"></div>
 <div>
   <table>
     <thead>
