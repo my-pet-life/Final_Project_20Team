@@ -39,6 +39,9 @@ spring:
               - profile_nickname
               - account_email
 
+  thymeleaf:
+    prefix: classpath:/templates/
+
 server:
   tomcat:
     connection-timeout: -1
