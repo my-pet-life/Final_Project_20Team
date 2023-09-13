@@ -204,6 +204,17 @@
               <p> 위치: ${data.location}</p>
               <p> 알림 설정: ${alarm}</p>`;
                 scheduleDetail.appendChild(scheduleInfo);
+
+                document.getElementById('date').value = data.date;
+                const startTimeParts = data.startTime.split(':');
+                document.getElementById('startTime').value = startTimeParts[0];
+                document.getElementById('startTime-minute').value = startTimeParts[1];
+                const endTimeParts = data.endTime.split(':');
+                document.getElementById('endTime').value = endTimeParts[0];
+                document.getElementById('endTime-minute').value = endTimeParts[1];
+                document.getElementById('title').value = data.title;
+                document.getElementById('content').value = data.content;
+                document.getElementById('location').value = data.location;
             })
             .catch(error => {
                 console.error('오류:', error);

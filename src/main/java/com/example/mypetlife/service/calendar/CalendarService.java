@@ -169,7 +169,7 @@ public class CalendarService {
     public List<AlarmScheduleListDto> readAllAlarmSchedule(HttpServletRequest request) {
         User user = userService.findByEmail(jwtTokenUtils.getEmailFromHeader(request));
         return calendarRepository.findAllByUserId(user).stream()
-                .filter(calendar -> calendar.getAlarm() != null)
+                .filter(calendar -> calendar.getAlarm() != -1)
                 .map(calendar -> {
                     AlarmScheduleListDto dto = new AlarmScheduleListDto();
                     dto.setAlarm(calendar.getAlarm());
