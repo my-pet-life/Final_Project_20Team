@@ -32,6 +32,7 @@ public class WebSecurityConfig {
                         authHttp.requestMatchers(
                                         "/main", "/login", "/register", "/main-success", "/calendar", "/schedules", "/create-schedule", "/update-schedule"
                                 ).permitAll()
+                                .requestMatchers(GET,"/register").permitAll()
                                 .requestMatchers(
                                         "/api/register/**",
                                         "/api/login/**",
