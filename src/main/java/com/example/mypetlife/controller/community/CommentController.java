@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class CommentController {
 
     private final CommentService commentService;
@@ -52,7 +53,7 @@ public class CommentController {
     }
 
     /**
-     * [PUT] /community/article/{articleId}/{commentId}
+     * [PUT] /community/article.html/{articleId}/{commentId}
      * 댓글 수정
      */
     @PutMapping("/community/article/{articleId}/{commentId}")
@@ -77,7 +78,7 @@ public class CommentController {
     }
 
     /**
-     * [DELETE] /community/article/{articleId}/{commentId}
+     * [DELETE] /community/article.html/{articleId}/{commentId}
      * 댓글 삭제
      */
     @DeleteMapping("/community/article/{articleId}/{commentId}")
@@ -101,7 +102,7 @@ public class CommentController {
     }
 
     /**
-     * [POST] /community/article/{articleId}/{commentId}/like
+     * [POST] /community/article.html/{articleId}/{commentId}/like
      * 댓글 좋아요 누르기
      */
     @PostMapping("/community/article/{articleId}/{commentId}/like")

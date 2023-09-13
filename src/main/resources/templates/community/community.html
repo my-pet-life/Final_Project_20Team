@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>커뮤니티</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+        }
+
+        .sidebar {
+            flex: 1;
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+        }
+
+        #board {
+            flex: 3;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        #board h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .post {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .post:hover {
+            background-color: #e0e0e0;
+        }
+
+        .post-category {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .post-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .post-date {
+            font-size: 14px;
+            color: #777;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .category-item {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .category-item:hover {
+            text-decoration: underline;
+        }
+
+        /* 버튼 스타일 */
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #0c2b50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .nav-button:hover {
+            background-color: #0c2b50;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar">
+        <h2>카테고리</h2>
+        <ul class="category-list">
+            <li class="category-item" id="all">전체</li>
+            <li class="category-item" id="notice">공지사항</li>
+            <li class="category-item" id="review">리뷰</li>
+            <li class="category-item" id="question">질문</li>
+            <li class="category-item" id="chat">친목</li>
+        </ul>
+        <!-- 메인으로 이동하는 버튼 -->
+        <a href="/main-success" class="nav-button">메인으로 이동</a>
+        <!-- 로그아웃 버튼 -->
+        <a href="/main" id="logout" type="button" class="nav-button">로그아웃</a>
+    </div>
+    <div id = "board">
+        <h1>커뮤니티</h1>
+        <a href="/create-article" class="button">글 작성하기</a><br>
+        <div id="articles">
+        </div>
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const accessToken = localStorage.getItem('accessToken');
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        const apiUrl = '/api/community/articles'
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    window.location.href = "/main";
+                }
+                return response.json();
+            })
+            .then(data => {
+                data.content.forEach(article => {
+                    settingArticles(article);
+                })
+            })
+            .catch(error=>{
+                alert(error.message);
+            })
+    })
+
+    document.getElementById('all').addEventListener('click',function(event){
+        event.preventDefault();
+
+        const parent = document.getElementById('articles');
+        // 자식 노드 삭제
+        while(parent.firstChild)  {
+            parent.removeChild(parent.firstChild);
+        }
+
+        const accessToken = localStorage.getItem('accessToken');
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        const apiUrl = '/api/community/articles'
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    window.location.href = "/main";
+                }
+                return response.json();
+            })
+            .then(data => {
+                data.content.forEach(article => {
+                    settingArticles(article);
+                })
+            })
+            .catch(error=>{
+                alert(error.message);
+            })
+    })
+
+
+    document.getElementById('review').addEventListener('click', function(event){
+        event.preventDefault();
+        readArticles('REVIEW');
+    })
+
+    document.getElementById('notice').addEventListener('click', function(event){
+        event.preventDefault();
+        readArticles('NOTICE');
+    })
+
+    document.getElementById('question').addEventListener('click', function(event){
+        event.preventDefault();
+        readArticles('QUESTION');
+    })
+
+    document.getElementById('chat').addEventListener('click', function(event){
+        event.preventDefault();
+        readArticles('CHAT');
+    })
+
+    function readArticles(category){
+        const parent = document.getElementById('articles');
+        // 자식 노드 삭제
+        while(parent.firstChild)  {
+            parent.removeChild(parent.firstChild);
+        }
+
+        const accessToken = localStorage.getItem('accessToken');
+        const requestOptions = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            }
+        };
+
+        const apiUrl = '/api/community/articles'
+
+        fetch(apiUrl, requestOptions)
+            .then(response => {
+                if (!response.ok) {
+                    alert("로그인 후 이용하실 수 있습니다.");
+                    window.location.href = "/main";
+                }
+                return response.json();
+            })
+            .then(data => {
+                data.content.forEach(article => {
+                    if(article["category"]===category){
+                        settingArticles(article);
+                    }
+                })
+            })
+
+    }
+
+
+
+    function settingArticles(article) {
+        const parent = document.getElementById("articles");
+
+        const newDiv = document.createElement('div');
+        newDiv.setAttribute("class", "post");
+        newDiv.setAttribute("id","post");
+
+        const titleDiv = document.createElement('div');
+        titleDiv.innerHTML = `${article["category"]}`;
+        titleDiv.setAttribute("class", "post-category");
+
+        const contentDiv = document.createElement('div');
+        contentDiv.innerHTML = `${article["title"]}`;
+        contentDiv.setAttribute("class", "post-title");
+
+        const dateDiv = document.createElement('div');
+        let date = article["updatedDate"];
+        dateDiv.innerHTML = "작성 날짜:" + `${date}`;
+        dateDiv.setAttribute("class", "post-date");
+
+        newDiv.appendChild(titleDiv);
+        newDiv.appendChild(contentDiv);
+        newDiv.appendChild(dateDiv);
+
+        newDiv.addEventListener('click', function () {
+            console.log("click");
+            localStorage.setItem("articleId", article["id"]);
+            window.location.href = "/article";
+        })
+
+        parent.appendChild(newDiv);
+    }
+</script>
+<script>
+    document.getElementById('logout').addEventListener('click', function (event) {
+        const token = localStorage.getItem('accessToken');
+        // alert(token);
+
+        // 토큰 데이터 삭제
+        localStorage.removeItem("accessToken");
+        alert("로그아웃 되었습니다.");
+    });
+</script>
+</body>
+</html>
