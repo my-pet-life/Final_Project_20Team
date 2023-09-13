@@ -104,7 +104,17 @@ public class ChatService {
                 .build();
 
         messageRepository.save(newMessage);
+    }
 
+    @Transactional
+    public void deleteMessage(Long roomId){
+        ChatRoom chatRoom = chatRoomRepository.findById(roomId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CHATROOM));
+
+        List<Message> messageList = messageRepository.findAllByChatRoom(chatRoom);
+        for (Message message:messageList) {
+            messageRepository.delete(message);
+        }
     }
 
     public <T> void sendMessage(WebSocketSession session, T message){
