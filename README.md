@@ -14,6 +14,12 @@
 ----
 ## 2. 👩👩👩🧑 팀원 소개 및 담당 역할
 ### 팀장 [이지선](https://github.com/jsl1113)
+- ERD 설계 및 구축
+- 반려동물 일정 관리 기능 CRUD 구현
+- Naver Cloud Platform 의 SMS Reservation API 를 이용한 일정 알림 설정 기능
+- MockMvc 를 통해 일정 등록, 삭제 기능 단위 테스트 코드 작성
+- 로그인/회원 가입, 일정 관리 프론트 구현
+    - JavaScript의 fetch() 를 통한 양방향 JSON 통신
 
 ### 팀원 [이소희](https://github.com/olsohee)
 - 로그인/회원가입 기능, 커뮤니티 기능 개발
