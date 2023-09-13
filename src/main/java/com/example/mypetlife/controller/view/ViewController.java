@@ -27,7 +27,7 @@ public class ViewController {
 
     @GetMapping("/register")
     public String register(){
-        return "/register";
+        return "register";
     }
 
     @GetMapping("/main-success")
