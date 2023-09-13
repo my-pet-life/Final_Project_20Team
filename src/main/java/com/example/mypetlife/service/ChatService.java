@@ -4,6 +4,7 @@ import com.example.mypetlife.dto.chat.ChatMessageDto;
 import com.example.mypetlife.dto.chat.ChatMessageListDto;
 import com.example.mypetlife.entity.ChatRoom;
 import com.example.mypetlife.entity.Message;
+import com.example.mypetlife.entity.user.Authority;
 import com.example.mypetlife.entity.user.User;
 import com.example.mypetlife.exception.CustomException;
 import com.example.mypetlife.exception.ErrorCode;
@@ -129,16 +130,24 @@ public class ChatService {
         return chatMessageList;
     }
 
-    // TODO 일반 유저일 경우 채팅방을 생성한 유저인지 확인, 관리자일 경우 통과
-    public void userCheck(HttpServletRequest request, Long roomId){
+    // TODO 채팅방을 생성한 유저이면 true 반환
+    public boolean userCheck(HttpServletRequest request, Long roomId){
         // 채팅방을 만든 사용자인지 확인
         String email = jwtTokenUtils.getEmailFromHeader(request);
         User user = userService.findByEmail(email);
 
         ChatRoom chatRoom = chatRoomRepository.findById(roomId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CHATROOM));
-        if(user != chatRoom.getChatRoomUser()) throw new CustomException(ErrorCode.UNAUTHORIZED_CHATROOM);
-        // TODO 관리자일 경우는 접근 가능
+        if(user != chatRoom.getChatRoomUser()) return false;
+        else return true;
+    }
 
+    // TODO 관리자면 true 반환
+    public boolean adminCheck(HttpServletRequest request){
+        String userEmail= jwtTokenUtils.getEmailFromHeader(request);
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        if(user.getAuthority().equals(Authority.ROLE_ADMIN)) return true;
+        else return false;
     }
 }
