@@ -48,6 +48,9 @@ http://13.209.174.161:8080
   - access token 만료 후 refresh token을 이용해 access token 재발급 가능
 
 ### 일정 관리
+- 병원 방문일, 예방 주사 접종일자 등 반려 동물 일정들을 기록 하기 위한 일정 관리 CRUD 기능
+- 알림 설정 시, 해당 일정 전에 메세지 알림 전송받는 기능
+  - Naver SMS Reservation API 이용 
 
 ### 커뮤니티
 - 게시물 CRUD 기능
