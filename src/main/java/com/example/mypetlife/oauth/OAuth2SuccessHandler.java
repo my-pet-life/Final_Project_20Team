@@ -46,7 +46,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         JwtTokenDto tokenDto = jwtTokenUtils.generateToken(user);
 
         // 파라미터로 토큰을 전달하면서 리다이렉트
-        String redirectUrl = String.format("http://localhost:8080/login/kakao?access_token=%s&refresh_token=%s",
+        String redirectUrl = String.format("http://13.209.174.161:8080/login/kakao?access_token=%s&refresh_token=%s",
                 tokenDto.getAccessToken(), tokenDto.getRefreshToken());
         getRedirectStrategy().sendRedirect(request, response, redirectUrl);
     }
