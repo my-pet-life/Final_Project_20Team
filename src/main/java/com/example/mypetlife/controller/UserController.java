@@ -77,6 +77,7 @@ public class UserController {
      * [POST] /access_token
      * Refresh Token 검증 후 유효하면 새로운 Access Token 발급, 유효하지 않으면 재로그인하도록
      */
+    @GetMapping("/access_token")
     public AccessTokenDto recreationAccessToken(@RequestBody RefreshTokenDto refreshTokenDto) {
 
         String refreshToken = refreshTokenDto.getRefreshToken();

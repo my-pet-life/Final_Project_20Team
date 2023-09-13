@@ -36,6 +36,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(
                                         "/api/register/**",
                                         "/api/login/**",
+                                        "/api/access_token",
                                         "/api/hospitals/**",
                                         "/api/seoul/reviews/**",
                                         "/api/gyeonggi/reviews/**",
