@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Calendar</title>
+    <title>Read Schedule</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,7 +42,7 @@
             background-color: #0056b3;
         }
 
-        #schedule-list {
+        #schedule-alarm-list {
             margin: 0 auto;
             max-width: 400px;
             padding: 10px;
@@ -54,7 +54,7 @@
             overflow-y: auto;
         }
 
-        #schedule-list li {
+        #schedule-alarm-list li {
             list-style-type: none;
             margin-bottom: 10px;
             padding: 5px;
@@ -62,41 +62,37 @@
             border-radius: 5px;
         }
 
-        #schedule-list li:hover {
+        #schedule-alarm-list li:hover {
             background-color: #e0e0e0;
         }
 
-        #schedule-list li {
+        #schedule-alarm-list li {
             font-size: 18px;
             font-weight: bold;
             color: #333;
         }
 
-        #schedule-list a {
+        #schedule-alarm-list a {
             color: #007bff;
             text-decoration: none;
             font-weight: normal;
         }
 
-        #schedule-list a:hover {
+        #schedule-alarm-list a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <H1>Schedule Management</H1>
-    <a href="/create-schedule" class="button">일정 등록</a><br>
-    <a href="/read-date-schedule" class="button">날짜로 일정 조회</a><br>
-    <a href="/read-alarm-schedule" class="button">알림 설정 일정 리스트 확인</a><br>
-    <a href="/main" id="logout" class="button">로그아웃</a>
+    <H1>Read Schedule</H1>
+    <a href="/calendar" class="button">일정 목록으로 돌아가기</a>
 </div>
 
-<div id="schedule-list">
+<div id="schedule-alarm-list">
     <!-- 일정 목록 -->
 </div>
 
-</body>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const accessToken = localStorage.getItem('accessToken');
@@ -109,8 +105,7 @@
             }
         };
 
-        const apiUrl = '/api/calendar/readall';
-
+        const apiUrl = '/api/calendar/readall/alarm';
         fetch(apiUrl, requestOptions)
             .then(response => {
                 if (!response.ok) {
@@ -122,22 +117,22 @@
             .then(data => {
                 console.log(data);
 
-                const scheduleList = document.getElementById('schedule-list');
+                const scheduleList = document.getElementById('schedule-alarm-list');
                 scheduleList.innerHTML = '';
 
                 if (data.length === 0) {
                     const noScheduleMessage = document.createElement('p');
-                    noScheduleMessage.textContent = '  등록된 일정이 없습니다.';
+                    noScheduleMessage.textContent = '  알람 설정된 일정이 없습니다.';
                     scheduleList.appendChild(noScheduleMessage);
                 } else {
                     data.forEach(schedule => {
                         const scheduleItem = document.createElement('li');
                         console.log(schedule)
-                        scheduleItem.textContent = `${schedule.date} ${schedule.startTime} - ${schedule.endTime} : ${schedule.title}`;
-                        scheduleItem.addEventListener('click', function () {
-                            localStorage.setItem("scheduleId", schedule.id);
-                            window.location.href = `/schedules`;
-                        });
+                        scheduleItem.textContent = `${schedule.date} ${schedule.startTime} - ${schedule.endTime} : ${schedule.title}  (${schedule.alarm}분 전)`;
+                        // scheduleItem.addEventListener('click', function () {
+                        //     localStorage.setItem("scheduleId", schedule.id);
+                        //     window.location.href = `/schedules`;
+                        // });
 
                         scheduleList.appendChild(scheduleItem);
                     });
@@ -148,15 +143,5 @@
             });
     });
 </script>
-<script>
-    document.getElementById('logout').addEventListener('click', function (event) {
-        // const token = localStorage.getItem('accessToken');
-        // alert(token);
-
-        // 토큰 데이터 삭제
-        localStorage.removeItem("accessToken");
-        alert("로그아웃 되었습니다.");
-        window.location.href = "/main";
-    });
-</script>
+</body>
 </html>

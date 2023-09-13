@@ -34,10 +34,6 @@
             margin-bottom: 20px;
         }
 
-        .container a.button:hover {
-            background-color: #0056b3;
-        }
-
         #content-wrapper {
             display: flex; /* 가로로 나란히 배치하기 위해 flex 사용 */
             justify-content: space-between; /* 간격을 최대화하여 나란히 배치 */
@@ -204,6 +200,17 @@
               <p> 위치: ${data.location}</p>
               <p> 알림 설정: ${alarm}</p>`;
                 scheduleDetail.appendChild(scheduleInfo);
+
+                document.getElementById('date').value = data.date;
+                const startTimeParts = data.startTime.split(':');
+                document.getElementById('startTime').value = startTimeParts[0];
+                document.getElementById('startTime-minute').value = startTimeParts[1];
+                const endTimeParts = data.endTime.split(':');
+                document.getElementById('endTime').value = endTimeParts[0];
+                document.getElementById('endTime-minute').value = endTimeParts[1];
+                document.getElementById('title').value = data.title;
+                document.getElementById('content').value = data.content;
+                document.getElementById('location').value = data.location;
             })
             .catch(error => {
                 console.error('오류:', error);

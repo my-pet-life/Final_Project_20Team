@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Read Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .container h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #content-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #schedule-date-form,
+        #schedule-date-list {
+            width: 35%;
+            flex-basis: calc(50% - 10px);
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            margin: 0 auto;
+        }
+
+        #schedule-date-form {
+            margin-bottom: 20px;
+        }
+
+        #schedule-date-form label {
+            display: block;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        #schedule-date-form .dateInput {
+            width: 35%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #schedule-date-list li {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            list-style-type: none;
+            margin-bottom: 10px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 5px;
+        }
+
+        #schedule-date-list li:hover {
+            background-color: #e0e0e0;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+  <h1>Read Schedule</h1>
+</div>
+
+<form id="schedule-date-form">
+    <label for="date">날짜 :</label>
+    <input type="date" id="date" name="date" class="dateInput">
+    <button id="read-date-schedule" class="button">조회하기</button>
+</form>
+
+<div id="schedule-date-list">
+    <!-- 일정 목록 -->
+</div>
+
+<script>
+  document.getElementById('read-date-schedule').addEventListener('click', function (event) {
+    event.preventDefault();
+
+    const accessToken = localStorage.getItem('accessToken');
+    const date = document.getElementById('date').value;
+    const apiUrl = `/api/calendar/readList?date=${date}`;
+
+      const requestOptions = {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`
+          }
+      };
+
+      fetch(apiUrl, requestOptions)
+          .then(response => {
+              if (!response.ok) {
+                  alert("로그인 후 이용하실 수 있습니다.");
+                  window.location.href = "/main";
+              }
+              return response.json();
+          })
+          .then(data => {
+              console.log(data);
+
+              const scheduleList = document.getElementById('schedule-date-list');
+              scheduleList.innerHTML = '';
+
+              if (data.length === 0) {
+                  const noScheduleMessage = document.createElement('p');
+                  noScheduleMessage.textContent = '  해당 날짜의 일정이 없습니다.';
+                  scheduleList.appendChild(noScheduleMessage);
+              } else {
+                  data.forEach(schedule => {
+                      const scheduleItem = document.createElement('li');
+                      scheduleItem.textContent = `${schedule.startTime} - ${schedule.endTime} : ${schedule.title}  (${schedule.location})`;
+                      scheduleList.appendChild(scheduleItem);
+                  });
+              }
+          })
+  });
+</script>
+</body>
+</html>
