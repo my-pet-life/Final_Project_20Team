@@ -18,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 public class InitCalendar {
     private final InitCalendarService initCalendarService;
 
-    @PostConstruct
+//    @PostConstruct
     public void init(){
         initCalendarService.createSchedule();
     }
