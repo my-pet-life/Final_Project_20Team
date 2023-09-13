@@ -58,6 +58,11 @@ public class ViewController {
         return "calendar/readAlarmSchedule";
     }
 
+    @GetMapping("/read-date-schedule")
+    public String readDateSchedule(){
+        return "calendar/readDateSchedule";
+    }
+
     @GetMapping("/community")
     public String community(){return "community/community";}
 
