@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-@ResponseBody
 @Controller
 @Slf4j
 public class ViewController {
@@ -54,4 +53,6 @@ public class ViewController {
     public String updateSchedule(){
         return "/calendar/updateSchedule";
     }
+
+
 }
