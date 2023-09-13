@@ -133,28 +133,31 @@
         const accessToken = localStorage.getItem('accessToken');
         console.log(accessToken);
 
-        const requestOptions = {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            }
-        };
-
-        fetch(apiUrl, requestOptions)
-            .then(response =>{
-                if (!response.ok) {
-                    throw new Error('서버 내에서 예외 발생');
+        if (window.confirm("해당 일정을 삭제하시겠습니까?")) {
+            const requestOptions = {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}`
                 }
-                return response.json();
-            })
-            .then(data =>{
-                alert(data.message);
-                window.location.href = "/calendar";
-            })
-            .catch(error =>{
-                console.error('오류:',error);
-            })
+            };
+
+            fetch(apiUrl, requestOptions)
+                .then(response =>{
+                    if (!response.ok) {
+                        throw new Error('서버 내에서 예외 발생');
+                    }
+                    return response.json();
+                })
+                .then(data =>{
+                    alert(data.message);
+                    window.location.href = "/calendar";
+                })
+                .catch(error =>{
+                    console.error('오류:',error);
+                })
+        }
+
     });
 </script>
 </body>

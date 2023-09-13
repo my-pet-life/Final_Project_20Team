@@ -29,8 +29,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
 
-        log.info("JwtAuthenticationEntryPoint 실행");
-
         // HandlerExceptionResolver에게 예외 처리를 위임
         // 이때 AuthenticatonException이 아닌 request에 담긴 JwtException을 전달
         resolver.resolveException(request, response, null, (JwtException) request.getAttribute("exception"));

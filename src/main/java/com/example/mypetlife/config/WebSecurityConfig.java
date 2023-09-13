@@ -36,9 +36,11 @@ public class WebSecurityConfig {
                                         "/main", "/login", "/register", "/main-success", "/calendar", "/schedules", "/create-schedule", "/update-schedule",
                                         "/community", "/article"
                                 ).permitAll()
+                                .requestMatchers(GET,"/register").permitAll()
                                 .requestMatchers(
                                         "/api/register/**",
                                         "/api/login/**",
+                                        "/api/access_token",
                                         "/api/hospitals/**",
                                         "/api/seoul/reviews/**",
                                         "/api/gyeonggi/reviews/**",
@@ -57,21 +59,20 @@ public class WebSecurityConfig {
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
                         .successHandler(oAuth2SuccessHandler)
-                        .userInfoEndpoint(userInfo -> userInfo // oauth2 로그인 성공 후 가져올 때의 설정들
-                                .userService(oAuth2UserService) // 소셜로그인 성공 후 후속 조치를 진행할 userService
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService)
                         )
                 )
+
                 .exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
+
                 .sessionManagement(sessionManagment -> sessionManagment
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // JwtFilter를 SecurityChainFilter에 등록하여 특정 URL에 접근하기 전에 로그인 유무를 확인한다.
+
                 .addFilterBefore(new JwtFilter(jwtTokenUtils), AuthorizationFilter.class)
-        // JwtExceptionFilter를 SecurityChainFilter에 등록하여 JwtFilter에서 발생한 예외를 처리한다.
-        // 즉 특정 URL에 로그인 없이 접근하면 예외가 발생하고, 해당 필터가 예외를 처리한다.
-//                .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
         ;
         return http.build();
     }

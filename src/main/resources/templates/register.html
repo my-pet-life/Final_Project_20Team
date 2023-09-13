@@ -98,10 +98,10 @@
     const password = document.getElementById('password').value;
     const petSpices = document.getElementById('petSpices').value;
 
-    fetch('/api/register', {
-      method: 'POST',
+    const requestOptions = {
+      method: 'POST', // HTTP 메서드
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json' // 요청 헤더 설정
       },
       body: JSON.stringify({
         username: username,
@@ -110,24 +110,26 @@
         password: password,
         petSpices: petSpices
       })
-    })
-            .then(response => {
-              if (!response.ok) {
-                alert('회원 가입에 실패하셨습니다. 모두 기입하셨는지 확인해주세요.');
-                throw new Error('회원 가입 실패');
-              }
-              return response.json();
-            })
-            .then(data => {
-              // 회원 가입 성공 시 처리
-              console.log('회원 가입 성공:', data);
-              alert('회원 가입에 성공하였습니다. 메인 화면으로 돌아가 로그인해주세요.');
+    };
 
-              window.location.href = '/main';
-            })
-            .catch(error => {
-              console.error('회원 가입 오류:', error);
-            });
+    fetch('/api/register', requestOptions)
+      .then(response => {
+        if (!response.ok) {
+          alert('회원 가입에 실패하셨습니다. 모두 기입하셨는지 확인해주세요.');
+          throw new Error('회원 가입 실패');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // 회원 가입 성공 시 처리
+        console.log('회원 가입 성공:', data);
+        alert('회원 가입에 성공하였습니다. 메인 화면으로 돌아가 로그인해주세요.');
+
+        window.location.href = '/main';
+      })
+      .catch(error => {
+        console.error('회원 가입 오류:', error);
+      });
   });
 </script>
 </body>
