@@ -1,5 +1,11 @@
 # MyPet Life
 
+<img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/49d6025b-6018-4ae4-95d5-851b5b7bab90" width="300" height="200"/>
+<img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/c39cefa4-2fa0-4aa5-a246-b9641d53a679" width="300" height="200"/>
+<img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/97280034-6a72-4f75-a64d-a0bc1c5ee604" width="300" height="200"/>
+
+<br>
+
 ## 1. 🐶🐱 프로젝트 소개 
 ### 프로젝트 링크
 http://13.209.174.161:8080
@@ -64,7 +70,7 @@ http://13.209.174.161:8080
 - 서울특별시, 경기도의 시 군 구 지역을 필터링 하여 해당 지역에 해당하는 동물병원을 조회 기능
 - 네이버 지도 API를 사용하여 동물병원 주소 검색 기능
 - 정상 영업중인 지역별 동물병원에 대한 리뷰 CRUD 기능
-- 
+
 ### 채팅
 - 실시간 채팅으로 관리자에게 궁금한 내용 문의 가능
 - webSocket을 실시간 채팅 기능 구현
