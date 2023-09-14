@@ -67,6 +67,8 @@ http://13.209.174.161:8080
 ---
 
 ## 4. 💻 기술 스택
+![image](https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/6a852510-8d45-487f-bdc8-622ddd026bdd)
+
 
 ---
 
