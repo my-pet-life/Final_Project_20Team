@@ -1,10 +1,11 @@
 # MyPet Life
 
+<img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/de7dd529-23c3-42b5-a918-03b973aef0bd" width="500" height="200"/><br>
 <img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/49d6025b-6018-4ae4-95d5-851b5b7bab90" width="250" height="180"/>
 <img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/c39cefa4-2fa0-4aa5-a246-b9641d53a679" width="250" height="180"/>
 <img src="https://github.com/my-pet-life/Final_Project_20Team/assets/55522275/97280034-6a72-4f75-a64d-a0bc1c5ee604" width="250" height="180"/>
 
-<br>
+<br><br>
 
 ## 1. 🐶🐱 프로젝트 소개 
 ### 프로젝트 링크
